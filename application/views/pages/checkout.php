@@ -17,13 +17,13 @@
                             <div class="col-md-6 col-sm-12" style="padding-bottom: 10px;">
                                 <div>
                                     <label for="name">Name</label>
-                                    <input type="text" class="default form-control" name="user_name" placeholder="Your Name" id="user_name" require/>
+                                    <input type="text" class="default form-control" name="user_name" placeholder="Your Name" id="user_name" require onchange="inputCheck()"/>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12" style="padding-bottom: 10px;">
                                 <div>
                                     <label for="phone">Phone No</label>
-                                    <input autocomplete="off" maxlength="10" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" name="phone_no" class="form-control input-default " placeholder="Your Phone Number" required autocomplete="off" id="user_phone">
+                                    <input autocomplete="off" maxlength="10" onkeyup="inputCheck()" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" name="phone_no" class="form-control input-default " placeholder="Your Phone Number" required autocomplete="off" id="user_phone">
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
@@ -85,7 +85,7 @@
                                             <div class="form-group">
                                                 <label> </label>
                                                 <div class='input-group' style="height: 25px!important; width: 100%; background-color: #fff; border-color: #111; border-radius: 9px;">
-                                                    <input type="text" class="default form-control" name="item_destination" placeholder="Add table number" id="order_destination_place" require/>
+                                                    <input type="text" class="default form-control" name="item_destination1" placeholder="Add table number" id="order_destination_place_table" required/>
                                                 </div>
                                             </div>
                                         </div>
@@ -96,7 +96,7 @@
                                             <div class="form-group">
                                                 <label> </label>
                                                 <div class='input-group' style="height: 25px!important; width: 100%; background-color: #fff; border-color: #111; border-radius: 9px;">
-                                                    <input type="text" class="default form-control" name="item_destination" placeholder="Add room number" id="order_destination_place" require/>
+                                                    <input type="text" class="default form-control" name="item_destination2" placeholder="Add room number" id="order_destination_place_room" required/>
                                                 </div>
                                             </div>
                                         </div>
@@ -107,35 +107,53 @@
                                             <div class="form-group">
                                                 <label> </label>
                                                 <div class='input-group' style="height: 25px!important; width: 100%; background-color: #fff; border-color: #111; border-radius: 9px;">
-                                                    <input type="text" class="default form-control" name="item_destination" placeholder="Add plate number" id="order_destination_place" require/>
+                                                    <input type="text" class="default form-control" name="item_destination3" placeholder="Add plate number" id="order_destination_place_plate" required/>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="section-header-left" id="when" >
                                         <h5 class="text-light-black " align="center" style="font-weight: bold;">Available Time Choice</h5>
-
+                                        <?php  if(!empty($companies)){
+                                            foreach($companies as $key => $service){?>
                                         <div class="custom-control custom-radio row">
+                                        <?php if($service->id == 3){?>
                                             <div class="col-md-4">
                                                 <input type="radio" id="now" name="time" value="" required checked> <label for="delivery">
                                                     <h6>Order From Table</h6>
                                                 </label>
                                             </div>
+                                            <?php } ?>
+                                            <?php if($service->id == 2){?>
                                             <div class="col-md-4">
                                                 <input type="radio" id="drive" name="time" value=""> <label for="drive">
                                                     <h6>Drive Up (From Your Car)</h6>
                                                 </label>
                                             </div>
+                                            <?php } ?>
+                                            <?php if($service->id == 1){?>
                                             <div class="col-md-4">
                                                 <input type="radio" id="room" name="time" value=""> <label for="room">
                                                     <h6>Order From Room (Hotel)</h6>
                                                 </label>
                                             </div>
+                                            <?php } ?>
+                                            <?php if($service->id == 4){?>
                                             <div class="col-md-4">
                                                 <input type="radio" id="schedule" name="time" value=""> <label for="pickup">
                                                     <h6>Pick up</h6>
                                                 </label>
                                             </div>
+                                            <?php } ?>
+                                            <?php if($service->id == 5){?>
+                                            <div class="col-md-4">
+                                                <input type="radio" id="delivary" name="time" value=""> <label for="pickup">
+                                                    <h6>Delivary</h6>
+                                                </label>
+                                            </div>
+                                            <?php } ?>
+                                            <?php }
+                                        }?>
                                         </div>
                                         <div class="col-lg-8" style="display: none;" id="date_picker">
                                             <div class="form-group">
@@ -148,35 +166,24 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="section-header-left">
-                                        <div class="col-lg-12" style="display: none;" id="date_picker">
-                                            <h5 class="text-light-black " align="center" style="font-weight: bold;">Make the payment on telebirr on this Number 1234567 and copy Ref number here</h5>
-                                            <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <label> </label>
-                                                    <div class='input-group' style="height: 25px!important; width: 100%; background-color: #fff; border-color: #111; border-radius: 9px;">
-                                                        <input type="text" class="default form-control" name="tele_birr" placeholder="Copy the Telebirr transaction number and paste here!" id="order_payment"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- <div class="form-group">
-                                                <label>When will you arive</label>
-                                                <div class='input-group date simplepicker-btn' style="height: 25px!important; width: 50%; background-color: #fff; border-color: #111; border-radius: 9px;">
-                                                    <div align="center" style="margin-top: 1%; margin-left: 0%;width:100%!important; ">
-                                                        <span id="btn_clander" style="margin-left: 2%;"><i style="color: #444;" class="fa fa-calendar"></i> <span style="color:black;margin-left:2%;margin-left:2%;" onMouseOver="this.style.color='#000'" id="order_time" required>&nbsp; Set your Date / Time</span></span>
-                                                    </div>
-                                                </div>
-                                            </div> -->
-                                        </div>
-                                    </div>
+                                   
                                     <div class="section-header-left">
                                         <hr>
                                         <br/>
                                         <h5 class="text-light-black " align="center" style="font-weight: bold;">Please Select Payment</h5>
-                                        <select class="default form-control" name="item" id="payment_option" required>
-                                            <option value="cash" id="cash">Cash</option>
-                                            <option value="telebirr" id="telebirr">Tele Birr</option>
-                                        </select>
+                                        <?php
+                                            if(!empty($companies[0]->tele_birr)){?>
+                                                <select class="default form-control" name="item" id="payment_option" required>
+                                                    <option value="cash" id="cash">Cash</option>
+                                                    <option value="telebirr" id="telebirr">Tele Birr</option>
+                                                </select>
+                                        <?php
+                                            }else{
+                                        ?>
+                                            <select class="default form-control" name="item" id="payment_option" required>
+                                                <option value="cash" id="cash" selected>Cash</option>
+                                            </select>
+                                            <?php }?>
                                         <div class="form-group" id="telebirr_input" style="display: none;">
                                             <h5 class="text-light-black " align="center" style="font-weight: bold;">Make the payment on telebirr on this Number 1234567 and copy Ref number here</h5>
                                             <label> </label>
@@ -220,28 +227,69 @@
 <script>
     inputCheck();
     function inputCheck() {
+        
         if ($('#user_name').val() == '') {
             $('#user_name').focus();
             $("#address_info").html('** <i style="color:red;">Please add your info</i> **');
-            $('.create_btn').add('disabled');
+            $('.create_btn').prop('disabled', true);
+
             return false;
         }else if($('#user_phone').val() == ''){
             $('#user_phone').focus();
             $("#address_info").html('** <i style="color:red;">Please add your info</i> **');
-            $('.create_btn').add('disabled');
+            $('.create_btn').prop('disabled', true);
+
             return false;
         }else{
+            $('.create_btn').prop('disabled', false);
             return true;
         }
     };
     $('.create_btn').click(function() {
-        $('#cover-spin').show(0);
+        $('#cover-spin').show(1);
         inputCheck();
+        location_list();
+        var order_destination ='';
+        var order_destination1 = document.getElementById("order_destination_place_table").value;
+        var order_destination2 = document.getElementById("order_destination_place_room").value;
+        var order_destination3 = document.getElementById("order_destination_place_plate").value;
+        
+        if (order_destination1 == '') {
+            $('#order_destination_place_table').focus();
+            $('.create_btn').prop('disabled', true);
+            $('#cover-spin').show(0);
+            return false;
+        }else{
+            order_destination = 'Table Number '+order_destination1;
+        }
+        if (order_destination2 == '') {
+            $('#order_destination_place_room').focus();
+            $('.create_btn').prop('disabled', true);
+            $('#cover-spin').show(0);
+            return false;
+        }else{
+            order_destination = 'Room Number '+order_destination2;
+
+        }
+        if(order_destination3 == '') {
+            $('#order_destination_place_plate').focus();
+            $('.create_btn').prop('disabled', true);
+            $('#cover-spin').show(0);
+            return false;
+        }else{
+            order_destination = 'Plate Number '+order_destination3;
+        }
+
+        $(".create_btn").attr('disabled', true);
+        console.log(order_destination);
+        return;
+
         var coordinate = sessionStorage.getItem('to_hidden');
-        var order_destination = document.getElementById("order_destination_place").value;
         var order_payment = document.getElementById("order_payment").value;
         var date = document.getElementById("order_time").innerHTML ;
         var branch = document.getElementById("vendor_id_select").value ;
+        var customer_name = document.getElementById("user_name").value ;
+        var customer_phone = document.getElementById("user_phone").value ;
         
         var order_type = 1;
         var vendor_id = 2;
@@ -253,10 +301,11 @@
             vendor_id: vendor_id,
             order_type: order_type,
             order_payment: order_payment,
-            branch: branch
+            branch: branch,
+            user_name: customer_name,
+            user_phone: customer_phone
         }
                 
-        $(".create_btn").attr('disabled', true);
         jQuery.noConflict();
         
         
@@ -265,15 +314,16 @@
             url: '<?php echo base_url() ?>cart/order_cart',
             data: data,
             success: function(response) {
+                console.log(response);
                 $('#error_message').html();
                 sessionStorage.removeItem('to');
                 sessionStorage.removeItem('to_hidden');
                 sessionStorage.removeItem('from_hidden');
-                console.log(response); 
-                return;
+                
                 window.location.href = "<?php echo base_url() ?>pages/order_view/" + JSON.parse(response).order_id;
             },
             error: function(error) {
+                console.log(error);
                 var error_message = JSON.parse(error.responseText);
                 var first_error = Object.keys(error_message)[0];
                 $('#error_message').html(error_message[first_error]);
@@ -323,12 +373,14 @@
             $("#to_here_list").html(branch_name);
             $('.create_btn').removeAttr('disabled');
             $('#table_order_destination').hide();
+            this.inputCheck();
         <?php }?>
 
         $('#vendor_id_select').click(function() {
             var branch_name = $('#vendor_id_select').find(":selected").text();
             $("#to_here_list").html(branch_name);
             $('.create_btn').removeAttr('disabled');
+            inputCheck();
         });
 
         $('#telebirr').click(function() {
@@ -350,12 +402,15 @@
                 $('#car_order_destination').hide();
             }
         });
-
+    });
+    location_list();
+    function location_list(){
         if ($('#to_here_list').html() == '') {
             $('#location').show();
         }else{
+            inputCheck();
             $('.create_btn').removeAttr('disabled');
         }
-    });
+    }
     
 </script>

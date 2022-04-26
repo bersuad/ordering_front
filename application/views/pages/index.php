@@ -23,7 +23,7 @@
                     foreach($category_list as $key => $category){
                 ?>
                     <li class="item">
-                        <a href="javascript:;" class="filter-button" data-filter="<?php echo str_replace(' ', '_', $category->category_name); ?>"><?php echo $category->category_name; ?></a>
+                        <a href="javascript:;" class="filter-button" data-filter="<?php echo  $category->category_id; ?>"><?php echo $category->category_name; ?></a>
                     </li>        
                 <?php }
                 } ?>
@@ -67,7 +67,7 @@
             <?php  if(!empty($items)){
                 foreach($items as $key => $item){
                     ?>
-                    <div class="filtr-item image filter <?php echo str_replace(' ', '_', $item->category_name); ?>">
+                    <div class="filtr-item image filter <?php echo $item->item_category; ?>">
                     <div class="col-sm-6 col-md-4 col-lg-4 col-xs-6 list-of-items">
                     <a href="#" data-toggle="modal" data-target="#modalQuickView<?php echo $item->item_id ?>" id="add_to_cart block fancybox" class="to_cart" data-name="<?php echo  $item->item_name?>" data-price="<?php echo  $item->item_value?>" data-desc="$detail" data-image="$photo" data-id="<?php echo $item->item_id?>">
                             <div class="content">

@@ -67,17 +67,19 @@ class Pages extends MY_Controller {
 			
 			$data['companies'] = $this->company_model->where('company_id', $restaurant_id)->get_all();
 	
-			$sql_category ="SELECT category_name
-						FROM category
-						RIGHT JOIN items ON items.item_category = category.category_id
-						INNER JOIN branches ON items.item_branch_id = branches.branch_id
-						INNER JOIN companies ON branches.branch_company_id = companies.company_id
-						WHERE company_id = $restaurant_id 
-						AND category_name != 'Extra' 
-						GROUP BY category_name
-						";
+			// $sql_category ="SELECT category_name
+			// 			FROM category
+			// 			RIGHT JOIN items ON items.item_category = category.category_id
+			// 			INNER JOIN branches ON items.item_branch_id = branches.branch_id
+			// 			INNER JOIN companies ON branches.branch_company_id = companies.company_id
+			// 			WHERE company_id = $restaurant_id 
+			// 			AND category_status = 1
+			// 			AND category_name != 'Extra' 
+			// 			GROUP BY category_name
+			// 			";
 			
-			$data['category_list'] 	= $this->Category_model->sql($sql_category);
+			// $data['category_list'] 	= $this->Category_model->sql($sql_category);
+			$data['category_list']  = $this->Category_model->where(['category_company_id'=>$restaurant_id, 'category_status' => 1 ] )->get_all();
 	
 			$this->data = $data;
 			

@@ -6,7 +6,7 @@ class Cart extends MY_Controller {
         $this->load->model('admin_model');
         $this->load->model('action_model');
         $this->load->model('customer_model');
-        $this->load->model('Customer_model');
+        // $this->load->model('Customer_model');
         $this->load->model('company_model');
         $this->load->model('header_model');
         $this->load->model('item_model');
@@ -102,10 +102,11 @@ class Cart extends MY_Controller {
     }
 
     public function order_cart() {
+        // echo json_encode($_POST);
+        // die();
         
         if (!empty($_SESSION["cart_item"])) {
             $items = [];
-                   
             foreach ( $_SESSION["cart_item"] as $value ) {
                 $group[$value['branch']][] = $value;
             }
@@ -117,8 +118,7 @@ class Cart extends MY_Controller {
             $list = [];
             $set = '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $code = substr(str_shuffle($set), 0, 4);
-            $this->session->set_userdata('code', $code);       
-                                             
+            $this->session->set_userdata('code', $code);  
             foreach ($items as $value) {
                 
                 $items_list=[];
@@ -142,8 +142,23 @@ class Cart extends MY_Controller {
                                 "payment_ref"                   => $this->input->post('order_payment'), 
                             );                
                 $branch_id = $this->input->post('branch'); 
-                $customer_id = 1;
+                $customer_phone = $this->input->post('user_phone');
+                $customer_name = $this->input->post('user_name');
                 $order_type = $this->input->post('order_type');
+                $customer = $this->customer_model->where('customer_phone', $customer_phone)->order_by('customer_id', "desc")->get_all();
+
+                if(!empty($customer))
+                {
+                    $customer_id = $customer[0]->customer_id;
+                }else{
+                    $user_data = array(
+                        'customer_phone' => $customer_phone,
+                        'customer_full_name' => $customer_name,   
+                        'customer_password' => '654321'                    
+                    );
+
+                    $customer_id = $this->customer_model->insert($user_data);
+                }
             
                 $this->load->helper('date_helper');
                 $date1 = custom_date_format_parser($this->input->input_stream('item_destination_date'));
@@ -189,7 +204,9 @@ class Cart extends MY_Controller {
 
     public function checkout() {
         $restaurant_id = $this->session->userdata('restaurant_id');
-        $data['companies'] = $this->company_model->where('company_id', $restaurant_id)->get_all();
+        $data['companies'] = $this->company_model->join('comapny_services', 'comapny_services.service_company_id = companies.company_id ')->join('services', 'services.id = comapny_services.service_list_id')->where('company_id', $restaurant_id)->get_all();
+        // $this->Category_model->join('category', 'category.category_title = item_list.item_category');
+        // print_r($data['companies']); die();
         $data['branches'] = $this->branch_model->where('branch_company_id', $restaurant_id)->get_all();
         $this->data = $data;
         $this->load->view('included/header', $data);
