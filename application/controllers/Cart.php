@@ -102,8 +102,7 @@ class Cart extends MY_Controller {
     }
 
     public function order_cart() {
-        // echo json_encode($_POST);
-        // die();
+        
         
         if (!empty($_SESSION["cart_item"])) {
             $items = [];
@@ -140,7 +139,8 @@ class Cart extends MY_Controller {
                                 "item_destination_coordinate"   => $this->input->post('item_destination_coordinate'), 
                                 "item_destination_date"         => $this->input->post('item_destination_date'), 
                                 "payment_ref"                   => $this->input->post('order_payment'), 
-                            );                
+                            ); 
+        
                 $branch_id = $this->input->post('branch'); 
                 $customer_phone = $this->input->post('user_phone');
                 $customer_name = $this->input->post('user_name');

@@ -253,43 +253,37 @@
         var order_destination1 = document.getElementById("order_destination_place_table").value;
         var order_destination2 = document.getElementById("order_destination_place_room").value;
         var order_destination3 = document.getElementById("order_destination_place_plate").value;
-        
-        if (order_destination1 == '') {
+
+        if (order_destination1 == '' && order_destination2 == '' && order_destination3 == '') {
             $('#order_destination_place_table').focus();
-            $('.create_btn').prop('disabled', true);
-            $('#cover-spin').show(0);
-            return false;
-        }else{
-            order_destination = 'Table Number '+order_destination1;
-        }
-        if (order_destination2 == '') {
+            $('#order_destination_place_plate').focus();
             $('#order_destination_place_room').focus();
             $('.create_btn').prop('disabled', true);
             $('#cover-spin').show(0);
             return false;
-        }else{
-            order_destination = 'Room Number '+order_destination2;
-
         }
-        if(order_destination3 == '') {
-            $('#order_destination_place_plate').focus();
-            $('.create_btn').prop('disabled', true);
-            $('#cover-spin').show(0);
-            return false;
-        }else{
+
+        if(order_destination1 !=''){
+            order_destination = 'Table Number '+order_destination1;
+        }else if(order_destination2 !=''){
+            order_destination = 'Room Number '+order_destination2;
+        }else if(order_destination3 !=''){
             order_destination = 'Plate Number '+order_destination3;
         }
 
         $(".create_btn").attr('disabled', true);
-        console.log(order_destination);
-        return;
-
+        var payment='';
         var coordinate = sessionStorage.getItem('to_hidden');
         var order_payment = document.getElementById("order_payment").value;
         var date = document.getElementById("order_time").innerHTML ;
         var branch = document.getElementById("vendor_id_select").value ;
         var customer_name = document.getElementById("user_name").value ;
         var customer_phone = document.getElementById("user_phone").value ;
+        if(order_payment != ''){
+            payment = 'Tele Birr '+order_payment;
+        }else{
+            payment = 'Cash';
+        }
         
         var order_type = 1;
         var vendor_id = 2;
@@ -300,7 +294,7 @@
             item_destination_date: date,
             vendor_id: vendor_id,
             order_type: order_type,
-            order_payment: order_payment,
+            order_payment: payment,
             branch: branch,
             user_name: customer_name,
             user_phone: customer_phone
@@ -332,8 +326,10 @@
     });
 
     $(document).ready(function() {
-        // document.getElementById('comp_name').innerHTML = sessionStorage.getItem('from_company');
+        
         $('#now').click(function() {
+            $('#order_destination_place_room').val('');
+            $('#order_destination_place_plate').val('');
             if (this.checked) {
                 $('.location').show();
                 $('#when').show();
@@ -345,6 +341,8 @@
         });
 
         $('#drive').click(function() {
+            $('#order_destination_place_room').val('');
+            $('#order_destination_place_table').val('');
             if (this.checked) {
                 $('.location').show();
                 // $('#when').hide();
@@ -356,6 +354,8 @@
         });
 
         $('#room').click(function() {
+            $('#order_destination_place_plate').val('');
+            $('#order_destination_place_table').val('');
             if (this.checked) {
                 $('.table').show();
                 $('.location').hide();
