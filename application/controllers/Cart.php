@@ -78,6 +78,11 @@ class Cart extends MY_Controller {
     }
     
     private function cart_table(){
+        
+        $restaurant_id = $this->session->userdata('restaurant_id');
+        $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
+        $comp_vat = (int) $customer[0]->vat / 100 ;
+        $comp_service = (int) $customer[0]->service_charge / 100;
         if (isset($_SESSION["cart_item"])) {
             $item_total = 0;
             $price_list = 0;
@@ -94,7 +99,16 @@ class Cart extends MY_Controller {
                 $output.= '<input type="hidden" value="' . $item["comment"] . '" id="comment"/>';
                 $output.='</td><td>' . $item["quantity"] . '</td><td> ETB ' . $item["price"] . '</td><td><a onClick=\'cartAction("remove",' . $item["code"] . ')\' class="btnRemoveAction cart-action"><i style="color:rgba(183, 0, 0,0.9); font-size: 0.9em;" class="fa fa-times fa-xs"></i></a></td></tr>';
             }
-            $output.= '</tbody></table><br><div class="d-flex align-items-right justify-content-round" align="right"> <b>Total: </b><span id="item_total">' . $item_total . ' </span> &nbsp; ETB</div><br>';
+            $output.= '</tbody></table><br>';
+            if($comp_vat != ''){
+                $output .= '<div class="" align="right"> <b>VAT: </b><span id="item_total">' . $customer[0]->vat .' %</span> &nbsp; ETB</div><br>';
+                $item_total += $item_total * $comp_vat;
+            }
+            if($comp_service != ''){
+                $output .= '<div class="" align="right"> <b>Service Charge: </b><span id="item_total">' . $customer[0]->service_charge .' %</span> &nbsp; ETB</div><br>';
+                $item_total += $item_total * $comp_service;
+            }
+            $output .= '<div class="" align="right"> <b>Total: </b><span id="item_total">' . number_format((float)$item_total, '2', '.', '') .' </span> &nbsp; ETB</div><br>';
             $output.= '<input type="hidden" value="' . $item_total . '" id="item_total_hidden"/>';
             
             return $output;

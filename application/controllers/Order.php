@@ -23,9 +23,9 @@ class Order extends MY_Controller {
         $order_id = $this->input->post('id');
         $user_id = 1;
         $output = '';
-        $code = $this->session->userdata('code');
+        
 
-        $sql = $this->sql_query($code, $order_id, $user_id);
+        $sql = $this->sql_query($order_id, $user_id);
         
         $orders = $this->order_model->sql($sql);
 
@@ -78,25 +78,24 @@ class Order extends MY_Controller {
                 
     }
 
-    private function sql_query($code, $order_id, $user_id)
+    private function sql_query($order_id, $user_id)
     {
-        if ($code) {
-            $sql  = "   SELECT order_item::json, order_id, order_timestamp, order_customer_id, order_status, order_type,branch_name
-                        FROM orders INNER JOIN branches ON orders.order_branch_id = branches.branch_id 
-                        WHERE orders.order_item ->> 'code' = '$code' AND orders.order_customer_id = $user_id;
-                    ";
-        } else {
+        
             $sql  = "   SELECT order_item::json, order_id, order_timestamp, order_customer_id, order_status, order_type,branch_name
                         FROM orders INNER JOIN branches ON orders.order_branch_id = branches.branch_id 
                         WHERE orders.order_id  = $order_id AND orders.order_customer_id = $user_id;
                     ";
-        }
+        
 
         return $sql;
     }
     
     
     public function new_order($order, $branch, $output){
+        $restaurant_id = $this->session->userdata('restaurant_id');
+        $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
+        $comp_vat = (int) $customer[0]->vat / 100 ;
+        $comp_service = (int) $customer[0]->service_charge / 100;
         $output.= '
             <table class="table table-borderless" style="align-items: center; align-self: center; text-align: center; border: 2px solid transparent; color:#212121; font-size: 0.9em;" id="cart_list_items">
                 <thead>
@@ -128,6 +127,16 @@ class Order extends MY_Controller {
                     }
                     }
                     $output.= '  
+                    <tr>
+                        <td></td>
+                        <td>VAT</td>
+                        <td>'.$customer[0]->vat.' %</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Service Charge</td>
+                        <td>'.$customer[0]->service_charge.' %</td>
+                    </tr>
                     <tr style="background: rgba(201, 201, 201, 0.3);">
                         <td></td>
                         <td>Total Price</td>
@@ -138,7 +147,16 @@ class Order extends MY_Controller {
                             $price_list = (int)$item->item_price / (int)$item->item_quantity;
                             $sum+= (int)$price_list * (int)$item->item_quantity;
                         }
-                        $output.= '' . number_format((float)$sum, '2', '.', '');
+                        
+                        if($comp_vat != ''){
+                            $sum += $sum * $comp_vat;
+                        }
+                        if($comp_service != ''){
+
+                            $sum += $sum * $comp_service;
+                        }
+
+                        $output.= '' . number_format((float)$sum, '2', '.', '').' ETB';
                         $output.= '
                         </td>
                     </tr>

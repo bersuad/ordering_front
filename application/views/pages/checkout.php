@@ -79,7 +79,66 @@
                                         <br>
                                         
                                     </div>
-                                    <div class="section-header-left" id="table_order_destination">
+                                    <div class="section-header-left" id="when" >
+                                        <h5 class="text-light-black " align="center" style="font-weight: bold;">Order Method</h5>
+                                        <div class="custom-control custom-radio row">
+                                        <?php  if(!empty($companies)){
+                                            foreach($companies as $key => $service){?>
+                                                    <?php if($service->id == 3){?>
+                                                        <div class="col-md-4 col-sm-12 col-lg-4">
+                                                            <input type="radio" id="now" name="time" value="" required> <label for="delivery">
+                                                                <h6><?php echo $service->service_name ?></h6>
+                                                            </label>
+                                                        </div>
+                                                    <?php } ?>
+                                                    
+                                                    <?php if($service->id == 2){?>
+                                                        <div class="col-md-4 col-sm-12 col-lg-4">
+                                                            <input type="radio" id="drive" name="time" value=""> <label for="drive">
+                                                                <h6><?php echo $service->service_name ?></h6>
+                                                            </label>
+                                                        </div>
+                                                    <?php } ?>
+                                                    
+                                                    <?php if($service->id == 1){?>
+                                                        <div class="col-md-4 col-sm-12 col-lg-4">
+                                                            <input type="radio" id="room" name="time" value=""> <label for="room">
+                                                                <h6><?php echo $service->service_name ?></h6>
+                                                            </label>
+                                                        </div>
+                                                    <?php } ?>
+                                                    
+                                                    <?php if($service->id == 4){?>
+                                                        <div class="col-md-4 col-sm-12 col-lg-4">
+                                                            <input type="radio" id="schedule" name="time" value=""> <label for="pickup">
+                                                                <h6><?php echo $service->service_name ?></h6>
+                                                            </label>
+                                                        </div>
+                                                    <?php } ?>
+                                                    
+                                                    <?php if($service->id == 5){?>
+                                                        <div class="col-md-4 col-sm-12 col-lg-4">
+                                                            <input type="radio" id="delivary" name="time" value=""> <label for="pickup">
+                                                                <h6><?php echo $service->service_name ?></h6>
+                                                            </label>
+                                                        </div>
+                                                    <?php } ?>
+                                                    <?php }
+                                            }?>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-8" style="display: none;" id="date_picker">
+                                            <div class="form-group">
+                                                <label>When will you show up?</label>
+                                                <div class='input-group date simplepicker-btn' style="height: 45px!important; width: 100%; background-color: #fff; border-color: #111; border-radius: 9px;">
+                                                    <div align="center" style="margin-top: 2%; margin-left: 0%;width:100%!important; ">
+                                                        <span id="btn_clander" style="margin-left: 2%;"><i style="color: #444;" class="fa fa-calendar"></i> <span style="color:black;margin-left:2%;margin-left:2%;" onMouseOver="this.style.color='#000'" id="order_time" required>&nbsp; Set your Date / Time</span></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="section-header-left" id="table_order_destination" style="display: none;">
                                         <h5 class="text-light-black " align="center" style="font-weight: bold;">Add your table number</h5>
                                         <div class="col-lg-12">
                                             <div class="form-group">
@@ -112,60 +171,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="section-header-left" id="when" >
-                                        <h5 class="text-light-black " align="center" style="font-weight: bold;">Available Time Choice</h5>
-                                        <?php  if(!empty($companies)){
-                                            foreach($companies as $key => $service){?>
-                                        <div class="custom-control custom-radio row">
-                                        <?php if($service->id == 3){?>
-                                            <div class="col-md-4">
-                                                <input type="radio" id="now" name="time" value="" required checked> <label for="delivery">
-                                                    <h6>Order From Table</h6>
-                                                </label>
-                                            </div>
-                                            <?php } ?>
-                                            <?php if($service->id == 2){?>
-                                            <div class="col-md-4">
-                                                <input type="radio" id="drive" name="time" value=""> <label for="drive">
-                                                    <h6>Drive Up (From Your Car)</h6>
-                                                </label>
-                                            </div>
-                                            <?php } ?>
-                                            <?php if($service->id == 1){?>
-                                            <div class="col-md-4">
-                                                <input type="radio" id="room" name="time" value=""> <label for="room">
-                                                    <h6>Order From Room (Hotel)</h6>
-                                                </label>
-                                            </div>
-                                            <?php } ?>
-                                            <?php if($service->id == 4){?>
-                                            <div class="col-md-4">
-                                                <input type="radio" id="schedule" name="time" value=""> <label for="pickup">
-                                                    <h6>Pick up</h6>
-                                                </label>
-                                            </div>
-                                            <?php } ?>
-                                            <?php if($service->id == 5){?>
-                                            <div class="col-md-4">
-                                                <input type="radio" id="delivary" name="time" value=""> <label for="pickup">
-                                                    <h6>Delivary</h6>
-                                                </label>
-                                            </div>
-                                            <?php } ?>
-                                            <?php }
-                                        }?>
-                                        </div>
-                                        <div class="col-lg-8" style="display: none;" id="date_picker">
-                                            <div class="form-group">
-                                                <label>When will you show up?</label>
-                                                <div class='input-group date simplepicker-btn' style="height: 45px!important; width: 100%; background-color: #fff; border-color: #111; border-radius: 9px;">
-                                                    <div align="center" style="margin-top: 2%; margin-left: 0%;width:100%!important; ">
-                                                        <span id="btn_clander" style="margin-left: 2%;"><i style="color: #444;" class="fa fa-calendar"></i> <span style="color:black;margin-left:2%;margin-left:2%;" onMouseOver="this.style.color='#000'" id="order_time" required>&nbsp; Set your Date / Time</span></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                    
                                     <div class="section-header-left">
                                         <hr>
@@ -177,20 +183,21 @@
                                                     <option value="cash" id="cash">Cash</option>
                                                     <option value="telebirr" id="telebirr">Tele Birr</option>
                                                 </select>
+                                                <div class="form-group" id="telebirr_input" style="display: none;">
+                                                    <h5 class="text-light-black " align="center" style="font-weight: bold;">Make the payment on telebirr on this Number <?php echo $companies[0]->tele_birr;?> and copy Ref number here</h5>
+                                                    <label> </label>
+                                                    <div class='input-group' style="height: 25px!important; width: 100%; background-color: #fff; border-color: #111; border-radius: 9px;">
+                                                        <input type="text" class="default form-control" name="tele_birr" placeholder="Copy the Telebirr transaction number and paste here!" id="order_payment"/>
+                                                    </div>
+                                                </div>
                                         <?php
                                             }else{
                                         ?>
-                                            <select class="default form-control" name="item" id="payment_option" required>
-                                                <option value="cash" id="cash" selected>Cash</option>
-                                            </select>
-                                            <?php }?>
-                                        <div class="form-group" id="telebirr_input" style="display: none;">
-                                            <h5 class="text-light-black " align="center" style="font-weight: bold;">Make the payment on telebirr on this Number 1234567 and copy Ref number here</h5>
-                                            <label> </label>
-                                            <div class='input-group' style="height: 25px!important; width: 100%; background-color: #fff; border-color: #111; border-radius: 9px;">
-                                                <input type="text" class="default form-control" name="tele_birr" placeholder="Copy the Telebirr transaction number and paste here!" id="order_payment"/>
-                                            </div>
-                                        </div>
+                                        <select class="default form-control" name="item" id="payment_option" required>
+                                            <option value="cash" id="cash" selected>Cash</option>
+                                        </select>
+                                        <?php }?>
+                                        
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
@@ -373,7 +380,7 @@
             $("#to_here_list").html(branch_name);
             $('.create_btn').removeAttr('disabled');
             $('#table_order_destination').hide();
-            this.inputCheck();
+            inputCheck();
         <?php }?>
 
         $('#vendor_id_select').click(function() {
@@ -383,16 +390,16 @@
             inputCheck();
         });
 
-        $('#telebirr').click(function() {
-            $('#telebirr_input').show();
+        
+        $('#payment_option').on('change', function () {
+            var value_select = $(this).val(); // get selected value
+            if (value_select == 'telebirr') { // require a URL
+                $('#telebirr_input').show();
+            }else{
+                $('#telebirr_input').hide();                
+            }
         });
         
-
-        $('#payment_option').click(function() {
-            $('#cash').click(function() {
-                $('#telebirr_input').hide();
-            });
-        });
 
         $('#schedule').click(function() {
             if (this.checked) {

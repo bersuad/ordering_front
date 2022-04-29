@@ -106,7 +106,7 @@
                         break;
                 }
             }
-
+            $('#modalQuickView'+product_code).modal('hide');
             jQuery.ajax({
                 url: "<?php echo base_url() ?>cart/product_cart",
                 data: queryString,
@@ -125,12 +125,7 @@
                     $('#cout_cart').text(cart_length);
                     $('#cart_item_count').text($('#cart-item .cart_item_item').length);
                     $('#mobile_cart_item_count').text(cart_length);
-                    console.log(cart_length);
-                    
-                    // window.close();
-                    // $('#modalQuickView'+product_code).modal('hide');
-                    
-                    $('#modalQuickView'+product_code).modal('hide');
+                                        
                     // event.preventDefault();
                     
                     if (action != "") {

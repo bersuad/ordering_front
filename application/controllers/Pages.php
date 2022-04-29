@@ -212,8 +212,12 @@ class Pages extends MY_Controller {
 		$data['companies'] = $this->company_model->where('company_id', $restaurant_id)->get_all();
 		$data['job_id'] = property_exists(json_decode($order->order_item), "job_id") ? json_decode($order->order_item)->job_id : "";
 		$data['request_id'] = $order->order_id;
+		$order_code = json_decode($order->order_item)->code;
+		// print_r($order_code); die();
+		$this->session->set_userdata('code', $order_code);
 		$this->data = $data;
-		// print_r($data['job_id']); die();
+		
+	
 		$this->load->view('included/header', $this->data);
 		$this->load->view('pages/order_track');
 		$this->load->view('included/footer');

@@ -211,12 +211,12 @@
         
         $("#add_to_cart").click(function(argument) {
         // $('#comment_').val();
-        $('#item_name').val($(this).data('name'));
-        $('#price_point').val($(this).data('price'));
-        $('#qty<?php echo $item->item_id ?>').val($(this).data('quantity'));
-        var myImageId = $(this).data('image');
-        $('#image').attr("src", myImageId);
-        var id = $('[name=item_id]').val($(this).data('id'));                                 
+            $('#item_name').val($(this).data('name'));
+            $('#price_point').val($(this).data('price'));
+            $('#qty<?php echo $item->item_id ?>').val($(this).data('quantity'));
+            var myImageId = $(this).data('image');
+            $('#image').attr("src", myImageId);
+            var id = $('[name=item_id]').val($(this).data('id'));                                 
         })
         
         

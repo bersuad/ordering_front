@@ -1,31 +1,7 @@
-    <section class="final-order section-padding bg-light-theme" style="margin-top: 180px;">
+
+<section class="final-order section-padding bg-light-theme" style="margin-top: 180px;">
         <div class="container">
             <div class="row">
-                <?php $code = $this->session->userdata('code'); 
-                    if ($code) {
-                ?>
-                    <div class="col-lg-2"></div>
-                    <div class="col-lg-8">
-                        <div align="center" class="main-box padding-20">
-                            <h4><strong> ** Notice **</strong></h4>
-                            <p>
-                                You can visit history page where you can find each order with time line.
-                            </p>
-                        </div>
-                        <div class="main-box padding-20">
-                            <div align="center">
-                                <img src="<?php echo base_url() ?>assets/img/logo.png" class="img-fluid" alt="Logo" style="height: 40px; width: auto;">
-                            </div>
-                            <br/>
-                                                        
-                            <input type="hidden" name="" id="request_id" value="<?php echo $request_id ?>">
-                            <input type="hidden" name="" id="job_id" value="<?php echo $job_id ?>">
-                            <div id="status">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2"></div>
-                <?php  } else {?>
                     <div class="col-lg-2">
                     </div>
                     <div class="col-lg-8">
@@ -43,9 +19,7 @@
                         </div>
                     </div>
                     <div class="col-lg-2"></div>                        
-                <?php    }
-                    
-                ?>
+                
             </div>
         </div>
     </section>
