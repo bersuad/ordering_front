@@ -45,7 +45,12 @@
                             <div class="content">
                                 <div class="filter_item_img">
                                     <i class="fa fa-search-plus"></i>
-                                    <img src="<?php echo order_admin_URL ?><?php echo $item->image; ?>" alt="sample" />
+                                    <?php 
+                                        if($item->image != ''){?>
+                                        <img src="<?php echo order_admin_URL; ?><?php echo $item->image; ?>" alt="sample" />
+                                    <?php }else{ ?>
+                                        <img src="<?php echo base_url(); ?>/assets/img/eat.png" alt="sample" />
+                                    <?php } ?>
                                 </div>
                                 <div class="info">
                                     <div class="name"><?php echo $item->item_name ?></div>
