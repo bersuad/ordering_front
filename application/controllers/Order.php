@@ -111,7 +111,7 @@ class Order extends MY_Controller {
                     if (!empty($item->extra)) {
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name. ' ('.$item->extra.')' .'</td>
+                        <td>' . $item->item_name. ' <br/>('.$item->extra.')<br/>'.$item->item_size.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>

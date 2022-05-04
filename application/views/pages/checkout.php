@@ -171,8 +171,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                   
                                     <div class="section-header-left">
                                         <hr>
                                         <br/>
@@ -260,8 +258,9 @@
         var order_destination1 = document.getElementById("order_destination_place_table").value;
         var order_destination2 = document.getElementById("order_destination_place_room").value;
         var order_destination3 = document.getElementById("order_destination_place_plate").value;
+        var new_date = document.getElementById("order_time").innerHTML ;
 
-        if (order_destination1 == '' && order_destination2 == '' && order_destination3 == '') {
+        if (order_destination1 == '' && order_destination2 == '' && order_destination3 == '' && new_date == '') {
             $('#order_destination_place_table').focus();
             $('#order_destination_place_plate').focus();
             $('#order_destination_place_room').focus();
@@ -374,6 +373,19 @@
             }
         });
 
+        $('#schedule').click(function() {
+            $('#order_destination_place_room').val('');
+            $('#order_destination_place_table').val('');
+            $('#order_destination_place_plate').val('');
+            if (this.checked) {
+                $('#date_picker').show();
+                $('.location').hide();
+                $('#car_order_destination').hide();
+                $('#table_order_destination').hide();
+                $('#room_order_destination').hide();
+            }
+        });
+
         <?php
             if(count($branches)==1){?>
             var branch_name = document.getElementById("vendor_id_select").innerHTML;
@@ -400,15 +412,6 @@
             }
         });
         
-
-        $('#schedule').click(function() {
-            if (this.checked) {
-                $('#date_picker').show();
-                $('#table_order_destination').hide();
-                $('#room_order_destination').hide();
-                $('#car_order_destination').hide();
-            }
-        });
     });
     location_list();
     function location_list(){

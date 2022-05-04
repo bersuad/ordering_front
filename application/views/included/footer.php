@@ -81,6 +81,9 @@
         function cartAction(action, product_code) {
             
             var extra = document.getElementById("daynamic_field_"+product_code);
+            var size = document.getElementById("size_"+product_code);
+            var orginal_price = document.getElementById("original_price"+product_code);
+            // console.log(orginal_price.value);
             
             if (extra != null) {
                 str = extra.innerText;
@@ -89,12 +92,21 @@
                 str = '';
             }
 
+            if (size != null) {
+                size_str = size.value;
+            }
+            else {
+                size_str = '';
+            }
+
+
             var queryString = "";
             if (action != "") {
                 switch (action) {
                     case "add":
                         $("#add_" + product_code).attr('disabled', true);
-                        queryString = 'action=' + action + '&code=' + product_code + '&quantity=' + $("#qty_" + product_code).html() + '&price_point=' + $('#price_point' + product_code).html() + '&branch=' + $('#branch_' + product_code).html() + '&comment=' + $('#comment_' + product_code).val() + '&extra=' + str;
+                        queryString = 'action=' + action + '&code=' + product_code + '&quantity=' + $("#qty_" + product_code).html() + '&price_point=' + $('#price_point' + product_code).html() + '&branch=' + $('#branch_' + product_code).html() + '&comment=' + $('#comment_' + product_code).val() + '&extra=' + str + '&size=' + size_str + '&ori_price=' + orginal_price.value;
+                        // console.log(orginal_price.value);
                         break;
                     case "remove":
                         $("#add_" + product_code).removeAttr('disabled');

@@ -46,7 +46,7 @@
                                 <div class="filter_item_img">
                                     <i class="fa fa-search-plus"></i>
                                     <?php 
-                                        if($item->image != ''){?>
+                                        if($item->image != 'uploads/'){?>
                                         <img src="<?php echo order_admin_URL; ?><?php echo $item->image; ?>" alt="sample" />
                                     <?php }else{ ?>
                                         <img src="<?php echo base_url(); ?>/assets/img/eat.png" alt="sample" />
@@ -114,9 +114,15 @@
                     </button>
                 </div>
                 <div class="modal-body" align="center" style="align-items: center; text-align:center; ">
-                    <img src="<?php echo order_admin_URL ?><?php echo $item->image; ?>" alt="image" style="min-width:auto; max-height: 450px; min-height: auto; max-width: 100%!important;">
+                    <?php 
+                        if($item->image != 'uploads/'){?>
+                        <img src="<?php echo order_admin_URL ?><?php echo $item->image; ?>" alt="image" style="min-width:auto; max-height: 450px; min-height: auto; max-width: 100%!important;">
+                    <?php }else{ ?>
+                        <img src="<?php echo base_url(); ?>/assets/img/eat.png" alt="sample" style="min-width:auto; max-height: 450px; min-height: auto; max-width: 100%!important;"/>
+                    <?php } ?>
                     <h3 style="margin-top: 20px; margin-bottom: 20px;"><?php echo $item->item_name ?></h3>
                     <p style="margin-top: 20px; margin-bottom: 20px;" id="real_price<?php echo $item->item_id ?>"><?php echo $item->item_value ?> Br.</p>
+                    <input type="hidden" name="original_price" value="<?php echo $item->item_value ?>" id="original_price<?php echo $item->item_id ?>"/>
                     <p align="center" style="margin-top: 2%;"> <?php echo $item->description ?></p>
                     <div align="center" class="row" style="background-color: #f8f8f8; width: 100%; border-radius: 10px; align-content: center;">
                         <i class="fa fa-minus fa-lg" id="minus_btn<?php echo $item->item_id ?>" style="cursor: pointer; background: #eeeeee; height: 50px; width: 50px; border-radius: 50%; padding-top: 15px; margin-rigth: 20px;"></i>
@@ -124,17 +130,35 @@
                         <i class="fa fa-plus fa-lg" id="plus_btn<?php echo $item->item_id ?>" style="cursor: pointer; background: #eeeeee; height: 50px; width: 50px; border-radius: 100%; padding-top: 15px; margin-left: 15px;"></i>
                     </div>
                     <p style="margin-top: 10px;" id="price_point<?php echo $item->item_id ?>"><?php echo $item->item_value ?>.00 Br.</p>
-                    
+                    <?php 
+                        if($item->item_size){
+                            $size_list      = json_decode($item->item_size);
+                            if (!empty($size_list) || $size_list[0] != '' ) {?>
+                                <select class="form-control" id="size_<?php echo $item->item_id ?>">
+                                <option value="" disabled selected>-- Select Size --</option>
+                        <?php    foreach ($size_list as $key => $list) {
+                                if($list != ''){
+                        ?>  
+                            <option value="<?php echo $list;?>"><?php echo $list;?></option>
+                        <?php }
+                        }?>
+                            </select>
+                       <?php }
+                            ?>
+                    <?php }
+                        
+                    ?>
+                        
                     <?php
-                        if (empty($extras)) {
+                        if (empty($item->extra_list)) {
                         } else { ?>
                         <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
                             <div class="card">
                                 <!-- Card header -->
-                                <div class="card-header" role="tab" id="headingTwo2">
+                                <div class="card-header" role="tab" id="headingTwo2" style="height: 40px; background: #f1f1f1; padding-top: 5px; margin-top: 10px">
                                 <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseTwo<?php echo $item->item_id ?>" aria-expanded="false" aria-controls="collapseTwo<?php echo $item->item_id ?>">
                                     <h5 class="mb-0">
-                                        Extra<i style="margin-left: 80%;" class="fas fa-angle-down rotate-icon"></i>
+                                        Extra<i style="margin-left: 80%;" class="fa fa-angle-down rotate-icon"></i>
                                     </h5>
                                 </a>
                                 </div>
@@ -142,17 +166,26 @@
                                 <div class="card-body">
                                     <div class="form-check">
                                         <ul class="list-group list-group-flush">
-                                            <?php if (!empty($extras)) {
-                                            foreach ($extras as $extra) {
+                                            <?php 
+                                            $exra_list      = json_decode($item->extra_list);
+                                            if (!empty($exra_list)) {
+                                            foreach ($exra_list as $key => $extra) {
+                                                if($extra->extra != ''){
                                             ?>
                                             <li class="list-group-item">
                                             <!-- Default checked -->
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" value="<?php echo $extra->item_value ?>" id="<?php echo $item->item_id ?><?php echo $extra->item_id ?>"  onclick="checkClick<?php echo $item->item_id ?><?php echo $extra->item_id ?>()">
-                                                <label class="custom-control-label" for="<?php echo $item->item_id ?><?php echo $extra->item_id ?>"> <span id="extrList<?php echo $item->item_id ?><?php echo $extra->item_id ?>"> <?php echo $extra->item_name ?> </span> (<small ><?php echo number_format($extra->item_value, 2) ?>)</small></label>
+                                                <input type="checkbox" class="custom-control-input" value="<?php echo $extra->price ?>" id="<?php echo $item->item_id ?><?php echo $key ?>"  onclick="checkClick<?php echo $item->item_id ?><?php echo $key ?>()">
+                                                <label class="custom-control-label" for="<?php echo $item->item_id ?><?php echo $key ?>"> 
+                                                    <span id="extrList<?php echo $item->item_id ?><?php echo $key ?>"> 
+                                                        <?php echo $extra->extra ?> 
+                                                    </span> 
+                                                    (<small ><?php echo number_format($extra->price, 2) ?>)</small>
+                                                </label>
                                             </div>
                                             </li>
-                                            <?php
+                                            <?php }
+                                            $key++;
                                             }
                                             } ?>
                                             <span id="daynamic_field_<?php echo $item->item_id ?>" style="display: none;"></span>
@@ -182,17 +215,17 @@
     </div>
 
     <script type="text/javascript">
-        <?php
-        if (!empty($extras)) {
-            foreach ($extras as $extra) {
-        ?>
+        <?php $exra_list      = json_decode($item->extra_list);
+        if (!empty($exra_list)) {
+            foreach ($exra_list as $key => $extra) {?>
             
-            function checkClick<?php echo $item->item_id ?><?php echo $extra->item_id ?>(){
-                var extra = Number(document.getElementById(<?php echo $item->item_id ?><?php echo $extra->item_id ?>).value);
+            function checkClick<?php echo $item->item_id ?><?php echo $key ?>(){
+                var extra = Number(document.getElementById(<?php echo $item->item_id ?><?php echo $key ?>).value);
                 var price = parseInt($('#price_point<?php echo $item->item_id ?>').html());
-                if ($("#<?php echo $item->item_id ?><?php echo $extra->item_id ?>").prop('checked')==true){
+                if ($("#<?php echo $item->item_id ?><?php echo $key ?>").prop('checked')==true){
                     var real_price = parseInt($('#real_price<?php echo $item->item_id ?>').html());
-                    var extra_list = $('#extrList<?php echo $item->item_id ?><?php echo $extra->item_id ?>').html();
+                    var extra_list = $('#extrList<?php echo $item->item_id ?><?php echo $key ?>').html();
+                    console.log(extra_list);
                     $('#daynamic_field_<?php echo $item->item_id ?>').append(extra_list);
                     
                     var add_real = (real_price) + (extra);
@@ -210,6 +243,7 @@
                 
             }
         <?php
+        $key++;
         }
         }
         ?>
