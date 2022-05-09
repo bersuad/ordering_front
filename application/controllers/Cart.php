@@ -154,13 +154,19 @@ class Cart extends MY_Controller {
                     );
                     array_push($items_list, $order);
                 }
+                $payment = $this->input->post('order_payment');
+                
+                if($payment == ''){
+                    $payment = 'Cash';
+                }
+
                 $order_item = array(
                                 "code"                          => $code,
                                 "items"                         => $items_list, 
                                 "item_destination"              => $this->input->post('item_destination'), 
                                 "item_destination_coordinate"   => $this->input->post('item_destination_coordinate'), 
                                 "item_destination_date"         => $this->input->post('item_destination_date'), 
-                                "payment_ref"                   => $this->input->post('order_payment'), 
+                                "payment_ref"                   => $payment, 
                             ); 
         
                 $branch_id = $this->input->post('branch'); 

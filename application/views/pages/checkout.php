@@ -407,21 +407,11 @@
             inputCheck();
         });
 
-        
-        // $('#payment_option').on('change', function () {
-        //     var value_select = $(this).val(); // get selected value
-        //     if (value_select == 'telebirr') { // require a URL
-        //         $('#telebirr_input').show();
-        //     }else{
-        //         $('#telebirr_input').hide();                
-        //     }
-        // });
-
         $('#payment_option').on('change', function () {
             
             var account_name = $('#payment_option :selected').text();
             var account_number = $(this).val();
-            console.log($('#payment_option :selected').text());
+            // console.log($('#payment_option :selected').text());
             if (account_name != 'Cash') { 
                 $('#telebirr_input').show();
                 $("#acc_name").html(account_name);
