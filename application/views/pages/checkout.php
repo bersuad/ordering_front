@@ -174,27 +174,26 @@
                                     <div class="section-header-left">
                                         <hr>
                                         <br/>
-                                        <h5 class="text-light-black " align="center" style="font-weight: bold;">Please Select Payment</h5>
-                                        <?php
-                                            if(!empty($companies[0]->tele_birr)){?>
+                                        <?php 
+                                            if(!empty($payments))
+                                            {?>
+                                                <h5 class="text-light-black " align="center" style="font-weight: bold;">Please Select Payment</h5>
                                                 <select class="default form-control" name="item" id="payment_option" required>
-                                                    <option value="cash" id="cash">Cash</option>
-                                                    <option value="telebirr" id="telebirr">Tele Birr</option>
+                                                    <option value="Cash">Cash</option>
+                                                    <?php foreach ($payments as $payment) {?>
+                                                        <option value="<?php echo $payment->payment_number ?>"><?php echo $payment->payment_name?></option>
+                                                    <?php }?>
                                                 </select>
-                                                <div class="form-group" id="telebirr_input" style="display: none;">
-                                                    <h5 class="text-light-black " align="center" style="font-weight: bold;">Make the payment on telebirr on this Number <?php echo $companies[0]->tele_birr;?> and copy Ref number here</h5>
-                                                    <label> </label>
-                                                    <div class='input-group' style="height: 25px!important; width: 100%; background-color: #fff; border-color: #111; border-radius: 9px;">
-                                                        <input type="text" class="default form-control" name="tele_birr" placeholder="Copy the Telebirr transaction number and paste here!" id="order_payment"/>
-                                                    </div>
+
+                                            <?php }?>
+                                        
+                                            <div class="form-group" id="telebirr_input" style="display: none;">
+                                                <h5 class="text-light-black " align="center" style="font-weight: bold;">Make the payment on <span id="acc_name"></span> on this Number <span id="acc_num"></span> and copy Ref number here</h5>
+                                                <label> </label>
+                                                <div class='input-group' style="height: 25px!important; width: 100%; background-color: #fff; border-color: #111; border-radius: 9px;">
+                                                    <input type="text" class="default form-control" name="tele_birr" placeholder="Copy the Telebirr transaction number and paste here!" id="order_payment"/>
                                                 </div>
-                                        <?php
-                                            }else{
-                                        ?>
-                                        <select class="default form-control" name="item" id="payment_option" required>
-                                            <option value="cash" id="cash" selected>Cash</option>
-                                        </select>
-                                        <?php }?>
+                                            </div>
                                         
                                     </div>
                                     <div class="row">
@@ -278,15 +277,21 @@
         }
 
         $(".create_btn").attr('disabled', true);
-        var payment='';
+        var payment= '';
+        var order_payment = '';
         var coordinate = sessionStorage.getItem('to_hidden');
+        <?php
+            if(!empty($companies[0]->tele_birr)){?>
         var order_payment = document.getElementById("order_payment").value;
+        <?php }?>
         var date = document.getElementById("order_time").innerHTML ;
         var branch = document.getElementById("vendor_id_select").value ;
         var customer_name = document.getElementById("user_name").value ;
         var customer_phone = document.getElementById("user_phone").value ;
-        if(order_payment != ''){
-            payment = 'Tele Birr '+order_payment;
+        var account_name = document.getElementById("acc_name").innerHTML;
+        console.log(account_name);
+        if(order_payment != '' || order_payment != null){
+            payment = account_name+' '+order_payment;
         }else{
             payment = 'Cash';
         }
@@ -403,12 +408,28 @@
         });
 
         
+        // $('#payment_option').on('change', function () {
+        //     var value_select = $(this).val(); // get selected value
+        //     if (value_select == 'telebirr') { // require a URL
+        //         $('#telebirr_input').show();
+        //     }else{
+        //         $('#telebirr_input').hide();                
+        //     }
+        // });
+
         $('#payment_option').on('change', function () {
-            var value_select = $(this).val(); // get selected value
-            if (value_select == 'telebirr') { // require a URL
+            
+            var account_name = $('#payment_option :selected').text();
+            var account_number = $(this).val();
+            console.log($('#payment_option :selected').text());
+            if (account_name != 'Cash') { 
                 $('#telebirr_input').show();
+                $("#acc_name").html(account_name);
+                $("#acc_num").html(account_number);
             }else{
-                $('#telebirr_input').hide();                
+                $('#telebirr_input').hide();  
+                $("#acc_name").html('');
+                $("#acc_num").html('');              
             }
         });
         

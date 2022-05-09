@@ -10,9 +10,7 @@
     <div class="title-block">
         <h1 class="section-title" style="color: <?php echo $companies[0]->main_color; ?>;">Our Menus</h1>
     </div>
-    <?php if (!empty($items)) {
-        // print_r($items); die();
-        ?>
+    <?php if (!empty($items)) {?>
         <div class="menu_filter text-center" style="border-radius: 60px;">
             <ul class="list-unstyled list-inline d-inline-block">
                 <li class="item active">
@@ -35,67 +33,76 @@
         
         <div class="filtr-item image filter all active">
             <div class="row">
-            <?php $in_session = "0"; ?>
-        <?php  if(!empty($items)){
-            foreach($items as $key => $item){
-        ?>
-                    <div class="col-sm-6 col-md-4 col-lg-4 col-xs-6 list-of-items">
-                        
-                        <a href="#" data-toggle="modal" data-target="#modalQuickView<?php echo $item->item_id ?>" id="add_to_cart block fancybox" class="to_cart" data-name="<?php echo  $item->item_name?>" data-price="<?php echo  $item->item_value?>" data-desc="$detail" data-image="$photo" data-id="<?php echo $item->item_id?>">
-                            <div class="content">
-                                <div class="filter_item_img">
-                                    <i class="fa fa-search-plus"></i>
-                                    <?php 
-                                        if($item->image != 'uploads/'){?>
-                                        <img src="<?php echo order_admin_URL; ?><?php echo $item->image; ?>" alt="sample" />
-                                    <?php }else{ ?>
-                                        <img src="<?php echo base_url(); ?>/assets/img/eat.png" alt="sample" />
-                                    <?php } ?>
-                                </div>
-                                <div class="info">
-                                    <div class="name"><?php echo $item->item_name ?></div>
-                                    <span class="filter_item_price">Br. <?php echo $item->item_value ?></span>
-                                </div>
-                            </div>
-                        </a>
+                <?php $in_session = "0"; ?>
+                <?php  if(!empty($items)){
+                    foreach($items as $key => $item){
+                ?>
+                            <div class="col-sm-6 col-md-4 col-lg-4 col-xs-6 list-of-items">
+                                
+                                <a href="#" data-toggle="modal" data-target="#modalQuickView<?php echo $item->item_id ?>" id="add_to_cart block fancybox" class="to_cart" data-name="<?php echo  $item->item_name?>" data-price="<?php echo  $item->item_value?>" data-desc="$detail" data-image="$photo" data-id="<?php echo $item->item_id?>">
+                                    <div class="content">
+                                        <div class="filter_item_img">
+                                            <i class="fa fa-search-plus"></i>
+                                            <?php 
+                                                if($item->image != 'uploads/'){?>
+                                                <img src="<?php echo order_admin_URL; ?><?php echo $item->image; ?>" alt="sample" />
+                                            <?php }else{ ?>
+                                                <img src="<?php echo base_url(); ?>/assets/img/eat.png" alt="sample" />
+                                            <?php } ?>
+                                        </div>
+                                        <div class="info">
+                                            <div class="name"><?php echo $item->item_name ?></div>
+                                            <span class="filter_item_price">Br. <?php echo $item->item_value ?></span>
+                                        </div>
+                                    </div>
+                                </a>
 
-                    </div>
-                    
-                    
-                <?php
-            }
-        }
-        ?> 
+                            </div>
+                            
+                            
+                        <?php
+                    }
+                }
+                ?> 
+            </div>
         </div>
-        </div>
+        
         <div class="row">
-            <?php  if(!empty($items)){
+            <?php  if(!empty($items)){?>
+                <div class="image">
+                    <?php
                 foreach($items as $key => $item){
                     ?>
-                    <div class="filtr-item image filter <?php echo $item->item_category; ?>">
-                    <div class="col-sm-6 col-md-4 col-lg-4 col-xs-6 list-of-items">
-                    <a href="#" data-toggle="modal" data-target="#modalQuickView<?php echo $item->item_id ?>" id="add_to_cart block fancybox" class="to_cart" data-name="<?php echo  $item->item_name?>" data-price="<?php echo  $item->item_value?>" data-desc="$detail" data-image="$photo" data-id="<?php echo $item->item_id?>">
-                            <div class="content">
-                                <div class="filter_item_img">
-                                    <i class="fa fa-search-plus"></i>
-                                    <img src="<?php echo order_admin_URL ?><?php echo $item->image; ?>" alt="sample" />
+                    <div class="filtr-item filter <?php echo $item->item_category; ?>">
+                        <div class="col-sm-6 col-md-4 col-lg-4 col-xs-6 list-of-items">
+                            
+                            <a href="#" data-toggle="modal" data-target="#modalQuickView<?php echo $item->item_id ?>" id="add_to_cart block fancybox" class="to_cart" data-name="<?php echo  $item->item_name?>" data-price="<?php echo  $item->item_value?>" data-desc="$detail" data-image="$photo" data-id="<?php echo $item->item_id?>">
+                                <div class="content">
+                                    <div class="filter_item_img">
+                                        <i class="fa fa-search-plus"></i>
+                                        <?php 
+                                            if($item->image != 'uploads/'){?>
+                                            <img src="<?php echo order_admin_URL; ?><?php echo $item->image; ?>" alt="sample" />
+                                        <?php }else{ ?>
+                                            <img src="<?php echo base_url(); ?>/assets/img/eat.png" alt="sample" />
+                                        <?php } ?>
+                                    </div>
+                                    <div class="info">
+                                        <div class="name"><?php echo $item->item_name ?></div>
+                                        <span class="filter_item_price">Br. <?php echo $item->item_value ?></span>
+                                    </div>
                                 </div>
-                                <div class="info">
-                                    <div class="name"><?php echo $item->item_name ?></div>
-                                    <span class="filter_item_price">Br. <?php echo $item->item_value ?></span>
-                                </div>
-                            </div>
-                        </a>
+                            </a>
+
+                        </div>                    
                     </div>
-                    
-                    </div>
-        <?php
+            <?php
+                }?>
+                </div>
+                <?php
             }
-        }
-        ?>
-    </div>
-        
-        
+            ?>
+        </div>   
     </div>
 </div>
 <!-- item modal -->
@@ -143,59 +150,62 @@
                         <?php }
                         }?>
                             </select>
-                       <?php }
-                            ?>
                     <?php }
-                        
+                        }                        
                     ?>
                         
                     <?php
-                        if (empty($item->extra_list)) {
-                        } else { ?>
-                        <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
-                            <div class="card">
-                                <!-- Card header -->
-                                <div class="card-header" role="tab" id="headingTwo2" style="height: 40px; background: #f1f1f1; padding-top: 5px; margin-top: 10px">
-                                <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseTwo<?php echo $item->item_id ?>" aria-expanded="false" aria-controls="collapseTwo<?php echo $item->item_id ?>">
-                                    <h5 class="mb-0">
-                                        Extra<i style="margin-left: 80%;" class="fa fa-angle-down rotate-icon"></i>
-                                    </h5>
-                                </a>
-                                </div>
-                                <div id="collapseTwo<?php echo $item->item_id ?>" class="collapse" role="tabpanel" aria-labelledby="headingTwo2" data-parent="#accordionEx">
-                                <div class="card-body">
-                                    <div class="form-check">
-                                        <ul class="list-group list-group-flush">
-                                            <?php 
-                                            $exra_list      = json_decode($item->extra_list);
-                                            if (!empty($exra_list)) {
-                                            foreach ($exra_list as $key => $extra) {
-                                                if($extra->extra != ''){
-                                            ?>
-                                            <li class="list-group-item">
-                                            <!-- Default checked -->
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" value="<?php echo $extra->price ?>" id="<?php echo $item->item_id ?><?php echo $key ?>"  onclick="checkClick<?php echo $item->item_id ?><?php echo $key ?>()">
-                                                <label class="custom-control-label" for="<?php echo $item->item_id ?><?php echo $key ?>"> 
-                                                    <span id="extrList<?php echo $item->item_id ?><?php echo $key ?>"> 
-                                                        <?php echo $extra->extra ?> 
-                                                    </span> 
-                                                    (<small ><?php echo number_format($extra->price, 2) ?>)</small>
-                                                </label>
-                                            </div>
-                                            </li>
-                                            <?php }
-                                            $key++;
-                                            }
-                                            } ?>
-                                            <span id="daynamic_field_<?php echo $item->item_id ?>" style="display: none;"></span>
-                                        </ul>
+                        if(!empty($item->extra_list)){
+                            $exra_list      = json_decode($item->extra_list);
+                            // print_r($exra_list);
+                            if ($exra_list[0]->extra=='') {
+                            } else { ?>
+                            <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
+                                <div class="card">
+                                    <!-- Card header -->
+                                    <div class="card-header" role="tab" id="headingTwo2" style="height: 40px; background: #f1f1f1; padding-top: 5px; margin-top: 10px">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseTwo<?php echo $item->item_id ?>" aria-expanded="false" aria-controls="collapseTwo<?php echo $item->item_id ?>">
+                                        <h5 class="mb-0">
+                                        Add-on Options<i style="margin-left: 80%;" class="fa fa-angle-down rotate-icon"></i>
+                                        </h5>
+                                    </a>
+                                    </div>
+                                    <div id="collapseTwo<?php echo $item->item_id ?>" class="collapse" role="tabpanel" aria-labelledby="headingTwo2" data-parent="#accordionEx">
+                                    <div class="card-body">
+                                        <div class="form-check">
+                                            <ul class="list-group list-group-flush">
+                                                <?php 
+                                                $exra_list      = json_decode($item->extra_list);
+                                                if (!empty($exra_list)) {
+                                                foreach ($exra_list as $key => $extra) {
+                                                    if($extra->extra != ''){
+                                                ?>
+                                                <li class="list-group-item">
+                                                <!-- Default checked -->
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" value="<?php echo $extra->price ?>" id="<?php echo $item->item_id ?><?php echo $key ?>"  onclick="checkClick<?php echo $item->item_id ?><?php echo $key ?>()">
+                                                    <label class="custom-control-label" for="<?php echo $item->item_id ?><?php echo $key ?>"> 
+                                                        <span id="extrList<?php echo $item->item_id ?><?php echo $key ?>"> 
+                                                            <?php echo $extra->extra ?> 
+                                                        </span> 
+                                                        (<small ><?php echo number_format($extra->price, 2) ?>)</small>
+                                                    </label>
+                                                </div>
+                                                </li>
+                                                <?php }
+                                                $key++;
+                                                }
+                                                } ?>
+                                                <span id="daynamic_field_<?php echo $item->item_id ?>" style="display: none;"></span>
+                                            </ul>
+                                        </div>
+                                    </div>
                                     </div>
                                 </div>
-                                </div>
                             </div>
-                        </div>
-                    <?php
+
+                            <?php
+                            }
                         }
                         ?>
                     <div id="modal_comment">

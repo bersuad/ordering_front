@@ -6,7 +6,6 @@ class Cart extends MY_Controller {
         $this->load->model('admin_model');
         $this->load->model('action_model');
         $this->load->model('customer_model');
-        // $this->load->model('Customer_model');
         $this->load->model('company_model');
         $this->load->model('header_model');
         $this->load->model('item_model');
@@ -16,6 +15,7 @@ class Cart extends MY_Controller {
         $this->load->model('transaction_model');
         $this->load->model('branch_model');
         $this->load->model('role_model');
+        $this->load->model('Payment_model');
     }    
     
     public function product_cart() 
@@ -228,7 +228,7 @@ class Cart extends MY_Controller {
         $restaurant_id = $this->session->userdata('restaurant_id');
         $data['companies'] = $this->company_model->join('comapny_services', 'comapny_services.service_company_id = companies.company_id ')->join('services', 'services.id = comapny_services.service_list_id')->where('company_id', $restaurant_id)->get_all();
         // $this->Category_model->join('category', 'category.category_title = item_list.item_category');
-        // print_r($data['companies']); die();
+        $data['payments'] = $this->Payment_model->where(['company_payment_id'=> $restaurant_id, 'payment_status'=> 1])->order_by('payment_id', 'desc')->get_all();
         $data['branches'] = $this->branch_model->where('branch_company_id', $restaurant_id)->get_all();
         $this->data = $data;
         $this->load->view('included/header', $data);

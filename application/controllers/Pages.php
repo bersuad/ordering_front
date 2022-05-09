@@ -20,6 +20,7 @@ class Pages extends MY_Controller {
         $this->load->model('role_model');
 		$this->load->model('Category_model');
 		$this->load->model('reservation_model');
+		$this->load->model('Payment_model');
     }
 	
 

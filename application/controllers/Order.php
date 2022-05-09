@@ -146,16 +146,17 @@ class Order extends MY_Controller {
                         foreach (json_decode($order->order_item)->items as $item) {
                             $price_list = (int)$item->item_price / (int)$item->item_quantity;
                             $sum+= (int)$price_list * (int)$item->item_quantity;
+                            $total=$sum;
                         }
                         
                         if($comp_vat != ''){
-                            $sum += $sum * $comp_vat;
+                            $vat = $sum * $comp_vat;
                         }
                         if($comp_service != ''){
 
-                            $sum += $sum * $comp_service;
+                            $service = $sum * $comp_service;
                         }
-
+                        $sum += $vat + $service; 
                         $output.= '' . number_format((float)$sum, '2', '.', '').' ETB';
                         $output.= '
                         </td>
