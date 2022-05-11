@@ -174,19 +174,19 @@
                                     <div class="section-header-left">
                                         <hr>
                                         <br/>
+                                        <h5 class="text-light-black " align="center" style="font-weight: bold;">Please Select Payment</h5>
+                                        <select class="default form-control" name="item" id="payment_option" required>
+                                            <option value="Cash" selected>Cash</option>
                                         <?php 
                                             if(!empty($payments))
                                             {?>
-                                                <h5 class="text-light-black " align="center" style="font-weight: bold;">Please Select Payment</h5>
-                                                <select class="default form-control" name="item" id="payment_option" required>
-                                                    <option value="Cash">Cash</option>
                                                     <?php foreach ($payments as $payment) {?>
                                                         <option value="<?php echo $payment->payment_number ?>"><?php echo $payment->payment_name?></option>
                                                     <?php }?>
-                                                </select>
-
-                                            <?php }?>
-                                        
+                                                    
+                                                    <?php }?>
+                                                    
+                                            </select>
                                             <div class="form-group" id="telebirr_input" style="display: none;">
                                                 <h5 class="text-light-black " align="center" style="font-weight: bold;">Make the payment on <span id="acc_name"></span> on this Number <span id="acc_num"></span> and copy Ref number here</h5>
                                                 <label> </label>
@@ -226,7 +226,23 @@
     
 </section>
 
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="<?php echo base_url() ?>assets/js/jquery-2.1.1.min.js"></script>
+
+<script type="text/javascript">
+   
+
+
+    if ( $.fn.magnificPopup ) {	
+        $('.btn-iframe').magnificPopup({
+            type: 'iframe',
+            removalDelay: 600,
+            preloader: false,
+            fixedContentPos: false,
+            closeBtnInside: false
+        });
+    }
+</script>
 
 <script>
     inputCheck();
@@ -289,7 +305,6 @@
         var customer_name = document.getElementById("user_name").value ;
         var customer_phone = document.getElementById("user_phone").value ;
         var account_name = document.getElementById("acc_name").innerHTML;
-        console.log(account_name);
         if(order_payment != '' || order_payment != null){
             payment = account_name+' '+order_payment;
         }else{
@@ -310,7 +325,7 @@
             user_name: customer_name,
             user_phone: customer_phone
         }
-                
+        success();      
         jQuery.noConflict();
         
         
@@ -319,19 +334,16 @@
             url: '<?php echo base_url() ?>cart/order_cart',
             data: data,
             success: function(response) {
-                console.log(response);
                 $('#error_message').html();
                 sessionStorage.removeItem('to');
                 sessionStorage.removeItem('to_hidden');
                 sessionStorage.removeItem('from_hidden');
-                
-                window.location.href = "<?php echo base_url() ?>pages/order_view/" + JSON.parse(response).order_id;
+                setInterval(function () {
+                    window.location.href = "<?php echo base_url() ?>pages/order_view/" + JSON.parse(response).order_id;
+                }, 2000);
             },
             error: function(error) {
-                console.log(error);
-                var error_message = JSON.parse(error.responseText);
-                var first_error = Object.keys(error_message)[0];
-                $('#error_message').html(error_message[first_error]);
+                swal("Oops...", "Something went wrong :(", "error");
             }
         });
     });
@@ -434,4 +446,16 @@
         }
     }
     
+    function success() {
+        Swal.fire({
+            position: 'bottom-end',
+            icon: 'success',
+            title: "Ordered!",
+            text: 'Thank You, You have successfully order, We will contact you soon! ',
+            showConfirmButton: false,
+            timer: 8000,
+            button: "Ok",
+        });
+    };
 </script>
+

@@ -226,7 +226,7 @@ class Pages extends MY_Controller {
 
 	public function history() {
         $restaurant_id = $this->session->userdata('restaurant_id');
-        $user_id = 1;
+        $user_id = $this->session->userdata('customer_id');
 		$sql  = "SELECT DISTINCT on (item_name) item_name, item_id,item_value, item_description->'image' AS image,
 				item_description->'description' AS description,company_cover_image, company_logo,company_name, company_opening_hour, company_closing_hour, item_category
 				from items

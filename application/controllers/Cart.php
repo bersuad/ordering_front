@@ -178,6 +178,17 @@ class Cart extends MY_Controller {
                 if(!empty($customer))
                 {
                     $customer_id = $customer[0]->customer_id;
+
+                    // $customer = $this->customer_model->fields('customer_full_name,customer_id')->where('customer_phone',$phone_no)->get();
+        
+                    $user_data = array(
+                        'phone_no'   => $customer_phone,
+                        'customer_name' => $customer[0]->customer_full_name,
+                        'customer_id' => $customer[0]->customer_id,                     
+                        'logged_in' => true
+                    );
+
+                    $this->session->set_userdata($user_data);
                 }else{
                     $user_data = array(
                         'customer_phone' => $customer_phone,
@@ -186,7 +197,18 @@ class Cart extends MY_Controller {
                     );
 
                     $customer_id = $this->customer_model->insert($user_data);
+                    // $customer = $this->customer_model->fields('customer_full_name,customer_id')->where('customer_phone',$phone_no)->get();
+                    
+                    $New_user_data = array(
+                        'phone_no'   => $customer_phone,
+                        'customer_name' => $customer_name,
+                        'customer_id' => $customer->customer_id,                     
+                        'logged_in' => true
+                    );
+    
+                    $this->session->set_userdata($New_user_data);
                 }
+
             
                 $this->load->helper('date_helper');
                 $date1 = custom_date_format_parser($this->input->input_stream('item_destination_date'));
@@ -257,28 +279,28 @@ class Cart extends MY_Controller {
         $this->load->view('templates/footer');
     }
 
-    public function mobile_truck($tracking_no = null)
-    {
-        $url = "https://balderasu.adc.com.et/balderasu/routing/mobile_truck/$tracking_no";
-        $data = array();
+    // public function mobile_truck($tracking_no = null)
+    // {
+    //     $url = "https://balderasu.adc.com.et/balderasu/routing/mobile_truck/$tracking_no";
+    //     $data = array();
         
-        $result = $this->send_order_curl($data, $url);
-        echo $result;
-        exit;
-    }
+    //     $result = $this->send_order_curl($data, $url);
+    //     echo $result;
+    //     exit;
+    // }
 
-    public function dispatch()
-    {
-        $data = array(
-            "job_id" => $this->input->post('job_id')
-        );
+    // public function dispatch()
+    // {
+    //     $data = array(
+    //         "job_id" => $this->input->post('job_id')
+    //     );
         
-        $url = "https://balderasu.adc.com.et/balderasu/api_request_dispatch/order_info";
+    //     $url = "https://balderasu.adc.com.et/balderasu/api_request_dispatch/order_info";
 
-        $result = $this->send_order_curl($data, $url);
-        echo $result;
-        exit;
-    }
+    //     $result = $this->send_order_curl($data, $url);
+    //     echo $result;
+    //     exit;
+    // }
 
     private function send_order_curl($data, $url) {
         $curl = curl_init();
@@ -318,6 +340,14 @@ class Cart extends MY_Controller {
             $this->Transaction_model->insert($transaction);
         }
         echo $order_id;
+    }
+
+    public function logout() {
+
+        session_destroy();
+        $url = 'menu/'.$this->session->userdata('menu_url');
+
+        redirect($url, 'refresh');
     }
 
 

@@ -89,7 +89,9 @@
                                     <ul class="nav navbar-nav">
                                         <li class="<?=(current_url() == base_url('menu/'.$this->session->userdata('menu_url'))) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('menu/'.$this->session->userdata('menu_url')) ?>">Menu</a></li>
                                         <li class="<?=(current_url() == base_url('/reservation')) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('/reservation') ?>">Reservation</a></li>
-                                        <li class="<?=(current_url() == base_url('/order-history')) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('/order-history') ?>">Order History</a></li>
+                                        <?php if($this->session->userdata('logged_in') == true){?>
+                                            <li class="<?=(current_url() == base_url('/order-history')) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('/order-history') ?>">Order History</a></li>    
+                                        <?php }?>
                                         <!-- <li><a class="page-scroll" href="#">Logout</a></li> -->
                                         <li>
                                             <a href="<?php echo base_url('/checkout') ?>"><i class="fa fa-shopping-cart"></i> My cart <sup><span class="badge badge-pill badge-default" id="cart_item_count"></span></sup></a>                                        
@@ -109,6 +111,12 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        <?php if($this->session->userdata('logged_in') == true){?>
+                                        <li><a class="page-scroll" href="<?php echo base_url('cart/logout')?>" id="login" > <i class="fas fa-log-in"></i>
+                                                <span>LOG OUT</span>
+                                            </a>
+                                        </li>
+                                        <?php }?>
                                     </ul>
                                 </div>
                             </div>

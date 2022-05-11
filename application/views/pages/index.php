@@ -1,8 +1,6 @@
 <?php
    if (!empty($items)) {
       if(!empty($_SESSION["cart_item"])){
-         // print_r( $items[0] );
-         // die();
       }
     }
    ?>
@@ -105,7 +103,7 @@
         </div>   
     </div>
 </div>
-<!-- item modal -->
+
 <script src="<?php echo base_url() ?>assets/js/jquery-2.1.1.min.js"></script>
 
 <?php  if(!empty($items)){
@@ -137,22 +135,29 @@
                         <i class="fa fa-plus fa-lg" id="plus_btn<?php echo $item->item_id ?>" style="cursor: pointer; background: #eeeeee; height: 50px; width: 50px; border-radius: 100%; padding-top: 15px; margin-left: 15px;"></i>
                     </div>
                     <p style="margin-top: 10px;" id="price_point<?php echo $item->item_id ?>"><?php echo $item->item_value ?>.00 Br.</p>
-                    <?php 
-                        if($item->item_size){
-                            $size_list      = json_decode($item->item_size);
-                            if (!empty($size_list) || $size_list[0] != '' ) {?>
-                                <select class="form-control" id="size_<?php echo $item->item_id ?>">
-                                <option value="" disabled selected>-- Select Size --</option>
-                        <?php    foreach ($size_list as $key => $list) {
-                                if($list != ''){
-                        ?>  
-                            <option value="<?php echo $list;?>"><?php echo $list;?></option>
+                    
+                    <div class="custom-control custom-radio row">
+                        <?php 
+                            if(!empty($item->item_size)){
+                        $size_list      = json_decode($item->item_size);
+                                if (!empty($size_list) || $size_list[0]->size != "") {?>
+                                    <h4 align="center">Select Size</h4>
+                                    
+                                <?php foreach ($size_list as $key => $list) {?>
+                        <?php if($list->size != ''){
+                        ?>
+                            <div class="col-md-4 col-sm-12 col-lg-4">
+                                <input type="radio" id="size<?php echo $item->item_id ?><?php echo $key ?>" name="time" value="" required> <label for="size">
+                                    <h6><span id="size_name<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->size ?></span> (<span id="size_price<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->price ?> Br.</span>)</h6>
+                                </label>
+                            </div>
                         <?php }
+                        $key++;
+                                }
+                            }
                         }?>
-                            </select>
-                    <?php }
-                        }                        
-                    ?>
+                        <span id="daynamic_size_<?php echo $item->item_id ?>" style="display: none;"></span>
+                    </div>
                         
                     <?php
                         if(!empty($item->extra_list)){
@@ -257,6 +262,34 @@
         }
         }
         ?>
+
+        <?php $size_list      = json_decode($item->item_size);
+        if (!empty($size_list)) {
+            
+            foreach ($size_list as $key => $list) {?>
+            $('#size<?php echo $item->item_id ?><?php echo $key ?>').click(function() {
+                $('#daynamic_size_<?php echo $item->item_id ?>').html(' ');
+                var ori_price = parseInt($('#original_price<?php echo $item->item_id ?>').val());
+                var real_price = parseInt($('#real_price<?php echo $item->item_id ?>').html());
+                var size = $('#size_name<?php echo $item->item_id ?><?php echo $key ?>').html();
+                var price = parseInt( $('#size_price<?php echo $item->item_id ?><?php echo $key;?>').html());
+                var mainprice = parseInt($('#price_point<?php echo $item->item_id ?>').html());
+                
+                $('#daynamic_size_<?php echo $item->item_id ?>').html(size);
+                
+                var add_real = (ori_price) + (price);
+                $('#real_price<?php echo $item->item_id ?>').html(add_real);
+                var total = (price) + (ori_price);
+                $('#price_point<?php echo $item->item_id ?>').html(total);                                                                                            
+                
+                
+            });
+        <?php
+        $key++;
+        }
+        }
+        ?>
+
         
         $("#add_to_cart").click(function(argument) {
         // $('#comment_').val();

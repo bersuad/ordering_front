@@ -21,7 +21,7 @@ class Order extends MY_Controller {
     public function truck_order_for_mobile() {
 
         $order_id = $this->input->post('id');
-        $user_id = 1;
+        $user_id = $this->session->userdata('customer_id');
         $output = '';
         
 
@@ -108,10 +108,14 @@ class Order extends MY_Controller {
                 <tbody>
                     ';
                     foreach (json_decode($order->order_item)->items as $item) {
+                        $size = '';
+                        if($item->item_size != ''){
+                            $size = 'Size: ('.$item->item_size.')';
+                        }
                     if (!empty($item->extra)) {
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name. ' <br/>('.$item->extra.')<br/>'.$item->item_size.'</td>
+                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -119,7 +123,7 @@ class Order extends MY_Controller {
                     }else{
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name .'</td>
+                        <td>' . $item->item_name .'<br/>'.$size.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
