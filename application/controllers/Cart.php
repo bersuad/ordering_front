@@ -179,7 +179,6 @@ class Cart extends MY_Controller {
                 {
                     $customer_id = $customer[0]->customer_id;
 
-                    // $customer = $this->customer_model->fields('customer_full_name,customer_id')->where('customer_phone',$phone_no)->get();
         
                     $user_data = array(
                         'phone_no'   => $customer_phone,
@@ -197,12 +196,11 @@ class Cart extends MY_Controller {
                     );
 
                     $customer_id = $this->customer_model->insert($user_data);
-                    // $customer = $this->customer_model->fields('customer_full_name,customer_id')->where('customer_phone',$phone_no)->get();
                     
                     $New_user_data = array(
                         'phone_no'   => $customer_phone,
                         'customer_name' => $customer_name,
-                        'customer_id' => $customer->customer_id,                     
+                        'customer_id' => $customer_id,
                         'logged_in' => true
                     );
     

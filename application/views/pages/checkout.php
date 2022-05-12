@@ -340,7 +340,7 @@
                 sessionStorage.removeItem('from_hidden');
                 setInterval(function () {
                     window.location.href = "<?php echo base_url() ?>pages/order_view/" + JSON.parse(response).order_id;
-                }, 2000);
+                }, 4000);
             },
             error: function(error) {
                 swal("Oops...", "Something went wrong :(", "error");
@@ -423,7 +423,6 @@
             
             var account_name = $('#payment_option :selected').text();
             var account_number = $(this).val();
-            // console.log($('#payment_option :selected').text());
             if (account_name != 'Cash') { 
                 $('#telebirr_input').show();
                 $("#acc_name").html(account_name);
