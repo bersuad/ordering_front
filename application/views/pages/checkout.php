@@ -171,6 +171,17 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="section-header-left" id="address_order_destination" style="display: none;">
+                                        <h5 class="text-light-black " align="center" style="font-weight: bold;">Add your location</h5>
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label> </label>
+                                                <div class='input-group' style="height: 25px!important; width: 100%; background-color: #fff; border-color: #111; border-radius: 9px;">
+                                                    <input type="text" class="default form-control" name="item_destination4" placeholder="Add order destination" id="order_destination_place_address" required/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="section-header-left">
                                         <hr>
                                         <br/>
@@ -273,6 +284,7 @@
         var order_destination1 = document.getElementById("order_destination_place_table").value;
         var order_destination2 = document.getElementById("order_destination_place_room").value;
         var order_destination3 = document.getElementById("order_destination_place_plate").value;
+        var order_destination4 = document.getElementById("order_destination_place_address").value;
         var new_date = document.getElementById("order_time").innerHTML ;
 
         if (order_destination1 == '' && order_destination2 == '' && order_destination3 == '' && new_date == '') {
@@ -290,6 +302,8 @@
             order_destination = 'Room Number '+order_destination2;
         }else if(order_destination3 !=''){
             order_destination = 'Plate Number '+order_destination3;
+        }else if(order_destination4 !=''){
+            order_destination = order_destination4;
         }
 
         $(".create_btn").attr('disabled', true);
@@ -353,8 +367,10 @@
         $('#now').click(function() {
             $('#order_destination_place_room').val('');
             $('#order_destination_place_plate').val('');
+            $('#order_destination_place_address').val('');
             if (this.checked) {
                 $('.location').show();
+                $('#address_order_destination').hide();
                 $('#when').show();
                 $('#date_picker').hide();
                 $('#table_order_destination').show();
@@ -366,8 +382,10 @@
         $('#drive').click(function() {
             $('#order_destination_place_room').val('');
             $('#order_destination_place_table').val('');
+            $('#order_destination_place_address').val('');
             if (this.checked) {
                 $('.location').show();
+                $('#address_order_destination').hide();
                 // $('#when').hide();
                 $('#date_picker').hide();
                 $('#car_order_destination').show();
@@ -379,8 +397,10 @@
         $('#room').click(function() {
             $('#order_destination_place_plate').val('');
             $('#order_destination_place_table').val('');
+            $('#order_destination_place_address').val('');
             if (this.checked) {
                 $('.table').show();
+                $('#address_order_destination').hide();
                 $('.location').hide();
                 // $('#when').hide();
                 $('#date_picker').hide();
@@ -394,8 +414,24 @@
             $('#order_destination_place_room').val('');
             $('#order_destination_place_table').val('');
             $('#order_destination_place_plate').val('');
+            $('#order_destination_place_address').val('');
             if (this.checked) {
                 $('#date_picker').show();
+                $('#address_order_destination').hide();
+                $('.location').hide();
+                $('#car_order_destination').hide();
+                $('#table_order_destination').hide();
+                $('#room_order_destination').hide();
+            }
+        });
+
+        $('#delivary').click(function() {
+            $('#order_destination_place_room').val('');
+            $('#order_destination_place_table').val('');
+            $('#order_destination_place_plate').val('');
+            if (this.checked) {
+                $('#address_order_destination').show();
+                $('#date_picker').hide();
                 $('.location').hide();
                 $('#car_order_destination').hide();
                 $('#table_order_destination').hide();
