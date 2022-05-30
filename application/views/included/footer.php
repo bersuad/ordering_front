@@ -2,24 +2,32 @@
 
     <nav class="cd-nav-container right_menu" id="cd-nav" style="background-color: <?php echo $companies[0]->main_color; ?> ;">
         <div class="header__open_menu">
-            <a href="<?php echo base_url('menu/'.$this->session->userdata('restaurant_id')) ?>" class="rmenu_logo" title="">
+            <a href="<?php echo base_url('menu/'.$this->session->userdata('menu_url')) ?>" class="rmenu_logo" title="">
                 <img src="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" alt="logo" style="max-width: 80px; height:auto;"/>
             </a>
         </div>
-        <div class="right_menu_search">
+        <!-- <div class="right_menu_search">
             <form method="post">
                 <input type="text" name="q" class="form-control search_input" value="" placeholder="Search anything">
                 <button type="submit" class="search_icon"><i class="fa fa-search"></i></button>
             </form>
-        </div>
+        </div> -->
         <ul class="rmenu_list">
             <li class="<?=(current_url() == base_url('menu/'.$this->session->userdata('restaurant_id'))) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('menu/'.$this->session->userdata('restaurant_id')) ?>">Menu</a></li>
             <li class="<?=(current_url() == base_url('/reservation')) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('/reservation') ?>">Reservation</a></li>
-            <li class="<?=(current_url() == base_url('/order_history')) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('/order_history') ?>">Order History</a></li>
-            <!-- <li><a class="page-scroll" href="#about_us">Logout</a></li> -->
             <li>
                 <a href="<?php echo base_url('/checkout') ?>"><i class="fa fa-shopping-cart"></i> My cart &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<sup><span class="badge badge-pill badge-default" style="width:30px; height:auto;"><small id="mobile_cart_item_count"></small></span></sup></a>
             </li>
+            <?php if($this->session->userdata('logged_in') == true){?>
+                <li class="<?=(current_url() == base_url('/order_history')) ? 'active':''?>">
+                    <a class="page-scroll" href="<?php echo base_url('/order_history') ?>">Order History</a>
+                </li>
+                <li>
+                    <a href="<?php echo base_url('cart/logout')?>"> 
+                        <i class="fas fa-log-in"></i>Log out
+                    </a>
+                </li>
+            <?php }?>
         </ul>
         <div class="right_menu_addr top_addr">
             <span><i class="fa fa-map-marker" aria-hidden="true"></i> Addis Ababa, Bole around Edna Mall</span>

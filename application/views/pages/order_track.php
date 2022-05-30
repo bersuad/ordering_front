@@ -32,7 +32,7 @@
         function truck_order_for_mobile() {
             var id = $('#request_id').val();
             var job_id = $('#job_id').val();
-            console.log(id);
+            // console.log(id);
                 
                 $.ajax({
                     type: "POST",
