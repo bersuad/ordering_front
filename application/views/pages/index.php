@@ -9,7 +9,7 @@
         <h1 class="section-title" style="color: <?php echo $companies[0]->main_color; ?>;">Our Menus</h1>
     </div>
     <?php if (!empty($items)) {?>
-        <div class="menu_filter text-center" style="border-radius: 60px;">
+        <div class="menu_filter text-center" style="padding-left: 10px; padding-right: 10px; border-radius: 15px; box-shadow: 10px 2px 22px -3px rgba(87,85,85,0.2);">
             <ul class="list-unstyled list-inline d-inline-block">
                 <li class="item active">
                     <a href="#" class="filter-button active" data-filter="all">All</a>

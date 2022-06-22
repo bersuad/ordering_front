@@ -33,16 +33,46 @@
     <link href="<?php echo base_url() ?>assets/simplepicker.css" rel="stylesheet" media="screen">
 
     
-    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo base_url() ?>assets/img/qr.png" />
-    <link rel="icon" type="image/png" sizes="256x256"  href="<?php echo base_url() ?>assets/img/qr.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="<?php echo base_url() ?>assets/img/qr.png">    
-    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo base_url() ?>assets/img/qr.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="<?php echo base_url() ?>assets/img/qr.png" />
-    <link rel="icon" type="image/png" href="<?php echo base_url() ?>assets/img/qr.png"/>
-    <link rel="mask-icon" href="<?php echo base_url() ?>assets/img/qr.png" color="#5bbad5" />
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" />
+    <link rel="icon" type="image/png" sizes="256x256"  href="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>">
+    <link rel="icon" type="image/png" sizes="192x192"  href="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>">    
+    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" />
+    <link rel="icon" type="image/png" sizes="16x16" href="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" />
+    <link rel="icon" type="image/png" href="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>"/>
+    <link rel="mask-icon" href="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" color="#5bbad5" />
     <meta name="msapplication-TileColor" content="#990100" />
     <meta name="theme-color" content="#ffffff" />    
+    <style>
+        .top_addr i.fa {
+            color:<?php echo $companies[0]->second_color; ?>;
+        }
 
+        .navbar-nav>li.active>a {
+            color:<?php echo $companies[0]->second_color; ?>;
+            border-bottom: 1px solid <?php echo $companies[0]->second_color; ?>;
+        }
+
+        .top_addr span{
+            color:<?php echo $companies[0]->second_color; ?>;
+        }
+
+        .nav > li > a:focus, .nav > li > a:hover{
+            color: <?php echo $companies[0]->second_color; ?>;
+            border-bottom: 1px solid <?php echo $companies[0]->second_color; ?>;
+        }
+
+        .menu_filter .item a:focus,
+        .menu_filter .item a:hover {
+            color:<?php echo $companies[0]->main_color; ?>;
+            border-color: <?php echo $companies[0]->second_color; ?>;
+            background-color: <?php echo $companies[0]->second_color; ?>;
+        }
+        .menu_filter .item.active a {
+            border-color: <?php echo $companies[0]->main_color; ?>;
+            background-color: <?php echo $companies[0]->main_color; ?>;
+            color:<?php echo $companies[0]->second_color; ?>;
+        }
+    </style>
 </head>
 
 

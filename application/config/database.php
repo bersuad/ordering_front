@@ -92,6 +92,6 @@ $db['default'] = array(
     'compress'      => false,
     'stricton'      => false,
     'failover'      => array(),
-	'save_queries' 	=> TRUE
+	'save_queries' 	=> TRUE,
     // 'save_queries'  => $_SERVER['CI_ENV'] === 'development' ? true : false,
 );
