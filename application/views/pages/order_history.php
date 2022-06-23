@@ -19,7 +19,7 @@
                                 <p><?php echo  date('d M, Y h:i a', strtotime($order['order_timestamp']) );?> </p>    <br>
                             </div>
                             <div class="col-md-3 col-sm-3 col-xs-12" style="padding-top: 27px;">
-                                <i class="btn fa fa-chevron-right btn-warning btn-block" style="background: #f6a525;"></i>
+                                <i class="btn fa fa-chevron-right btn-block" style="color: <?php echo $companies[0]->second_color; ?>!important; background-color: <?php echo $companies[0]->main_color; ?>!important;"></i>
                             </div>
                             <hr/>     
                         </div>

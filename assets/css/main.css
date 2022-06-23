@@ -1813,7 +1813,7 @@ a:focus {
 .right_menu_icon {
     right: 0;
     margin-left: 0;
-    margin-right: 10px;
+    margin-right: 1px;
 }
 
 .right_menu {
@@ -1969,4 +1969,31 @@ a:focus {
 
 .mt-100{
     margin-top: 100px;
+}
+
+#mobile-count-view{
+    display: none!important;
+}
+.category-list{
+    padding-left: 10px;
+    padding-right: 10px;
+    /* border-bottom-left-radius: 15px; */
+    /* border-top-left-radius: 15px; */
+    border-radius: 10px;
+    box-shadow: 10px 2px 22px -3px rgba(87,85,85,0.2);
+}
+
+.next-button{
+    position:absolute;
+    right:0;
+    top:0; 
+    margin-top: 55px; 
+    cursor: pointer; 
+    background: rgba(190,190,190,0.08); 
+    /* height: 60px;  */
+    width: 50px; 
+    border-bottom-right-radius: 15px; 
+    border-top-right-radius: 15px; 
+    padding-top: 20px; 
+    margin-right:-35px!important;
 }

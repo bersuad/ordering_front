@@ -15,9 +15,7 @@
         <ul class="rmenu_list">
             <li class="<?=(current_url() == base_url('menu/'.$this->session->userdata('restaurant_id'))) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('menu/'.$this->session->userdata('restaurant_id')) ?>">Menu</a></li>
             <li class="<?=(current_url() == base_url('/reservation')) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('/reservation') ?>">Reservation</a></li>
-            <li>
-                <a href="<?php echo base_url('/checkout') ?>"><i class="fa fa-shopping-cart"></i> My cart &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<sup><span class="badge badge-pill badge-default" style="width:30px; height:auto;"><small id="mobile_cart_item_count"></small></span></sup></a>
-            </li>
+            
             <?php if($this->session->userdata('logged_in') == true){?>
                 <li class="<?=(current_url() == base_url('/order_history')) ? 'active':''?>">
                     <a class="page-scroll" href="<?php echo base_url('/order_history') ?>">Order History</a>

@@ -72,6 +72,9 @@
             background-color: <?php echo $companies[0]->main_color; ?>;
             color:<?php echo $companies[0]->second_color; ?>;
         }
+        .reserv_box{
+            background-color: <?php echo $companies[0]->main_color; ?>!important;
+        }
     </style>
 </head>
 
@@ -108,6 +111,9 @@
                                 <a class="navbar-brand" href="<?php echo base_url('menu/'.$this->session->userdata('menu_url')) ?>">
                                     <img src="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" alt="logo" />
                                 </a>
+                                <a href="<?php echo base_url('/checkout') ?>" id="mobile-count-view">
+                                    <span><i class="fa fa-shopping-cart fa-lg" style="font-size: 1.em; color:#fff;"></i> <sup><span class="badge badge-pill badge-default" id="mobile_cart_item_count"></span></sup></span>
+                                </a>
                                 <a href="#cd-nav" class="cd-nav-trigger right_menu_icon">
                                     <span><i class="fa fa-bars" aria-hidden="true"></i></span>
                                 </a>
@@ -124,7 +130,7 @@
                                         <?php }?>
                                         <!-- <li><a class="page-scroll" href="#">Logout</a></li> -->
                                         <li>
-                                            <a href="<?php echo base_url('/checkout') ?>"><i class="fa fa-shopping-cart"></i> My cart <sup><span class="badge badge-pill badge-default" id="cart_item_count"></span></sup></a>                                        
+                                            <a href="<?php echo base_url('/checkout') ?>"><i class="fa fa-shopping-cart"></i> cart <sup><span class="badge badge-pill badge-default" id="cart_item_count"></span></sup></a>                                        
                                             <div class="cart-btn cart-dropdown" style="display: none;">
                                                 
                                                 <div class="cart-detail-box">
@@ -142,7 +148,7 @@
                                             </div>
                                         </li>
                                         <?php if($this->session->userdata('logged_in') == true){?>
-                                        <li><a class="page-scroll" href="<?php echo base_url('cart/logout')?>" id="login" > <i class="fas fa-log-in"></i>
+                                        <li><a class="page-scroll" href="<?php echo base_url('cart/logout')?>" id="login" > <i class="fa fa-log-out"></i>
                                                 <span>LOG OUT</span>
                                             </a>
                                         </li>

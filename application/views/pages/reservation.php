@@ -40,10 +40,11 @@
                                     <div class="form-group form_pos">
                                         <select name="reservation_num_people" class="form-control" style="color:black;">
                                             <option value="">Number of Gustes</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
+                                            <?php
+                                                for ($i=1; $i <= 20; $i++) { 
+                                                    echo "<option value='+$i+'>".$i."</option>";
+                                                }
+                                            ?>
                                         </select>
                                         <span class="form_icon"></span>
                                     </div>
