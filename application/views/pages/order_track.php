@@ -32,7 +32,7 @@
         function truck_order_for_mobile() {
             var id = $('#request_id').val();
             var job_id = $('#job_id').val();
-            // console.log(id);
+            console.log(id);
                 
                 $.ajax({
                     type: "POST",
@@ -61,4 +61,40 @@
                 }
             }, 5000);
         });
+    </script>
+    <script type="text/javascript">
+        // request();
+        function request() {
+
+            var job_id = $("#request_id").val();
+            if (job_id == null) return;
+            else if(job_id == "") return;
+        }
+
+        function request_status(name, phone_no, driver_id, job_status, tracking_number) {
+            var name = name;
+            var phone_no = phone_no;
+            var driver_id = driver_id
+            var job_status = job_status;
+            var tracking_no = tracking_number;
+            var job_id = document.getElementById("job_id").value;
+            var order_id = <?php echo $request_id ?>;
+            
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url(); ?>cart/order_info",
+                data: {
+                    name: name,
+                    phone_no: phone_no,
+                    driver_id: driver_id,
+                    job_status: job_status,
+                    tracking_no: tracking_number,
+                    job_id: job_id,
+                    order_id: order_id,
+                },
+                success: function(output) {
+                    
+                }
+            });
+        }
     </script>

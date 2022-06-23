@@ -202,7 +202,7 @@
                                                 <h5 class="text-light-black " align="center" style="font-weight: bold;">Make the payment on <span id="acc_name"></span> on this Number <span id="acc_num"></span> and copy Ref number here</h5>
                                                 <label> </label>
                                                 <div class='input-group' style="height: 25px!important; width: 100%; background-color: #fff; border-color: #111; border-radius: 9px;">
-                                                    <input type="text" class="default form-control" name="tele_birr" placeholder="Copy the Telebirr transaction number and paste here!" id="order_payment"/>
+                                                    <input type="text" class="default form-control" name="tele_birr" placeholder="Copy the transaction number and paste here!" id="order_payment"/>
                                                 </div>
                                             </div>
                                         
