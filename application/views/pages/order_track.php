@@ -7,7 +7,7 @@
                     <div class="col-lg-8">
                         <div class="main-box padding-20">
                                 <div align="center">
-                                    <img src="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" alt="logo"  style="height: 120px; width:auto;"/>
+                                    <img src="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" alt="logo"  style="height: 100px; width:auto; border-radius: 10px;"/>
                                 </div>
                                 <br/>                        
                                 <input type="hidden" name="" id="request_id" value="<?php echo $request_id ?>">

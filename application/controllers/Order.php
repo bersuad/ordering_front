@@ -16,6 +16,11 @@ class Order extends MY_Controller {
         $this->load->model('transaction_model');
         $this->load->model('branch_model');
         $this->load->model('role_model');
+        
+        $restaurant_id = $this->session->userdata('restaurant_id');
+        $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
+        $comp_vat = (int) $customer[0]->vat / 100 ;
+        $comp_service = (int) $customer[0]->service_charge / 100;
     }
 
     public function truck_order_for_mobile() {
@@ -33,6 +38,7 @@ class Order extends MY_Controller {
             <div align="center" style="width: 100%; margin-left: 5%; background:#f2f2f2!important; border-radius: 10px;"></div>
             <article style="font-size: 1em; color: #212121;">
             <h4 align="center"> Your Order Status</h4>
+            <h5 align="center"> Order ID <b>'.$order_id.'</b></h5>
         ';
 
         foreach ($orders as $order) {
@@ -100,9 +106,9 @@ class Order extends MY_Controller {
             <table class="table table-borderless" style="align-items: center; align-self: center; text-align: center; border: 2px solid transparent; color:#212121; font-size: 0.9em;" id="cart_list_items">
                 <thead>
                     <tr>
-                        <th>Item</th>
-                        <th>Qty</th>
-                        <th>Price (ETB)</th>
+                        <th style="text-align: center; font-weight: bold;">Item</th>
+                        <th style="text-align: center; font-weight: bold;">Qty</th>
+                        <th style="text-align: center; font-weight: bold;">Price (ETB)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -191,87 +197,30 @@ class Order extends MY_Controller {
 
     public function order_accept($order, $branch, $output)
     {
+        $restaurant_id = $this->session->userdata('restaurant_id');
+        $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
+        $comp_vat = (int) $customer[0]->vat / 100 ;
+        $comp_service = (int) $customer[0]->service_charge / 100;
         $output.= '
             <table class="table table-borderless" style="align-items: center; align-self: center; text-align: center; border: 2px solid transparent; color:#212121; font-size: 0.9em;" id="cart_list_items">
                 <thead>
-                    <tr>
-                        
-                        <th style="text-align="center"">Item</th>
-                        <th>Qty</th>
-                        <th>Price (ETB)</th>
+                    <tr>    
+                        <th style="text-align: center; font-weight: bold;">Item</th>
+                        <th style="text-align: center; font-weight: bold;">Qty</th>
+                        <th style="text-align: center; font-weight: bold;">Price (ETB)</th>
                     </tr>
                 </thead>
                 <tbody>
                     ';
                     foreach (json_decode($order->order_item)->items as $item) {
-                    $output.= '
-                    <tr>
-                        <td>' . $item->item_name . '</td>
-                        <td>' . $item->item_quantity . '</td>
-                        <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
-                    </tr>
-                    ';
-                    }
-                    $output.= '  
-                    <tr style="background: rgba(201, 201, 201, 0.3);">
-                        <td></td>
-                        <td>Total Price</td>
-                        <td>';
-                        $sum = 0;
-                        $price_list = 0;
-                        foreach (json_decode($order->order_item)->items as $item) {
-                        $price_list = (int)$item->item_price / (int)$item->item_quantity;
-                        $sum+= (int)$price_list * (int)$item->item_quantity;
+                        $size = '';
+                        if($item->item_size != ''){
+                            $size = 'Size: ('.$item->item_size.')';
                         }
-                        $output.= '' . number_format((float)$sum, '2', '.', '');
-                        $output.= '
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>';
-                        if ($order->order_type == 1) {
-                        $output.= 'Your Location
-                        </td>
-                        ';
-                        } else {
-                        $output.= 'Branch Location </td>';
-                        }
-                        $output.= '
-                        <td>' . json_decode($order->order_item)->item_destination . '</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td> Ordered From</td>
-                        <td>'. $branch .'</td>
-                    </tr>
-                </tbody>
-            </table>
-        ';
-        $output.= '
-            <h5 align="center" style="color: rgba(216, 148, 0, 0.9); font-size: 1.2em!important; font-weight: bold;"> Your order is being proccessed.</h5>
-        ';
-        return $output;
-    }
-
-    public function order_wait($order, $branch, $output)
-    {
-        $output.= '
-            <table class="table table-borderless" style="align-items: center; align-self: center; text-align: center; border: 2px solid transparent; color:#212121; font-size: 0.9em;" id="cart_list_items">
-                <thead>
-                    <tr>
-                        <th>Item</th>
-                        <th>Qty</th>
-                        <th>Price (ETB)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ';
-                    foreach (json_decode($order->order_item)->items as $item) {
                     if (!empty($item->extra)) {
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name. ' ('.$item->extra.')' .'</td>
+                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -279,7 +228,7 @@ class Order extends MY_Controller {
                     }else{
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name .'</td>
+                        <td>' . $item->item_name .'<br/>'.$size.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -287,6 +236,16 @@ class Order extends MY_Controller {
                     }
                     }
                     $output.= '  
+                    <tr>
+                        <td></td>
+                        <td>VAT</td>
+                        <td>'.$customer[0]->vat.' %</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Service Charge</td>
+                        <td>'.$customer[0]->service_charge.' %</td>
+                    </tr>
                     <tr style="background: rgba(201, 201, 201, 0.3);">
                         <td></td>
                         <td>Total Price</td>
@@ -296,12 +255,110 @@ class Order extends MY_Controller {
                         foreach (json_decode($order->order_item)->items as $item) {
                             $price_list = (int)$item->item_price / (int)$item->item_quantity;
                             $sum+= (int)$price_list * (int)$item->item_quantity;
+                            $total=$sum;
                         }
-                        $output.= '' . number_format((float)$sum, '2', '.', '');
+                        
+                        if($comp_vat != ''){
+                            $vat = $sum * $comp_vat;
+                        }
+                        if($comp_service != ''){
+
+                            $service = $sum * $comp_service;
+                        }
+                        $sum += $vat + $service; 
+                        $output.= '' . number_format((float)$sum, '2', '.', '').' ETB';
                         $output.= '
                         </td>
                     </tr>
-                    
+                    <tr>
+                        <td></td>
+                        <td> Ordered From</td>
+                        <td>'.$branch.'</td>
+                    </tr>
+                </tbody>
+            </table>
+        ';
+        $output.= '
+            <h5 align="center" style="color: rgba(216, 148, 0, 0.9); font-size: 1.2em!important; font-weight: bold;"> Your order is began proccessed.</h5>
+        ';
+        return $output;
+    }
+
+    public function order_wait($order, $branch, $output)
+    {
+        $restaurant_id = $this->session->userdata('restaurant_id');
+        $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
+        $comp_vat = (int) $customer[0]->vat / 100 ;
+        $comp_service = (int) $customer[0]->service_charge / 100;
+        $output.= '
+            <table class="table table-borderless" style="align-items: center; align-self: center; text-align: center; border: 2px solid transparent; color:#212121; font-size: 0.9em;" id="cart_list_items">
+                <thead>
+                    <tr>
+                        <th style="text-align: center; font-weight: bold;">Item</th>
+                        <th style="text-align: center; font-weight: bold;">Qty</th>
+                        <th style="text-align: center; font-weight: bold;">Price (ETB)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ';
+                    foreach (json_decode($order->order_item)->items as $item) {
+                        $size = '';
+                        if($item->item_size != ''){
+                            $size = 'Size: ('.$item->item_size.')';
+                        }
+                    if (!empty($item->extra)) {
+                    $output.= ' 
+                    <tr>
+                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'</td>
+                        <td>' . $item->item_quantity . '</td>
+                        <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
+                    </tr>
+                    ';
+                    }else{
+                    $output.= ' 
+                    <tr>
+                        <td>' . $item->item_name .'<br/>'.$size.'</td>
+                        <td>' . $item->item_quantity . '</td>
+                        <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
+                    </tr>
+                    ';
+                    }
+                    }
+                    $output.= '  
+                    <tr>
+                        <td></td>
+                        <td>VAT</td>
+                        <td>'.$customer[0]->vat.' %</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Service Charge</td>
+                        <td>'.$customer[0]->service_charge.' %</td>
+                    </tr>
+                    <tr style="background: rgba(201, 201, 201, 0.3);">
+                        <td></td>
+                        <td>Total Price</td>
+                        <td>';
+                        $sum = 0;
+                        $price_list = 0;
+                        foreach (json_decode($order->order_item)->items as $item) {
+                            $price_list = (int)$item->item_price / (int)$item->item_quantity;
+                            $sum+= (int)$price_list * (int)$item->item_quantity;
+                            $total=$sum;
+                        }
+                        
+                        if($comp_vat != ''){
+                            $vat = $sum * $comp_vat;
+                        }
+                        if($comp_service != ''){
+
+                            $service = $sum * $comp_service;
+                        }
+                        $sum += $vat + $service; 
+                        $output.= '' . number_format((float)$sum, '2', '.', '').' ETB';
+                        $output.= '
+                        </td>
+                    </tr>
                     <tr>
                         <td></td>
                         <td> Ordered From</td>
@@ -312,7 +369,7 @@ class Order extends MY_Controller {
         ';
         if ($order->order_type == 1) {
             $output.= '
-                <h5 style="color: rgba(216, 148, 0, 0.9); font-size: 1.2em!important; font-weight: bold;" align="center"> Your order is ready to be picked up, waiting for a picked up.</h5>
+                <h5 style="color: rgba(216, 148, 0, 0.9); font-size: 1.2em!important; font-weight: bold;" align="center"> Your order is began processed, give us a moment.</h5>
             ';
         } else {
             $output.= '
@@ -326,27 +383,55 @@ class Order extends MY_Controller {
 
     public function order_onway($order, $branch, $output)
     {
+        $restaurant_id = $this->session->userdata('restaurant_id');
+        $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
+        $comp_vat = (int) $customer[0]->vat / 100 ;
+        $comp_service = (int) $customer[0]->service_charge / 100;
         $output.= '
             <table class="table table-borderless" style="align-items: center; align-self: center; text-align: center; border: 2px solid transparent; color:#212121; font-size: 0.9em;" id="cart_list_items">
                 <thead>
                     <tr>
-                        <th>Item</th>
-                        <th>Qty</th>
-                        <th>Price (ETB)</th>
+                        <th style="text-align: center; font-weight: bold;">Item</th>
+                        <th style="text-align: center; font-weight: bold;">Qty</th>
+                        <th style="text-align: center; font-weight: bold;">Price (ETB)</th>
                     </tr>
                 </thead>
                 <tbody>
                     ';
                     foreach (json_decode($order->order_item)->items as $item) {
-                    $output.= '
+                        $size = '';
+                        if($item->item_size != ''){
+                            $size = 'Size: ('.$item->item_size.')';
+                        }
+                    if (!empty($item->extra)) {
+                    $output.= ' 
                     <tr>
-                        <td>' . $item->item_name . '</td>
+                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'</td>
+                        <td>' . $item->item_quantity . '</td>
+                        <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
+                    </tr>
+                    ';
+                    }else{
+                    $output.= ' 
+                    <tr>
+                        <td>' . $item->item_name .'<br/>'.$size.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
                     ';
                     }
+                    }
                     $output.= '  
+                    <tr>
+                        <td></td>
+                        <td>VAT</td>
+                        <td>'.$customer[0]->vat.' %</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Service Charge</td>
+                        <td>'.$customer[0]->service_charge.' %</td>
+                    </tr>
                     <tr style="background: rgba(201, 201, 201, 0.3);">
                         <td></td>
                         <td>Total Price</td>
@@ -354,18 +439,27 @@ class Order extends MY_Controller {
                         $sum = 0;
                         $price_list = 0;
                         foreach (json_decode($order->order_item)->items as $item) {
-                        $price_list = (int)$item->item_price / (int)$item->item_quantity;
-                        $sum+= (int)$price_list * (int)$item->item_quantity;
+                            $price_list = (int)$item->item_price / (int)$item->item_quantity;
+                            $sum+= (int)$price_list * (int)$item->item_quantity;
+                            $total=$sum;
                         }
-                        $output.= '' . number_format((float)$sum, '2', '.', '');
+                        
+                        if($comp_vat != ''){
+                            $vat = $sum * $comp_vat;
+                        }
+                        if($comp_service != ''){
+
+                            $service = $sum * $comp_service;
+                        }
+                        $sum += $vat + $service; 
+                        $output.= '' . number_format((float)$sum, '2', '.', '').' ETB';
                         $output.= '
                         </td>
                     </tr>
-                    
                     <tr>
                         <td></td>
                         <td> Ordered From</td>
-                        <td>'. $branch .'</td>
+                        <td>'.$branch.'</td>
                     </tr>
                 </tbody>
             </table>
@@ -391,27 +485,55 @@ class Order extends MY_Controller {
 
     public function order_cancled($order, $branch, $output)
     {
+        $restaurant_id = $this->session->userdata('restaurant_id');
+        $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
+        $comp_vat = (int) $customer[0]->vat / 100 ;
+        $comp_service = (int) $customer[0]->service_charge / 100;
         $output.= '
             <table class="table table-borderless" style="align-items: center; align-self: center; text-align: center; border: 2px solid transparent; color:#212121; font-size: 0.9em;" id="cart_list_items">
                 <thead>
                     <tr>
-                        <th>Item</th>
-                        <th>Qty</th>
-                        <th>Price (ETB)</th>
+                        <th style="text-align: center; font-weight: bold;">Item</th>
+                        <th style="text-align: center; font-weight: bold;">Qty</th>
+                        <th style="text-align: center; font-weight: bold;">Price (ETB)</th>
                     </tr>
                 </thead>
                 <tbody>
                     ';
                     foreach (json_decode($order->order_item)->items as $item) {
-                    $output.= '
+                        $size = '';
+                        if($item->item_size != ''){
+                            $size = 'Size: ('.$item->item_size.')';
+                        }
+                    if (!empty($item->extra)) {
+                    $output.= ' 
                     <tr>
-                        <td>' . $item->item_name . '</td>
+                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'</td>
+                        <td>' . $item->item_quantity . '</td>
+                        <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
+                    </tr>
+                    ';
+                    }else{
+                    $output.= ' 
+                    <tr>
+                        <td>' . $item->item_name .'<br/>'.$size.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
                     ';
                     }
+                    }
                     $output.= '  
+                    <tr>
+                        <td></td>
+                        <td>VAT</td>
+                        <td>'.$customer[0]->vat.' %</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Service Charge</td>
+                        <td>'.$customer[0]->service_charge.' %</td>
+                    </tr>
                     <tr style="background: rgba(201, 201, 201, 0.3);">
                         <td></td>
                         <td>Total Price</td>
@@ -419,51 +541,88 @@ class Order extends MY_Controller {
                         $sum = 0;
                         $price_list = 0;
                         foreach (json_decode($order->order_item)->items as $item) {
-                        $price_list = (int)$item->item_price / (int)$item->item_quantity;
-                        $sum+= (int)$price_list * (int)$item->item_quantity;
+                            $price_list = (int)$item->item_price / (int)$item->item_quantity;
+                            $sum+= (int)$price_list * (int)$item->item_quantity;
+                            $total=$sum;
                         }
-                        $output.= '' . number_format((float)$sum, '2', '.', '');
+                        
+                        if($comp_vat != ''){
+                            $vat = $sum * $comp_vat;
+                        }
+                        if($comp_service != ''){
+
+                            $service = $sum * $comp_service;
+                        }
+                        $sum += $vat + $service; 
+                        $output.= '' . number_format((float)$sum, '2', '.', '').' ETB';
                         $output.= '
                         </td>
                     </tr>
-                    
                     <tr>
                         <td></td>
                         <td> Ordered From</td>
-                        <td>'. $branch .'</td>
+                        <td>'.$branch.'</td>
                     </tr>
                 </tbody>
             </table>
         ';
         $output.='       
-            <h5 align="center" style="color: #b70000; font-size: 1em!important; font-weight: bold;">Your order has been cancled, call 6583 for more information.</h5>
+            <h5 align="center" style="color: #b70000; font-size: 1em!important; font-weight: bold;">Sorry!<br/> Your order has been cancled.</h5>
         ';
         return $output;
     }
 
     public function order_delivered($order, $branch, $output)
     {
+        $restaurant_id = $this->session->userdata('restaurant_id');
+        $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
+        $comp_vat = (int) $customer[0]->vat / 100 ;
+        $comp_service = (int) $customer[0]->service_charge / 100;
         $output.= '
             <table class="table table-borderless" style="align-items: center; align-self: center; text-align: center; border: 2px solid transparent; color:#212121; font-size: 0.9em;" id="cart_list_items">
                 <thead>
                     <tr>
-                        <th>Item</th>
-                        <th>Qty</th>
-                        <th>Price (ETB)</th>
+                        <th style="text-align: center; font-weight: bold;">Item</th>
+                        <th style="text-align: center; font-weight: bold;">Qty</th>
+                        <th style="text-align: center; font-weight: bold;">Price (ETB)</th>
                     </tr>
                 </thead>
                 <tbody>
                     ';
                     foreach (json_decode($order->order_item)->items as $item) {
-                    $output.= '
+                        $size = '';
+                        if($item->item_size != ''){
+                            $size = 'Size: ('.$item->item_size.')';
+                        }
+                    if (!empty($item->extra)) {
+                    $output.= ' 
                     <tr>
-                        <td>' . $item->item_name . '</td>
+                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'</td>
+                        <td>' . $item->item_quantity . '</td>
+                        <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
+                    </tr>
+                    ';
+                    }else{
+                    $output.= ' 
+                    <tr>
+                        <td>' . $item->item_name .'<br/>'.$size.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
                     ';
                     }
+                    }
                     $output.= '  
+                    <tr>
+                        <td></td>
+                        <td>VAT</td>
+                        <td>'.$customer[0]->vat.' %</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Service Charge</td>
+                        <td>'.$customer[0]->service_charge.' %</td>
+                    </tr>
                     <tr style="background: rgba(201, 201, 201, 0.3);">
                         <td></td>
                         <td>Total Price</td>
@@ -471,26 +630,34 @@ class Order extends MY_Controller {
                         $sum = 0;
                         $price_list = 0;
                         foreach (json_decode($order->order_item)->items as $item) {
-                        // $sum += (int)$item->item_price * (int)$item->item_quantity;
-                        $price_list = (int)$item->item_price / (int)$item->item_quantity;
-                        $sum+= (int)$price_list * (int)$item->item_quantity;
+                            $price_list = (int)$item->item_price / (int)$item->item_quantity;
+                            $sum+= (int)$price_list * (int)$item->item_quantity;
+                            $total=$sum;
                         }
-                        $output.= '' . number_format((float)$sum, '2', '.', '');
+                        
+                        if($comp_vat != ''){
+                            $vat = $sum * $comp_vat;
+                        }
+                        if($comp_service != ''){
+
+                            $service = $sum * $comp_service;
+                        }
+                        $sum += $vat + $service; 
+                        $output.= '' . number_format((float)$sum, '2', '.', '').' ETB';
                         $output.= '
                         </td>
                     </tr>
-                    
                     <tr>
                         <td></td>
                         <td> Ordered From</td>
-                        <td>'. $branch .'</td>
+                        <td>'.$branch.'</td>
                     </tr>
                 </tbody>
             </table>
         ';
         if ($order->order_type == 1) {
             $output.= '
-                <h5 align="center" style="color: #087c02; font-size: 1.3em!important; font-weight: bold;">Order Delivered</h5>
+                <h5 align="center" style="color: #087c02; font-size: 1.3em!important; font-weight: bold;">Your order is about to serve.</h5>
                 <h5 align="center" style="font-size: 1em!important;">Thank you, for using our service.</h5>
             ';
         } else {
@@ -503,22 +670,30 @@ class Order extends MY_Controller {
 
     public function order_scheduled($order, $branch, $output)
     {
+        $restaurant_id = $this->session->userdata('restaurant_id');
+        $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
+        $comp_vat = (int) $customer[0]->vat / 100 ;
+        $comp_service = (int) $customer[0]->service_charge / 100;
         $output.= '    
             <table class="table table-borderless" style="align-items: center; align-self: center; text-align: center; border: 2px solid transparent; color:#212121; font-size: 0.9em;" id="cart_list_items">
                 <thead>
                     <tr>
-                        <th>Item</th>
-                        <th>Qty</th>
-                        <th>Price (ETB)</th>
+                        <th style="text-align: center; font-weight: bold;">Item</th>
+                        <th style="text-align: center; font-weight: bold;">Qty</th>
+                        <th style="text-align: center; font-weight: bold;">Price (ETB)</th>
                     </tr>
                 </thead>
                 <tbody>
                     ';
                     foreach (json_decode($order->order_item)->items as $item) {
+                        $size = '';
+                        if($item->item_size != ''){
+                            $size = 'Size: ('.$item->item_size.')';
+                        }
                     if (!empty($item->extra)) {
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name. ' ('.$item->extra.')' .'</td>
+                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -526,7 +701,7 @@ class Order extends MY_Controller {
                     }else{
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name .'</td>
+                        <td>' . $item->item_name .'<br/>'.$size.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -534,6 +709,16 @@ class Order extends MY_Controller {
                     }
                     }
                     $output.= '  
+                    <tr>
+                        <td></td>
+                        <td>VAT</td>
+                        <td>'.$customer[0]->vat.' %</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Service Charge</td>
+                        <td>'.$customer[0]->service_charge.' %</td>
+                    </tr>
                     <tr style="background: rgba(201, 201, 201, 0.3);">
                         <td></td>
                         <td>Total Price</td>
@@ -543,18 +728,26 @@ class Order extends MY_Controller {
                         foreach (json_decode($order->order_item)->items as $item) {
                             $price_list = (int)$item->item_price / (int)$item->item_quantity;
                             $sum+= (int)$price_list * (int)$item->item_quantity;
+                            $total=$sum;
                         }
-                        $output.= '' . number_format((float)$sum, '2', '.', '');
+                        
+                        if($comp_vat != ''){
+                            $vat = $sum * $comp_vat;
+                        }
+                        if($comp_service != ''){
+
+                            $service = $sum * $comp_service;
+                        }
+                        $sum += $vat + $service; 
+                        $output.= '' . number_format((float)$sum, '2', '.', '').' ETB';
                         $output.= '
                         </td>
                     </tr>
-                    
                     <tr>
                         <td></td>
                         <td> Ordered From</td>
                         <td>'.$branch.'</td>
                     </tr>
-                </tbody>
             </table>
             <h5 align="center" style="color: #225e02; font-size: 1em!important;">Your Order is scheduled.</h5>
             <h6 align="center" >Thank you, for using our service.</h6>
