@@ -13,7 +13,7 @@
             </form>
         </div> -->
         <ul class="rmenu_list">
-            <li class="<?=(current_url() == base_url('menu/'.$this->session->userdata('restaurant_id'))) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('menu/'.$this->session->userdata('restaurant_id')) ?>">Menu</a></li>
+            <li class="<?=(current_url() == base_url('menu/'.$this->session->userdata('restaurant_id'))) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('menu/'.$this->session->userdata('menu_url')) ?>">Menu</a></li>
             <li class="<?=(current_url() == base_url('/reservation')) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('/reservation') ?>">Reservation</a></li>
             
             <?php if($this->session->userdata('logged_in') == true){?>

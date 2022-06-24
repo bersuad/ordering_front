@@ -13,20 +13,20 @@
                     <div class="section-header mt-3">
                         <h5 class=" " style="font-weight: bold;">Review and place Your order</h5>
                         <!-- <h5>From <strong id="comp_name"><?php echo $companies[0]->company_name; ?></strong> </h5> -->
-                        <div class="row d-flex align-content-center" style="background: #f7f7f7!important; padding-top: 10px; border-radius: 10px; border-top: 5px solid #f2f2f2; border-right: 3.5px solid #f1f1f1; ">
-                            <div class="col-md-6 col-sm-12" style="padding-bottom: 10px;">
+                        <div class="row" style="background: #f7f7f7!important; padding-top: 10px; border-radius: 10px; border-top: 5px solid #f2f2f2; border-right: 3.5px solid #f1f1f1; ">
+                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="padding-bottom: 10px;">
                                 <div>
                                     <label for="name">Name</label>
                                     <input type="text" class="default form-control" name="user_name" placeholder="Your Name" id="user_name" require onchange="inputCheck()"/>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-12" style="padding-bottom: 10px;">
+                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="padding-bottom: 10px;">
                                 <div>
                                     <label for="phone">Phone No</label>
                                     <input autocomplete="off" maxlength="10" onkeyup="inputCheck()" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" name="phone_no" class="form-control input-default " placeholder="Your Phone Number" required autocomplete="off" id="user_phone">
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                 <div>
                                     <label for="Address">Branch</label>
                                     <p class="" id="to_here_list"></p>

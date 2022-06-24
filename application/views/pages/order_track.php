@@ -9,8 +9,7 @@
                                 <div align="center">
                                     <img src="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" alt="logo"  style="height: 120px; width:auto;"/>
                                 </div>
-                                <br/>
-                                                            
+                                <br/>                        
                                 <input type="hidden" name="" id="request_id" value="<?php echo $request_id ?>">
                                 <input type="hidden" name="" id="job_id" value="<?php echo $job_id ?>">
                                 <div id="status">

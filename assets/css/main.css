@@ -919,14 +919,14 @@ a:focus {
 
 #menu_items .filter_item_price {
     font-size: 18px;
-    color: #990100;
+    color: #616161;
     font-family: 'Montserrat-Bold';
 }
 
 #menu_items .info .name {
-    font-size: 23px;
+    font-size: 17px;
     font-family: 'ChunkFiveEx';
-    color: #f6a525;
+    color: #424242;
     text-transform: uppercase;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -1981,6 +1981,7 @@ a:focus {
     /* border-top-left-radius: 15px; */
     border-radius: 10px;
     box-shadow: 10px 2px 22px -3px rgba(87,85,85,0.2);
+    
 }
 
 .next-button{

@@ -129,7 +129,7 @@
                     <h3 style="margin-top: 20px; margin-bottom: 20px;"><?php echo $item->item_name ?></h3>
                     <p style="margin-top: 20px; margin-bottom: 20px;" id="real_price<?php echo $item->item_id ?>"><?php echo $item->item_value ?> Br.</p>
                     <input type="hidden" name="original_price" value="<?php echo $item->item_value ?>" id="original_price<?php echo $item->item_id ?>"/>
-                    <p align="center" style="margin-top: 2%;"> <?php echo $item->description ?></p>
+                    <p align="left" style="margin-top: 2%; align-items:flex-start; align-content:flex-start; align-self: flex-start; text-align: left;"> <?php echo $item->description ?></p>
                     <div align="center" class="row" style="background-color: #f8f8f8; width: 100%; border-radius: 10px; align-content: center;">
                         <i class="fa fa-minus fa-lg" id="minus_btn<?php echo $item->item_id ?>" style="cursor: pointer; background: #eeeeee; height: 50px; width: 50px; border-radius: 50%; padding-top: 15px; margin-rigth: 20px;"></i>
                         <strong><label style="font-size: 1.1em; padding-left: 6px;" id="qty_<?php echo $item->item_id ?>" name="quantity" class="quantity<?php echo $item->item_id ?>"> 1 </label> </strong>
