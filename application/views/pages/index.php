@@ -241,7 +241,6 @@
                 if ($("#<?php echo $item->item_id ?><?php echo $key ?>").prop('checked')==true){
                     var real_price = parseInt($('#real_price<?php echo $item->item_id ?>').html());
                     var extra_list = $('#extrList<?php echo $item->item_id ?><?php echo $key ?>').html();
-                    console.log(extra_list);
                     $('#daynamic_field_<?php echo $item->item_id ?>').append(extra_list);
                     
                     var add_real = (real_price) + (extra);
@@ -293,7 +292,6 @@
 
         
         $("#add_to_cart").click(function(argument) {
-        // $('#comment_').val();
             $('#item_name').val($(this).data('name'));
             $('#price_point').val($(this).data('price'));
             $('#qty<?php echo $item->item_id ?>').val($(this).data('quantity'));
@@ -304,7 +302,6 @@
         
         
         $("#plus_btn<?php echo $item->item_id ?>").click(function() {
-            // console.log(extra);
             var qun = parseInt($('.quantity<?php echo $item->item_id ?>').html());
             var price = parseInt($('#real_price<?php echo $item->item_id ?>').html());
             var add = qun + 1;
@@ -332,7 +329,6 @@
             if (qun <= 1) {
                 var add = 1;
                 $('.quantity<?php echo $item->item_id ?>').attr('disabled', true)
-                // $('.quantity<?php echo $item->item_id ?>').html(add);
             } else {
                 var qun = parseInt($('.quantity<?php echo $item->item_id ?>').html());
                 var price = parseInt($('#real_price<?php echo $item->item_id ?>').html());

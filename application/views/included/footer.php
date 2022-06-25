@@ -77,137 +77,16 @@
       <?php if ($this->session->flashdata('reservation_added')) {?>
         notify.showNotification('top', 'right', 'success', "<h5 style='color: white'><?php echo "You have successfully made a reservation, Thank  you!" ?></h5>");
       <?php }?>
-    </script>
-    <script>
-        $(document).ready(function() {
+
+      $(document).ready(function() {
             cartAction('', '');
         })
     </script>
-    <script>
-        function cartAction(action, product_code) {
-            
-            var extra = document.getElementById("daynamic_field_"+product_code);
-            var size = document.getElementById("daynamic_size_"+product_code);
-            var orginal_price = document.getElementById("original_price"+product_code);
-            // console.log(orginal_price.value);
-            
-            if (extra != null) {
-                str = extra.innerText;
-            }
-            else {
-                str = '';
-            }
-
-            if (size != null) {
-                size_str = size.innerText;
-            }
-            else {
-                size_str = '';
-            }
-
-
-            var queryString = "";
-            if (action != "") {
-                switch (action) {
-                    case "add":
-                        $("#add_" + product_code).attr('disabled', true);
-                        queryString = 'action=' + action + '&code=' + product_code + '&quantity=' + $("#qty_" + product_code).html() + '&price_point=' + $('#price_point' + product_code).html() + '&branch=' + $('#branch_' + product_code).html() + '&comment=' + $('#comment_' + product_code).val() + '&extra=' + str + '&size=' + size_str + '&ori_price=' + orginal_price.value;
-                        break;
-                    case "remove":
-                        $("#add_" + product_code).removeAttr('disabled');
-                        queryString = 'action=' + action + '&code=' + product_code;
-                        break;
-                    case "empty":
-                        $("#add_" + product_code).removeAttr('disabled');
-                        queryString = 'action=' + action;
-                        break;
-                }
-            }
-            $('#modalQuickView'+product_code).modal('hide');
-            jQuery.ajax({
-                url: "<?php echo base_url() ?>cart/product_cart",
-                data: queryString,
-                type: "POST",
-                success: function(data) {
-                    // jQuery.noConflict();
-
-                    $("#cart-item").empty();
-                    $("#check_list_cart").empty();
-                    $("#mobile_list_cart").empty();
-
-                    $("#cart-item").append(render(data));
-                    $("#check_list_cart").append(render(data));
-                    $("#mobile_list_cart").append(render(data));
-                    var cart_length = $('#cart-item .cart_item_item').length;
-                    $('#cout_cart').text(cart_length);
-                    $('#cart_item_count').text($('#cart-item .cart_item_item').length);
-                    $('#mobile_cart_item_count').text(cart_length);
-                                        
-                    // event.preventDefault();
-                    
-                    if (action != "") {
-
-                        switch (action) {
-                            case "add":
-                                $("#add_" + product_code).hide();
-                                $("#added_" + product_code).show();
-                                break;
-                            case "remove":
-                                $("#add_" + product_code).show();
-                                $("#added_" + product_code).hide();
-                                $("#add_" + product_code).removeAttr('disabled');
-                                break;
-                            case "empty":
-                                $(".btnAddAction").show();
-                                $(".btnAdded").hide();
-                                $("#add_" + product_code).removeAttr('disabled');
-                                break;
-                        }
-                    }
-                },
-                error: function() {}
-            });
-        }
-        function render(content) {
-            return content;
-        }
+    <script type="text/javascript">
+        function cartAction(b,a){var d=document.getElementById("daynamic_field_"+a),e=document.getElementById("daynamic_size_"+a),f=document.getElementById("original_price"+a);str=null!=d?d.innerText:"",size_str=null!=e?e.innerText:"";var c="";if(""!=b)switch(b){case"add":$("#add_"+a).attr("disabled",!0),c="action="+b+"&code="+a+"&quantity="+$("#qty_"+a).html()+"&price_point="+$("#price_point"+a).html()+"&branch="+$("#branch_"+a).html()+"&comment="+$("#comment_"+a).val()+"&extra="+str+"&size="+size_str+"&ori_price="+f.value;break;case"remove":$("#add_"+a).removeAttr("disabled"),c="action="+b+"&code="+a;break;case"empty":$("#add_"+a).removeAttr("disabled"),c="action="+b}$("#modalQuickView"+a).modal("hide"),jQuery.ajax({url:"<?php echo base_url() ?>cart/product_cart",data:c,type:"POST",success:function(c){$("#cart-item").empty(),$("#check_list_cart").empty(),$("#mobile_list_cart").empty(),$("#cart-item").append(render(c)),$("#check_list_cart").append(render(c)),$("#mobile_list_cart").append(render(c));var d=$("#cart-item .cart_item_item").length;if($("#cout_cart").text(d),$("#cart_item_count").text($("#cart-item .cart_item_item").length),$("#mobile_cart_item_count").text(d),""!=b)switch(b){case"add":$("#add_"+a).hide(),$("#added_"+a).show();break;case"remove":$("#add_"+a).show(),$("#added_"+a).hide(),$("#add_"+a).removeAttr("disabled");break;case"empty":$(".btnAddAction").show(),$(".btnAdded").hide(),$("#add_"+a).removeAttr("disabled")}},error:function(){}})}function render(a){return a}
     </script>
     <script>
-        let simplepicker = new SimplePicker({
-            zIndex: 10
-        });
-        const $button = document.getElementById("btn_clander");
-        const $eventLog = document.querySelector('#order_time');
-
-        if ($button !== null) {
-            $button.addEventListener('click', (e) => {
-                simplepicker.open();
-            });
-        }
-
-        simplepicker.on('submit', (date, readableDate) => {
-            document.getElementById("order_time").innerHTML = readableDate;
-        });
-
-        simplepicker.on('close', (date) => {
-            $eventLog.innerHTML += '' + '\n';
-        });
-        var $main_window=$(window);
-        $main_window.on("scroll", function() {
-            if($(this).scrollTop()>250) {
-                $(".back-to-top").fadeIn(200);
-            }
-            else {
-                $(".back-to-top").fadeOut(200);
-            }
-        });
-        $(".back-to-top").on("click", function() {
-            $("html, body").animate( {
-                scrollTop: 0
-            }
-            , "slow");
-            return false;
-        });
+        let simplepicker=new SimplePicker({zIndex:10});const $button=document.getElementById("btn_clander"),$eventLog=document.querySelector("#order_time");null!==$button&&$button.addEventListener("click",a=>{simplepicker.open()}),simplepicker.on("submit",(b,a)=>{document.getElementById("order_time").innerHTML=a}),simplepicker.on("close",a=>{$eventLog.innerHTML+="\n"});var $main_window=$(window);$main_window.on("scroll",function(){$(this).scrollTop()>250?$(".back-to-top").fadeIn(200):$(".back-to-top").fadeOut(200)}),$(".back-to-top").on("click",function(){return $("html, body").animate({scrollTop:0},"slow"),!1})
     </script>
 
 </body>

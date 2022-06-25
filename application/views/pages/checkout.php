@@ -1,6 +1,5 @@
 <div id="cover-spin">
 </div>
-<!-- Navigation -->
 <div class="container section" id="menu" data-aos="fade-up" style="margin-top: 180px;">
     <div class="container">
         <div class="row">
@@ -11,8 +10,7 @@
                         <img src="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" alt="logo"  style="height: 120px; width:auto;"/>
                     </div>
                     <div class="section-header mt-3">
-                        <h5 class=" " style="font-weight: bold;">Review and place Your order</h5>
-                        <!-- <h5>From <strong id="comp_name"><?php echo $companies[0]->company_name; ?></strong> </h5> -->
+                        <h5 align="center" style="font-weight: bold;">Review and place your order from <?php echo $companies[0]->company_name; ?></h5>
                         <div class="row" style="background: #f7f7f7!important; padding-top: 10px; border-radius: 10px; border-top: 5px solid #f2f2f2; border-right: 3.5px solid #f1f1f1; ">
                             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="padding-bottom: 10px;">
                                 <div>
@@ -29,7 +27,7 @@
                             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                 <div>
                                     <label for="Address">Branch</label>
-                                    <p class="" id="to_here_list"></p>
+                                    <p class="" id="to_here_list" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; text-align: left;"></p>
                                 </div>
                             </div>
                         </div>
@@ -38,7 +36,7 @@
                         </div>                 
                     </div>
                 
-                    <div class="row">
+                    <div class="row" style="box-shadow:rgba(0, 0, 0, 0.05) 0 8px 8px, rgba(0, 0, 0, 0.05) 0 2px 6px; padding-left: 10px; padding-right: 10px; ">
                         <div class="col-12">
                             <div class="payment-sec">
                                 <div class="section-header">
@@ -208,7 +206,7 @@
                                         
                                     </div>
                                     <div class="row">
-                                        <div class="col-12">
+                                        <div class="col-12" style="padding-left: 10px; padding-right: 10px;">
                                             <div id="accordion">
                                                 <div class="payment-option-tab">
                                                     <div class="tab-content">
@@ -386,7 +384,6 @@
             if (this.checked) {
                 $('.location').show();
                 $('#address_order_destination').hide();
-                // $('#when').hide();
                 $('#date_picker').hide();
                 $('#car_order_destination').show();
                 $('#table_order_destination').hide();
@@ -402,7 +399,6 @@
                 $('.table').show();
                 $('#address_order_destination').hide();
                 $('.location').hide();
-                // $('#when').hide();
                 $('#date_picker').hide();
                 $('#car_order_destination').hide();
                 $('#table_order_destination').hide();
