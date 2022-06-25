@@ -370,7 +370,7 @@
                 });
             }else{
                 $('#result').html('Searching ....');
-                setTimeout(resetForm, 5000);
+                window.setTimeout(resetForm, 2000);
             }
         });
     });
