@@ -29,10 +29,11 @@
     <?php }?>
 
     <div id="menu_items">
+        <?php $in_session = "0"; ?>
         
         <div class="filtr-item image filter all active">
             <div class="row">
-                <?php $in_session = "0"; ?>
+                <div id="result"></div>
                 <?php  if(!empty($items)){
                     foreach($items as $key => $item){
                 ?>
@@ -342,3 +343,40 @@
         });
     </script>
 <?php }}?>
+<script>
+    $(document).ready(function (){
+        $('#search_food').keyup(function(){
+            var txt = $(this).val();
+            var admin_url = "<?php echo order_admin_URL;?>";
+            var data = {
+                search:txt,
+                admin_url:admin_url
+            };
+
+            var str_len = txt.length;
+            
+            if(txt != '' && str_len >= 3){
+                $.ajax({
+                    type: "POST",
+                    url: '<?php echo base_url() ?>pages/getFood',
+                    data:data,
+                    success:function(data)
+                    {
+                        $('#result').html(data);
+                    },
+                    error:function(error) {
+                        $('#result').html('');
+                    }
+                });
+            }else{
+                $('#result').html('Searching ....');
+                setTimeout(resetForm, 5000);
+            }
+        });
+    });
+
+    function resetForm()
+    {
+        $('#result').html('');
+    }
+</script>

@@ -44,42 +44,9 @@ class Pages extends MY_Controller {
 					WHERE company_id = $restaurant_id 
 					AND items.item_category != 13";
 			$data['items'] = $this->item_model->sql($sql);
-	
-			$sql_extra  = "SELECT DISTINCT on (item_name) item_name, item_id,item_value, item_description->'image' AS image,
-					item_description->'description' AS description,item_category
-					from items
-					INNER JOIN branches ON items.item_branch_id = branches.branch_id
-					INNER JOIN companies ON branches.branch_company_id = companies.company_id
-					WHERE company_id = $restaurant_id 
-					AND items.item_status =  1::bit 
-					AND items.item_category = 13";
-			$data['extras'] = $this->item_model->sql($sql_extra);
-	
-			$sql_drink  = "SELECT DISTINCT on (item_name) item_name, item_id,item_value, item_description->'image' AS image,
-					item_description->'description' AS description,item_category
-					from items
-					INNER JOIN branches ON items.item_branch_id = branches.branch_id
-					INNER JOIN companies ON branches.branch_company_id = companies.company_id
-					WHERE company_id = $restaurant_id  
-					AND items.item_status = 1::bit
-					AND items.item_category = 14";
-			
-			$data['drinks'] = $this->item_model->sql($sql_drink);
 			
 			$data['companies'] = $this->company_model->where('company_id', $restaurant_id)->get_all();
 	
-			// $sql_category ="SELECT category_name
-			// 			FROM category
-			// 			RIGHT JOIN items ON items.item_category = category.category_id
-			// 			INNER JOIN branches ON items.item_branch_id = branches.branch_id
-			// 			INNER JOIN companies ON branches.branch_company_id = companies.company_id
-			// 			WHERE company_id = $restaurant_id 
-			// 			AND category_status = 1
-			// 			AND category_name != 'Extra' 
-			// 			GROUP BY category_name
-			// 			";
-			
-			// $data['category_list'] 	= $this->Category_model->sql($sql_category);
 			$data['category_list']  = $this->Category_model->where(['category_company_id'=>$restaurant_id, 'category_status' => 1 ] )->get_all();
 	
 			$this->data = $data;
@@ -244,4 +211,56 @@ class Pages extends MY_Controller {
         $this->load->view('pages/order_history');
         $this->load->view('included/footer');
     }
+
+	public function getFood()
+	{
+		$items_list = 0;
+		$restaurant_id = $this->session->userdata('restaurant_id');
+		$output = '';
+		$input  = ucfirst($_POST['search']);
+		$image_url = $_POST['admin_url'];
+		$sql  = "SELECT DISTINCT on (item_name) item_name, item_id,item_value, item_description->'image' AS image,
+					item_description->'description' AS description,company_cover_image, company_logo,company_name, company_opening_hour, company_closing_hour, item_category, category_name, extra_list, item_size
+					from items
+					INNER JOIN category ON category.category_id = items.item_category
+					INNER JOIN branches ON items.item_branch_id = branches.branch_id
+					INNER JOIN companies ON branches.branch_company_id = companies.company_id
+					WHERE company_id = $restaurant_id
+					AND UPPER(item_name) LIKE UPPER('%{$input}%')
+				";
+
+		$items = $this->item_model->sql($sql);
+
+		$items_list = count($items);
+		if(!empty($items)){
+			foreach($items as $key => $item){
+				$output .= '<div class="col-sm-6 col-md-4 col-lg-4 col-xs-6 list-of-items">';
+				$output .= '<a href="#" data-toggle="modal" data-target="#modalQuickView'.$item->item_id .'" id="add_to_cart block fancybox" class="to_cart" data-name="'.$item->item_name.'" data-price="'.$item->item_value.'" data-desc="$detail" data-image="$photo" data-id="'.$item->item_id.'">';
+				$output .= '<div class="content">
+								<div class="filter_item_img">
+									<i class="fa fa-search-plus"></i>';
+				if($item->image != 'uploads/'){
+					$output .= '<img src="'.$image_url.$item->image .'" alt="food image" />';
+				}else{
+					$output .= '<img src="'.base_url().'assets/img/eat.png" alt="placeholder" />';
+				}
+				$output .= '</div>
+							<div class="info">
+								<div class="name">'.$item->item_name.'</div>
+								<span class="filter_item_price">Br. '.$item->item_value.' </span>
+							</div>';
+				$output	.= '</div>
+					</a>';
+					echo $output .= '</div>';
+					$key++;
+					if($key == $items_list){
+						return;
+					}
+			}
+		}else{
+			$output .="<h5>Sorry, No food found!</h5>";
+		}
+		echo $output;
+
+	}
 }

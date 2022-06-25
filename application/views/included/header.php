@@ -97,9 +97,9 @@
                             </div>
                         </div>
                         <div id="navbar_search">
-                            <form method="post">
-                                <input type="text" name="q" class="form-control pull-left" value="" placeholder="Search your favorites food here">
-                                <button type="submit" class="pull-right close" id="search_close"><i class="fa fa-close"></i></button>
+                            <form>
+                                <input style="color: <?php echo $companies[0]->second_color; ?>;" type="text" name="name" class="form-control pull-left" value="" placeholder="Search your favorites food here" id="search_food" autocomplete="off"/>
+                                <button type='reset' value='Reset' name='reset' class="pull-right close" id="search_close" onclick="return resetForm(this.form);"><i class="fa fa-close"></i></button>
                             </form>
                         </div>
                     </div>
