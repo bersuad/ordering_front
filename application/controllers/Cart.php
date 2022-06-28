@@ -277,29 +277,6 @@ class Cart extends MY_Controller {
         $this->load->view('templates/footer');
     }
 
-    // public function mobile_truck($tracking_no = null)
-    // {
-    //     $url = "https://balderasu.adc.com.et/balderasu/routing/mobile_truck/$tracking_no";
-    //     $data = array();
-        
-    //     $result = $this->send_order_curl($data, $url);
-    //     echo $result;
-    //     exit;
-    // }
-
-    // public function dispatch()
-    // {
-    //     $data = array(
-    //         "job_id" => $this->input->post('job_id')
-    //     );
-        
-    //     $url = "https://balderasu.adc.com.et/balderasu/api_request_dispatch/order_info";
-
-    //     $result = $this->send_order_curl($data, $url);
-    //     echo $result;
-    //     exit;
-    // }
-
     private function send_order_curl($data, $url) {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);

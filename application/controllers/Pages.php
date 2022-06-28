@@ -251,11 +251,11 @@ class Pages extends MY_Controller {
 							</div>';
 				$output	.= '</div>
 					</a>';
-					echo $output .= '</div>';
+				echo $output .= '</div>';
+				if($key == $items_list){
+					return;
+				}
 					$key++;
-					if($key == $items_list){
-						return;
-					}
 			}
 		}else{
 			$output .="<h5>Sorry, No food found!</h5>";

@@ -26,8 +26,70 @@
     <script src="<?php echo base_url() ?>assets/js/jquery-2.1.1.min.js"></script>
     
     <script>
-        $(document).ready(function(){function a(){var a=$("#request_id").val();$("#job_id").val(),$.ajax({type:"POST",url:"/order_qr/order/truck_order_for_mobile",timeout:5e3,data:{id:a},success:function(a){try{result=JSON.parse(a),$("#status").empty(),$("#status").html(result),request()}catch(b){request()}}})}a(),setInterval(function(){$.active||a()},5e3)})
+        truck_order_for_mobile();
+        function truck_order_for_mobile() {
+            var id = $('#request_id').val();
+            var job_id = $('#job_id').val();
+                
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url(); ?>order/truck_order_for_mobile",
+                    timeout: 10000,
+                    data: {
+                        id:id,
+                    },
+                    success: function(output) {
+                        console.log(output);
+                        try{
+                            result = JSON.parse(output);
+                            $('#status').empty();
+                            $('#status').html(result);
+                        } catch(error) {
+
+                        }
+                    }
+                });
+            }
+
+            setInterval(function(){
+                if(!$.active){
+                    truck_order_for_mobile()
+                }
+            }, 3000);
     </script>
     <script type="text/javascript">
-        function request(){var a=$("#request_id").val();if(null!=a&&""==a)return}function request_status(a,b,c,d,e){var a=a,b=b,c=c,d=d,f=document.getElementById("job_id").value;$.ajax({type:"POST",url:"/order_qr/cart/order_info",data:{name:a,phone_no:b,driver_id:c,job_status:d,tracking_no:e,job_id:f,order_id:138},success:function(a){}})}
+        request();
+        function request() {
+
+            var job_id = $("#request_id").val();
+            if (job_id == null) return;
+            else if(job_id == "") return;
+        }
+
+        function request_status(name, phone_no, driver_id, job_status, tracking_number) {
+            var name = name;
+            var phone_no = phone_no;
+            var driver_id = driver_id
+            var job_status = job_status;
+            var tracking_no = tracking_number;
+            var job_id = document.getElementById("job_id").value;
+            var order_id = <?php echo $request_id ?>;
+            
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url(); ?>cart/order_info",
+                data: {
+                    name: name,
+                    phone_no: phone_no,
+                    driver_id: driver_id,
+                    job_status: job_status,
+                    tracking_no: tracking_number,
+                    job_id: job_id,
+                    order_id: order_id,
+                },
+                success: function(output) {
+                    
+                }
+            });
+        }
     </script>

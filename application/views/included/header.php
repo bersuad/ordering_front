@@ -60,6 +60,15 @@
             color: <?php echo $companies[0]->second_color; ?>;
             border-bottom: 1px solid <?php echo $companies[0]->second_color; ?>;
         }
+        .create_btn{
+            color:<?php echo $companies[0]->second_color; ?>;
+            background-color: <?php echo $companies[0]->main_color; ?>;
+        }
+
+        .create_btn:hover { 
+            color:<?php echo $companies[0]->main_color; ?>;
+            background-color: <?php echo $companies[0]->second_color; ?>;
+        }
 
         .menu_filter .item a:focus,
         .menu_filter .item a:hover {

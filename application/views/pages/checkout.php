@@ -212,7 +212,7 @@
                                                     <div class="tab-content">
                                                         <div class="form-group">
                                                             <h5 align="center" id="verification"></h5>
-                                                            <button class="btn btn-first btn-block btn-success create_btn filter-button" disabled>Place Order</button>
+                                                            <button class="btn btn-first btn-block create_btn filter-button" disabled>Place Order</button>
                                                         </div>
                                                         <p class="text-center text-light-black no-margin">
                                                             By placing your order, you agree to QRAnbessa's 

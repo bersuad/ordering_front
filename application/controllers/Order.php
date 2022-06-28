@@ -102,6 +102,7 @@ class Order extends MY_Controller {
         $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
         $comp_vat = (int) $customer[0]->vat / 100 ;
         $comp_service = (int) $customer[0]->service_charge / 100;
+        $service = 0;
         $output.= '
             <table class="table table-borderless" style="align-items: center; align-self: center; text-align: center; border: 2px solid transparent; color:#212121; font-size: 0.9em;" id="cart_list_items">
                 <thead>
@@ -201,6 +202,7 @@ class Order extends MY_Controller {
         $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
         $comp_vat = (int) $customer[0]->vat / 100 ;
         $comp_service = (int) $customer[0]->service_charge / 100;
+        $service = 0;
         $output.= '
             <table class="table table-borderless" style="align-items: center; align-self: center; text-align: center; border: 2px solid transparent; color:#212121; font-size: 0.9em;" id="cart_list_items">
                 <thead>
@@ -290,6 +292,7 @@ class Order extends MY_Controller {
         $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
         $comp_vat = (int) $customer[0]->vat / 100 ;
         $comp_service = (int) $customer[0]->service_charge / 100;
+        $service = 0;
         $output.= '
             <table class="table table-borderless" style="align-items: center; align-self: center; text-align: center; border: 2px solid transparent; color:#212121; font-size: 0.9em;" id="cart_list_items">
                 <thead>
@@ -387,6 +390,7 @@ class Order extends MY_Controller {
         $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
         $comp_vat = (int) $customer[0]->vat / 100 ;
         $comp_service = (int) $customer[0]->service_charge / 100;
+        $service = 0;
         $output.= '
             <table class="table table-borderless" style="align-items: center; align-self: center; text-align: center; border: 2px solid transparent; color:#212121; font-size: 0.9em;" id="cart_list_items">
                 <thead>
@@ -489,6 +493,7 @@ class Order extends MY_Controller {
         $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
         $comp_vat = (int) $customer[0]->vat / 100 ;
         $comp_service = (int) $customer[0]->service_charge / 100;
+        $service = 0;
         $output.= '
             <table class="table table-borderless" style="align-items: center; align-self: center; text-align: center; border: 2px solid transparent; color:#212121; font-size: 0.9em;" id="cart_list_items">
                 <thead>
@@ -578,6 +583,7 @@ class Order extends MY_Controller {
         $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
         $comp_vat = (int) $customer[0]->vat / 100 ;
         $comp_service = (int) $customer[0]->service_charge / 100;
+        $service = 0;
         $output.= '
             <table class="table table-borderless" style="align-items: center; align-self: center; text-align: center; border: 2px solid transparent; color:#212121; font-size: 0.9em;" id="cart_list_items">
                 <thead>
@@ -642,6 +648,7 @@ class Order extends MY_Controller {
 
                             $service = $sum * $comp_service;
                         }
+
                         $sum += $vat + $service; 
                         $output.= '' . number_format((float)$sum, '2', '.', '').' ETB';
                         $output.= '
@@ -674,6 +681,7 @@ class Order extends MY_Controller {
         $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
         $comp_vat = (int) $customer[0]->vat / 100 ;
         $comp_service = (int) $customer[0]->service_charge / 100;
+        $service = 0;
         $output.= '    
             <table class="table table-borderless" style="align-items: center; align-self: center; text-align: center; border: 2px solid transparent; color:#212121; font-size: 0.9em;" id="cart_list_items">
                 <thead>
