@@ -252,8 +252,7 @@ class Cart extends MY_Controller {
 
     public function checkout() {
         $restaurant_id = $this->session->userdata('restaurant_id');
-        $data['companies'] = $this->company_model->join('comapny_services', 'comapny_services.service_company_id = companies.company_id ')->join('services', 'services.id = comapny_services.service_list_id')->where('company_id', $restaurant_id)->get_all();
-        // $this->Category_model->join('category', 'category.category_title = item_list.item_category');
+        $data['companies'] = $this->company_model->join('comapny_services', 'comapny_services.service_company_id = companies.company_id ')->join('services', 'services.id = comapny_services.service_list_id')->where(['company_id' => $restaurant_id, 'services.service_status' =>1 ])->get_all(); 
         $data['payments'] = $this->Payment_model->where(['company_payment_id'=> $restaurant_id, 'payment_status'=> 1])->order_by('payment_id', 'desc')->get_all();
         $data['branches'] = $this->branch_model->where('branch_company_id', $restaurant_id)->get_all();
         $this->data = $data;

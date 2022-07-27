@@ -20,8 +20,9 @@
                 ?>
                     <li class="item">
                         <a href="javascript:;" class="filter-button" data-filter="<?php echo  $category->category_id; ?>"><?php echo $category->category_name; ?></a>
-                    </li>        
-                <?php }
+                    </li>       
+                <?php 
+                    }
                 } ?>
             </ul>
         </div>

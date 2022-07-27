@@ -28,7 +28,7 @@ class Pages extends MY_Controller {
 	{
 		$company = $this->company_model->where('url_name',$url_name)->get_all();
 		if(empty($company)){
-			echo "no page";
+			$this->no_page();
 		}else{
 
 			$restaurant_id = $company[0]->company_id;
@@ -42,10 +42,11 @@ class Pages extends MY_Controller {
 					INNER JOIN branches ON items.item_branch_id = branches.branch_id
 					INNER JOIN companies ON branches.branch_company_id = companies.company_id
 					WHERE company_id = $restaurant_id 
+					AND companies.company_status = 1
 					AND items.item_category != 13";
 			$data['items'] = $this->item_model->sql($sql);
 			
-			$data['companies'] = $this->company_model->where('company_id', $restaurant_id)->get_all();
+			$data['companies'] = $this->company_model->where(['company_id' => $restaurant_id, 'company_status' => 1])->get_all();
 	
 			$data['category_list']  = $this->Category_model->where(['category_company_id'=>$restaurant_id, 'category_status' => 1 ] )->get_all();
 	
@@ -96,6 +97,54 @@ class Pages extends MY_Controller {
 		$this->load->view('included/header', $this->data);
 		$this->load->view('pages/reservation');
 		$this->load->view('included/footer');
+	}
+
+	public function reservation_list($url_name)
+	{
+		$company = $this->company_model->where('url_name',$url_name)->get_all();
+
+		if(empty($company)){
+			$this->no_page();
+		}else{
+
+			$restaurant_id = $company[0]->company_id;
+
+			$sql  = "SELECT DISTINCT on (item_name) item_name, item_id,item_value, item_description->'image' AS image,
+					item_description->'description' AS description,company_cover_image, company_logo,company_name, company_opening_hour, company_closing_hour, item_category
+					from items
+					INNER JOIN branches ON items.item_branch_id = branches.branch_id
+					INNER JOIN companies ON branches.branch_company_id = companies.company_id
+					WHERE company_id = $restaurant_id";
+			$data['items'] = $this->item_model->sql($sql);
+			$sql_extra  = "SELECT DISTINCT on (item_name) item_name, item_id,item_value, item_description->'image' AS image,
+					item_description->'description' AS description,item_category
+					from items
+					INNER JOIN branches ON items.item_branch_id = branches.branch_id
+					INNER JOIN companies ON branches.branch_company_id = companies.company_id
+					WHERE company_id = $restaurant_id 
+					AND items.item_status =  1::bit 
+					AND items.item_category = 13";
+			$data['extras'] = $this->item_model->sql($sql_extra);
+			$sql_drink  = "SELECT DISTINCT on (item_name) item_name, item_id,item_value, item_description->'image' AS image,
+					item_description->'description' AS description,item_category
+					from items
+					INNER JOIN branches ON items.item_branch_id = branches.branch_id
+					INNER JOIN companies ON branches.branch_company_id = companies.company_id
+					WHERE company_id = $restaurant_id  
+					AND items.item_status = 1::bit
+					AND items.item_category = 14";
+
+
+			$data['branches'] = $this->branch_model->where(['branch_company_id' => $restaurant_id])->get_all();
+			$data['drinks'] = $this->item_model->sql($sql_drink);
+			$data['companies'] = $this->company_model->where('company_id', $restaurant_id)->get_all();
+
+			$this->data = $data;
+
+			$this->load->view('included/header', $this->data);
+			$this->load->view('pages/reservation');
+			$this->load->view('included/footer');
+		}
 	}
 
 	public function addReservation()
@@ -262,5 +311,12 @@ class Pages extends MY_Controller {
 		}
 		echo $output;
 
+	}
+
+	public function no_page()
+	{
+		$data['companies'] = $this->company_model->where(['company_status' => 1])->get_all();
+		// print_r($data); die();
+		$this->load->view('pages/404', $data);
 	}
 }
