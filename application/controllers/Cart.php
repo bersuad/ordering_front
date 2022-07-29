@@ -104,7 +104,7 @@ class Cart extends MY_Controller {
                 $item_total+= (int)$price_list * ((int)($item["quantity"]));
                 $output.= '<input type="hidden" value="' . $item["branch"] . '" id="branch_id"/>';
                 $output.= '<input type="hidden" value="' . $item["comment"] . '" id="comment"/>';
-                $output.='</td><td>' . $item["quantity"] . '</td><td> ETB ' . $item["price"] . '</td><td><a onClick=\'cartAction("remove",' . $item["code"] . ')\' class="btnRemoveAction cart-action"><i style="color:rgba(183, 0, 0,0.9); font-size: 0.9em;" class="fa fa-times fa-xs"></i></a></td></tr>';
+                $output.='</td><td>' . $item["quantity"] . '</td><td> ETB ' . $item["price"] . '</td><td><a onClick=\'cartAction("remove",' . $item["code"] . ')\' class="btnRemoveAction cart-action btn btn-sm btn-danger"><i class="fa fa-times"></i></a></td></tr>';
             }
             $output.= '</tbody></table><br>';
             if($comp_vat != ''){
