@@ -252,13 +252,21 @@ class Cart extends MY_Controller {
 
     public function checkout() {
         $restaurant_id = $this->session->userdata('restaurant_id');
-        $data['companies'] = $this->company_model->join('comapny_services', 'comapny_services.service_company_id = companies.company_id ')->join('services', 'services.id = comapny_services.service_list_id')->where(['company_id' => $restaurant_id, 'services.service_status' =>1 ])->get_all(); 
+        $data['companies'] = $this->company_model->join('comapny_services', 'comapny_services.service_company_id = companies.company_id ')->join('services', 'services.id = comapny_services.service_list_id')->where(['company_id' => $restaurant_id, 'services.service_status' => 1 ])->get_all(); 
         $data['payments'] = $this->Payment_model->where(['company_payment_id'=> $restaurant_id, 'payment_status'=> 1])->order_by('payment_id', 'desc')->get_all();
         $data['branches'] = $this->branch_model->where('branch_company_id', $restaurant_id)->get_all();
-        $this->data = $data;
-        $this->load->view('included/header', $data);
-        $this->load->view('pages/checkout');
-        $this->load->view('included/footer');
+        if($data['companies']){
+            $this->data = $data;
+    
+            $this->load->view('included/header', $data);
+            $this->load->view('pages/checkout');
+            $this->load->view('included/footer');
+        }else{
+            $this->session->set_flashdata('no_service', TRUE);
+            $url = 'menu/'.$this->session->userdata('menu_url');
+
+            redirect($url, 'refresh');
+        }
     }
 
     public function history() {

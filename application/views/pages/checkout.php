@@ -1,5 +1,3 @@
-<div id="cover-spin">
-</div>
 <div class="container section" id="menu" data-aos="fade-up" style="margin-top: 180px;">
     <div class="container">
         <div class="row">
@@ -275,7 +273,7 @@
         }
     };
     $('.create_btn').click(function() {
-        $('#cover-spin').show(1);
+        $('#cover-spin').show(0);
         inputCheck();
         location_list();
         var order_destination ='';
@@ -290,7 +288,7 @@
             $('#order_destination_place_plate').focus();
             $('#order_destination_place_room').focus();
             $('.create_btn').prop('disabled', true);
-            $('#cover-spin').show(0);
+            $('#cover-spin').hide(0);
             return false;
         }
 
@@ -479,7 +477,7 @@
     
     function success() {
         Swal.fire({
-            position: 'bottom-end',
+            position: 'center',
             icon: 'success',
             title: "Ordered!",
             text: 'Thank You, You have successfully order, We will contact you soon! ',
@@ -489,4 +487,3 @@
         });
     };
 </script>
-

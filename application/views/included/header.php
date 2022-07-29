@@ -91,6 +91,7 @@
 <body data-spy="scroll" data-target=".navbar" data-offset="50">
 
 <div class="body-wrapper">
+<div id="cover-spin"></div>
     <header id="header">
         <div class="navigation">
         
@@ -132,14 +133,14 @@
                             <div class="collapse navbar-collapse" id="navbar">
                                 <div class="navbar-right">
                                     <ul class="nav navbar-nav">
-                                        <li class="<?=(current_url() == base_url('menu/'.$this->session->userdata('menu_url'))) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('menu/'.$this->session->userdata('menu_url')) ?>">Menu</a></li>
-                                        <li class="<?=(current_url() == base_url('/reservation')) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('/reservation') ?>">Reservation</a></li>
+                                        <li class="<?=(current_url() == base_url('menu/'.$this->session->userdata('menu_url'))) ? 'active':''?>"><a onclick="$('#cover-spin').show(0)" class="page-scroll" href="<?php echo base_url('menu/'.$this->session->userdata('menu_url')) ?>">Menu</a></li>
+                                        <li class="<?=(current_url() == base_url('/reservation')) ? 'active':''?>"><a onclick="$('#cover-spin').show(0)" class="page-scroll" href="<?php echo base_url('/reservation') ?>">Reservation</a></li>
                                         <?php if($this->session->userdata('logged_in') == true){?>
                                             <li class="<?=(current_url() == base_url('/order-history')) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('/order-history') ?>">Order History</a></li>    
                                         <?php }?>
                                         <!-- <li><a class="page-scroll" href="#">Logout</a></li> -->
                                         <li>
-                                            <a href="<?php echo base_url('/checkout') ?>"><i class="fa fa-shopping-cart"></i> cart <sup><span class="badge badge-pill badge-default" id="cart_item_count"></span></sup></a>                                        
+                                            <a onclick="$('#cover-spin').show(0)" href="<?php echo base_url('/checkout') ?>"><i class="fa fa-shopping-cart"></i> cart <sup><span class="badge badge-pill badge-default" id="cart_item_count"></span></sup></a>                                        
                                             <div class="cart-btn cart-dropdown" style="display: none;">
                                                 
                                                 <div class="cart-detail-box">
