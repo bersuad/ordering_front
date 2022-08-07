@@ -143,12 +143,14 @@
                         <?php 
                             if(!empty($item->item_size)){
                         $size_list      = json_decode($item->item_size);
-                                if (!empty($size_list) || $size_list[0]->size != "") {?>
-                                    <h4 align="center">Select Size</h4>
+                            if (!empty($size_list)) {?>
+                                    <?php if(!empty($size_list[0]->title) ){?>
+                                            <h4 align="center"><?php echo $size_list[0]->title; ?></h4>
+                                        <?php }?>
                                     
-                                <?php foreach ($size_list as $key => $list) {?>
-                        <?php if($list->size != ''){
-                        ?>
+                                    <?php foreach ($size_list as $key => $list) {?>
+                                        <?php
+                        if($key > 0 && $list->size != ''){?>
                             <div class="col-md-4 col-sm-12 col-lg-4">
                                 <input type="radio" id="size<?php echo $item->item_id ?><?php echo $key ?>" name="time" value="" required> <label for="size">
                                     <h6><span id="size_name<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->size ?></span> (<span id="size_price<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->price ?> Br.</span>)</h6>

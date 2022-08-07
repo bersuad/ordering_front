@@ -57,7 +57,7 @@
     <script type="text/javascript" src="<?php echo base_url() ?>assets/js/main.js"></script>
     <script type="text/javascript" src="<?php echo base_url() ?>assets/simplepicker.js"></script>
     <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap-notify.js'); ?>" ></script>
-    
+  
     <script>
       var notify = {
         showNotification: function(from, align, color, message){

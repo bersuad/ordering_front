@@ -154,6 +154,7 @@ class Order extends MY_Controller {
                         <td>';
                         $sum = 0;
                         $price_list = 0;
+                        $vat = 0;
                         foreach (json_decode($order->order_item)->items as $item) {
                             $price_list = (int)$item->item_price / (int)$item->item_quantity;
                             $sum+= (int)$price_list * (int)$item->item_quantity;

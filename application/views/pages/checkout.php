@@ -281,7 +281,7 @@
         var order_destination2 = document.getElementById("order_destination_place_room").value;
         var order_destination3 = document.getElementById("order_destination_place_plate").value;
         var order_destination4 = document.getElementById("order_destination_place_address").value;
-        var new_date = document.getElementById("order_time").innerHTML ;
+        var new_date = <?php echo date('dd-mm-Y') ?> ;
 
         if (order_destination1 == '' && order_destination2 == '' && order_destination3 == '' && new_date == '') {
             $('#order_destination_place_table').focus();
@@ -410,7 +410,7 @@
             $('#order_destination_place_plate').val('');
             $('#order_destination_place_address').val('');
             if (this.checked) {
-                $('#date_picker').show();
+                // $('#date_picker').show();
                 $('#address_order_destination').hide();
                 $('.location').hide();
                 $('#car_order_destination').hide();

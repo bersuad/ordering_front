@@ -31,7 +31,6 @@
     <link href="<?php echo base_url() ?>assets/css/main.css" type="text/css" rel="stylesheet" />
     <link href="<?php echo base_url() ?>assets/css/responsive.css" type="text/css" rel="stylesheet" />
     <link href="<?php echo base_url() ?>assets/simplepicker.css" rel="stylesheet" media="screen">
-
     
     <link rel="apple-touch-icon" sizes="180x180" href="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" />
     <link rel="icon" type="image/png" sizes="256x256"  href="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>">
