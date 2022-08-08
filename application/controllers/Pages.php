@@ -36,7 +36,7 @@ class Pages extends MY_Controller {
 			$this->session->set_userdata('menu_url', $url_name);
 	
 			$sql  = "SELECT DISTINCT on (item_name) item_name, item_id,item_value, item_description->'image' AS image,
-					item_description->'description' AS description,company_cover_image, company_logo,company_name, company_opening_hour, company_closing_hour, item_category, category_name, extra_list, item_size
+					item_description->'description' AS description,company_cover_image, company_logo,company_name, company_opening_hour, company_closing_hour, item_category, category_name, extra_list, item_size, group_list
 					from items
 					INNER JOIN category ON category.category_id = items.item_category
 					INNER JOIN branches ON items.item_branch_id = branches.branch_id

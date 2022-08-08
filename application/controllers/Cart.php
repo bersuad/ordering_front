@@ -25,7 +25,7 @@ class Cart extends MY_Controller {
             case "add":
                 $item_id = $_POST["code"];
                 $productByCode = $this->item_model->get_product_detail($item_id);
-                $itemArray = array($productByCode[0]["item_id"] => array('name' => $productByCode[0]["item_name"], 'code' => $productByCode[0]["item_id"], 'quantity' => $_POST["quantity"], 'price' => $_POST['price_point'], 'branch' => $_POST['branch'], 'comment' => $_POST['comment'], 'extra'=> $_POST['extra'] , 'size'=> $_POST['size'], 'ori_price'=> $_POST['ori_price']));
+                $itemArray = array($productByCode[0]["item_id"] => array('name' => $productByCode[0]["item_name"], 'code' => $productByCode[0]["item_id"], 'quantity' => $_POST["quantity"], 'price' => $_POST['price_point'], 'branch' => $_POST['branch'], 'comment' => $_POST['comment'], 'extra'=> $_POST['extra'] ,'choose'=>$_POST['choose_group'],'size'=> $_POST['size'], 'ori_price'=> $_POST['ori_price']));
                 
                 $this->cart_check($productByCode[0], $itemArray);
                                 
@@ -57,6 +57,7 @@ class Cart extends MY_Controller {
                     // $_SESSION["cart_item"][$kode]["branch"] = $_POST["branch"];
                     $_SESSION["cart_item"][$kode]["comment"] = $_POST["comment"];
                     $_SESSION["cart_item"][$kode]["extra"] = $_POST["extra"];
+                    $_SESSION["cart_item"][$kode]["choose"] = $_POST["choose"];
                     $_SESSION["cart_item"][$kode]["ori_price"] = $_POST["ori_price"];
                     if($_POST["size"] != null || $_POST != ''){
                         $_SESSION["cart_item"][$kode]["size"] = $_POST["size"];
@@ -98,7 +99,11 @@ class Cart extends MY_Controller {
                     $output.='<br><small>Extra ('.$item['extra'] .')</small>';
                 }
                 if(!empty($item['size'] || $item['size'] != null)){
-                    $output.='<br><small>Size ('.$item['size'] .')</small>';
+                    $output.='<br><small>Size  ('.$item['size'] .')</small>';
+                }
+
+                if(!empty($item['choose'] || $item['choose'] != null)){
+                    $output.='<br><small>Selected ( '.$item['choose'] .' )</small>';
                 }
                 $price_list = ((int)($item["price"]) / (int)($item["quantity"]));
                 $item_total+= (int)$price_list * ((int)($item["quantity"]));
@@ -146,6 +151,7 @@ class Cart extends MY_Controller {
                     $order = array(
                         "order_item_id" => $item['code'], 
                         "extra"         => $item['extra'],
+                        "choose"        => $item['choose'],
                         "comment"       => $item['comment'], 
                         "item_name"     => $item['name'], 
                         "item_price"    => $item['price'], 

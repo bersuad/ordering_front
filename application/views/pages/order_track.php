@@ -39,7 +39,6 @@
                         id:id,
                     },
                     success: function(output) {
-                        console.log(output);
                         try{
                             result = JSON.parse(output);
                             $('#status').empty();

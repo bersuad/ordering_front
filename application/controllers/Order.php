@@ -116,26 +116,30 @@ class Order extends MY_Controller {
                     ';
                     foreach (json_decode($order->order_item)->items as $item) {
                         $size = '';
+                        $choose = '';
                         if($item->item_size != ''){
                             $size = 'Size: ('.$item->item_size.')';
                         }
+                        if($item->choose != ''){
+                            $choose = 'Choose: ('.$item->choose.')';
+                        }
                     if (!empty($item->extra)) {
-                    $output.= ' 
-                    <tr>
-                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'</td>
-                        <td>' . $item->item_quantity . '</td>
-                        <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
-                    </tr>
-                    ';
-                    }else{
-                    $output.= ' 
-                    <tr>
-                        <td>' . $item->item_name .'<br/>'.$size.'</td>
-                        <td>' . $item->item_quantity . '</td>
-                        <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
-                    </tr>
-                    ';
-                    }
+                        $output.= ' 
+                            <tr>
+                                <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'<br/>'.$choose.'</td>
+                                <td>' . $item->item_quantity . '</td>
+                                <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
+                            </tr>
+                        ';
+                        }else{
+                        $output.= ' 
+                            <tr>
+                                <td>' . $item->item_name .'<br/>'.$size.'<br/>'.$choose.'</td>
+                                <td>' . $item->item_quantity . '</td>
+                                <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
+                            </tr>
+                            ';
+                        }
                     }
                     $output.= '  
                     <tr>
@@ -217,13 +221,17 @@ class Order extends MY_Controller {
                     ';
                     foreach (json_decode($order->order_item)->items as $item) {
                         $size = '';
+                        $choose = '';
                         if($item->item_size != ''){
                             $size = 'Size: ('.$item->item_size.')';
+                        }
+                        if($item->choose != ''){
+                            $choose = 'Choose: ('.$item->choose.')';
                         }
                     if (!empty($item->extra)) {
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'</td>
+                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'<br/>'.$choose.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -231,7 +239,7 @@ class Order extends MY_Controller {
                     }else{
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name .'<br/>'.$size.'</td>
+                        <td>' . $item->item_name .'<br/>'.$size.'<br/>'.$choose.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -255,6 +263,7 @@ class Order extends MY_Controller {
                         <td>';
                         $sum = 0;
                         $price_list = 0;
+                        $vat = 0;
                         foreach (json_decode($order->order_item)->items as $item) {
                             $price_list = (int)$item->item_price / (int)$item->item_quantity;
                             $sum+= (int)$price_list * (int)$item->item_quantity;
@@ -307,13 +316,20 @@ class Order extends MY_Controller {
                     ';
                     foreach (json_decode($order->order_item)->items as $item) {
                         $size = '';
+                        $choose = '';
+                        
                         if($item->item_size != ''){
                             $size = 'Size: ('.$item->item_size.')';
                         }
+                        
+                        if( !empty($item->choose) && $item->choose != '' ){
+                            $choose = 'Choose: ('.$item->choose.')';
+                        }
+
                     if (!empty($item->extra)) {
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'</td>
+                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'<br/>'.$choose.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -321,7 +337,7 @@ class Order extends MY_Controller {
                     }else{
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name .'<br/>'.$size.'</td>
+                        <td>' . $item->item_name .'<br/>'.$size.'<br/>'.$choose.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -345,6 +361,7 @@ class Order extends MY_Controller {
                         <td>';
                         $sum = 0;
                         $price_list = 0;
+                        $vat = 0;
                         foreach (json_decode($order->order_item)->items as $item) {
                             $price_list = (int)$item->item_price / (int)$item->item_quantity;
                             $sum+= (int)$price_list * (int)$item->item_quantity;
@@ -379,7 +396,7 @@ class Order extends MY_Controller {
             $output.= '
                 <h5 style="color: #087c02; font-size: 1.2em!important; font-weight: bold;" align="center">
                 Order completed ! When You arrive at
-                <h5 style="color: #087c02; font-size: 1em!important; font-weight: bold;" align="center">' . json_decode($order->order_item)->item_destination . ' branch, Ask for order N<sup><u>o</u></sup> " <i>' . $order_id . '</i> "</h5>
+                <h5 style="color: #087c02; font-size: 1em!important; font-weight: bold;" align="center">' . json_decode($order->order_item)->item_destination . ' branch, Ask for order N<sup><u>o</u></sup> " <i></i> "</h5>
             ';
         }
         return $output;
@@ -405,13 +422,17 @@ class Order extends MY_Controller {
                     ';
                     foreach (json_decode($order->order_item)->items as $item) {
                         $size = '';
+                        $choose = '';
                         if($item->item_size != ''){
                             $size = 'Size: ('.$item->item_size.')';
+                        }
+                        if($item->choose != ''){
+                            $choose = 'Choose: ('.$item->choose.')';
                         }
                     if (!empty($item->extra)) {
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'</td>
+                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'<br/>'.$choose.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -419,7 +440,7 @@ class Order extends MY_Controller {
                     }else{
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name .'<br/>'.$size.'</td>
+                        <td>' . $item->item_name .'<br/>'.$size.'<br/>'.$choose.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -443,6 +464,7 @@ class Order extends MY_Controller {
                         <td>';
                         $sum = 0;
                         $price_list = 0;
+                        $vat = 0;
                         foreach (json_decode($order->order_item)->items as $item) {
                             $price_list = (int)$item->item_price / (int)$item->item_quantity;
                             $sum+= (int)$price_list * (int)$item->item_quantity;
@@ -508,13 +530,17 @@ class Order extends MY_Controller {
                     ';
                     foreach (json_decode($order->order_item)->items as $item) {
                         $size = '';
+                        $choose = '';
                         if($item->item_size != ''){
                             $size = 'Size: ('.$item->item_size.')';
+                        }
+                        if($item->choose != ''){
+                            $choose = 'Choose: ('.$item->choose.')';
                         }
                     if (!empty($item->extra)) {
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'</td>
+                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'<br/>'.$choose.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -522,7 +548,7 @@ class Order extends MY_Controller {
                     }else{
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name .'<br/>'.$size.'</td>
+                        <td>' . $item->item_name .'<br/>'.$size.'<br/>'.$choose.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -546,6 +572,7 @@ class Order extends MY_Controller {
                         <td>';
                         $sum = 0;
                         $price_list = 0;
+                        $vat = 0;
                         foreach (json_decode($order->order_item)->items as $item) {
                             $price_list = (int)$item->item_price / (int)$item->item_quantity;
                             $sum+= (int)$price_list * (int)$item->item_quantity;
@@ -598,13 +625,17 @@ class Order extends MY_Controller {
                     ';
                     foreach (json_decode($order->order_item)->items as $item) {
                         $size = '';
+                        $choose = '';
                         if($item->item_size != ''){
                             $size = 'Size: ('.$item->item_size.')';
+                        }
+                        if($item->choose != ''){
+                            $choose = 'Choose: ('.$item->choose.')';
                         }
                     if (!empty($item->extra)) {
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'</td>
+                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'<br/>'.$choose.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -612,7 +643,7 @@ class Order extends MY_Controller {
                     }else{
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name .'<br/>'.$size.'</td>
+                        <td>' . $item->item_name .'<br/>'.$size.'<br/>'.$choose.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -636,6 +667,7 @@ class Order extends MY_Controller {
                         <td>';
                         $sum = 0;
                         $price_list = 0;
+                        $vat = 0;
                         foreach (json_decode($order->order_item)->items as $item) {
                             $price_list = (int)$item->item_price / (int)$item->item_quantity;
                             $sum+= (int)$price_list * (int)$item->item_quantity;
@@ -696,13 +728,17 @@ class Order extends MY_Controller {
                     ';
                     foreach (json_decode($order->order_item)->items as $item) {
                         $size = '';
+                        $choose = '';
                         if($item->item_size != ''){
                             $size = 'Size: ('.$item->item_size.')';
+                        }
+                        if($item->choose != ''){
+                            $choose = 'Choose: ('.$item->choose.')';
                         }
                     if (!empty($item->extra)) {
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'</td>
+                        <td>' . $item->item_name. ' <br/>Extra: ('.$item->extra.')<br/>'.$size.'<br/>'.$choose.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -710,7 +746,7 @@ class Order extends MY_Controller {
                     }else{
                     $output.= ' 
                     <tr>
-                        <td>' . $item->item_name .'<br/>'.$size.'</td>
+                        <td>' . $item->item_name .'<br/>'.$size.'<br/>'.$choose.'</td>
                         <td>' . $item->item_quantity . '</td>
                         <td>' . number_format((int)$item->item_price, 2, '.', '') . '</td>
                     </tr>
@@ -734,6 +770,7 @@ class Order extends MY_Controller {
                         <td>';
                         $sum = 0;
                         $price_list = 0;
+                        $vat = 0;
                         foreach (json_decode($order->order_item)->items as $item) {
                             $price_list = (int)$item->item_price / (int)$item->item_quantity;
                             $sum+= (int)$price_list * (int)$item->item_quantity;

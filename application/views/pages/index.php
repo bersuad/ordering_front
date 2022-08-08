@@ -139,44 +139,71 @@
                     </div>
                     <p style="margin-top: 10px;" id="price_point<?php echo $item->item_id ?>"><?php echo $item->item_value ?>.00 Br.</p>
                     
+                    <?php 
+                        if(!empty($item->group_list)){
+                            $group_list      = json_decode($item->group_list);
+                            if (!empty($group_list)) {?>
+                                <div class="custom-control custom-checkbox">
+                                    <?php if(!empty($group_list[0]->title) ){?>
+                                        <h4 align="center"><?php echo $group_list[0]->title; ?></h4>
+                                    <?php }?>
+                                    
+                                    <?php foreach ($group_list as $key => $list) {?>
+                                        <?php
+                                        if($key > 0 && $list->item_name != ''){?>
+                                            <div class="col-md-12 col-sm-12 col-lg-12">
+                                                <input type="checkbox" id="choose_<?php echo $item->item_id ?><?php echo $key ?>" onclick="chooseCheckClick<?php echo $item->item_id ?><?php echo $key ?>()"/> 
+                                                <label for="choose">
+                                                    <h6><span id="choose_name<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->item_name ?></span></h6>
+                                                </label>
+                                            </div>
+                                        <?php }
+                                        $key++;
+                                    }?>
+                                </div>
+                            <?php }
+                        }
+                    ?>
+                    <span id="choose_field_<?php echo $item->item_id ?>" style="display: none;"></span>
+
                     <div class="custom-control custom-radio row">
                         <?php 
                             if(!empty($item->item_size)){
-                        $size_list      = json_decode($item->item_size);
-                            if (!empty($size_list)) {?>
+                                $size_list      = json_decode($item->item_size);
+                                if (!empty($size_list)) {?>
                                     <?php if(!empty($size_list[0]->title) ){?>
-                                            <h4 align="center"><?php echo $size_list[0]->title; ?></h4>
-                                        <?php }?>
+                                        <h4 align="center"><?php echo $size_list[0]->title; ?></h4>
+                                    <?php }?>
                                     
                                     <?php foreach ($size_list as $key => $list) {?>
                                         <?php
-                        if($key > 0 && $list->size != ''){?>
-                            <div class="col-md-4 col-sm-12 col-lg-4">
-                                <input type="radio" id="size<?php echo $item->item_id ?><?php echo $key ?>" name="time" value="" required> <label for="size">
-                                    <h6><span id="size_name<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->size ?></span> (<span id="size_price<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->price ?> Br.</span>)</h6>
-                                </label>
-                            </div>
-                        <?php }
-                        $key++;
+                                        if($key > 0 && $list->size != ''){?>
+                                            <div class="col-md-4 col-sm-12 col-lg-4">
+                                                <input type="radio" id="size<?php echo $item->item_id ?><?php echo $key ?>" name="time" value="" required> <label for="size">
+                                                    <h6><span id="size_name<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->size ?></span> (<span id="size_price<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->price ?> Br.</span>)</h6>
+                                                </label>
+                                            </div>
+                                        <?php }
+                                        $key++;
+                                    }
                                 }
-                            }
-                        }?>
+                            }?>
                         <span id="daynamic_size_<?php echo $item->item_id ?>" style="display: none;"></span>
                     </div>
-                        
+
+                    
+
                     <?php
                         if(!empty($item->extra_list)){
                             $exra_list      = json_decode($item->extra_list);
-                            // print_r($exra_list);
                             if ($exra_list[0]->extra=='') {
                             } else { ?>
                             <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
                                 <div class="card">
-                                    <!-- Card header -->
                                     <div class="card-header" role="tab" id="headingTwo2" style="height: 40px; background: #f1f1f1; padding-top: 5px; margin-top: 10px">
                                     <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseTwo<?php echo $item->item_id ?>" aria-expanded="false" aria-controls="collapseTwo<?php echo $item->item_id ?>">
                                         <h5 class="mb-0">
-                                        Add-on Options<i style="margin-left: 80%;" class="fa fa-angle-down rotate-icon"></i>
+                                        Add-on Options<i style="margin-left: 60%;" class="fa fa-angle-down rotate-icon"></i>
                                         </h5>
                                     </a>
                                     </div>
@@ -237,61 +264,82 @@
     <script type="text/javascript">
         <?php $exra_list      = json_decode($item->extra_list);
         if (!empty($exra_list)) {
+
             foreach ($exra_list as $key => $extra) {?>
             
-            function checkClick<?php echo $item->item_id ?><?php echo $key ?>(){
-                var extra = Number(document.getElementById(<?php echo $item->item_id ?><?php echo $key ?>).value);
-                var price = parseInt($('#price_point<?php echo $item->item_id ?>').html());
-                if ($("#<?php echo $item->item_id ?><?php echo $key ?>").prop('checked')==true){
-                    var real_price = parseInt($('#real_price<?php echo $item->item_id ?>').html());
-                    var extra_list = $('#extrList<?php echo $item->item_id ?><?php echo $key ?>').html();
-                    $('#daynamic_field_<?php echo $item->item_id ?>').append(extra_list);
+                function checkClick<?php echo $item->item_id ?><?php echo $key ?>(){
+                    var extra = Number(document.getElementById(<?php echo $item->item_id ?><?php echo $key ?>).value);
+                    var price = parseInt($('#price_point<?php echo $item->item_id ?>').html());
+                    if ($("#<?php echo $item->item_id ?><?php echo $key ?>").prop('checked')==true){
+                        var real_price = parseInt($('#real_price<?php echo $item->item_id ?>').html());
+                        var extra_list = $('#extrList<?php echo $item->item_id ?><?php echo $key ?>').html();
+                        $('#daynamic_field_<?php echo $item->item_id ?>').append(extra_list+', ');
+                        
+                        var add_real = (real_price) + (extra);
+                        $('#real_price<?php echo $item->item_id ?>').html(add_real);
+                        var total = (extra) + (price);
+                        $('#price_point<?php echo $item->item_id ?>').html(total);                                                                                            
+                    }else{
+                        var real_price = parseInt($('#real_price<?php echo $item->item_id ?>').html());
+                        $('#daynamic_field_<?php echo $item->item_id ?>').remove();
+                        var add_real = (real_price) - (extra);
+                        $('#real_price<?php echo $item->item_id ?>').html(add_real);
+                        var total = (price) - (extra);
+                        $('#price_point<?php echo $item->item_id ?>').html(total); 
+                    }
                     
-                    var add_real = (real_price) + (extra);
-                    $('#real_price<?php echo $item->item_id ?>').html(add_real);
-                    var total = (extra) + (price);
-                    $('#price_point<?php echo $item->item_id ?>').html(total);                                                                                            
-                }else{
-                    var real_price = parseInt($('#real_price<?php echo $item->item_id ?>').html());
-                    $('#daynamic_field_<?php echo $item->item_id ?>').remove();
-                    var add_real = (real_price) - (extra);
-                    $('#real_price<?php echo $item->item_id ?>').html(add_real);
-                    var total = (price) - (extra);
-                    $('#price_point<?php echo $item->item_id ?>').html(total); 
                 }
-                
+            <?php
+            $key++;
             }
-        <?php
-        $key++;
         }
+        ?>
+
+        <?php $group_list      = json_decode($item->group_list);
+            if (!empty($group_list)) {
+                foreach ($group_list as $key => $group) {?>
+
+                function chooseCheckClick<?php echo $item->item_id ?><?php echo $key ?>(){
+                    var choose = $('#choose_name<?php echo $item->item_id ?><?php echo $key ?>').html();
+                    
+                    if ($("#choose_<?php echo $item->item_id ?><?php echo $key ?>").prop('checked')==true){
+                        $('#choose_field_<?php echo $item->item_id ?>').append(choose+', ');
+                    }else{
+                        $('#choose_field_<?php echo $item->item_id ?>').remove();
+                    }
+                    
+                }
+            <?php
+                $key++;
+            }
         }
         ?>
 
         <?php $size_list      = json_decode($item->item_size);
-        if (!empty($size_list)) {
-            
-            foreach ($size_list as $key => $list) {?>
-            $('#size<?php echo $item->item_id ?><?php echo $key ?>').click(function() {
-                $('#daynamic_size_<?php echo $item->item_id ?>').html(' ');
-                var ori_price = parseInt($('#original_price<?php echo $item->item_id ?>').val());
-                var real_price = parseInt($('#real_price<?php echo $item->item_id ?>').html());
-                var size = $('#size_name<?php echo $item->item_id ?><?php echo $key ?>').html();
-                var price = parseInt( $('#size_price<?php echo $item->item_id ?><?php echo $key;?>').html());
-                var mainprice = parseInt($('#price_point<?php echo $item->item_id ?>').html());
+            if (!empty($size_list)) {
                 
-                $('#daynamic_size_<?php echo $item->item_id ?>').html(size);
-                
-                var add_real = (ori_price) + (price);
-                $('#real_price<?php echo $item->item_id ?>').html(add_real);
-                var total = (price) + (ori_price);
-                $('#price_point<?php echo $item->item_id ?>').html(total);                                                                                            
-                
-                
-            });
-        <?php
-        $key++;
-        }
-        }
+                foreach ($size_list as $key => $list) {?>
+                $('#size<?php echo $item->item_id ?><?php echo $key ?>').click(function() {
+                    $('#daynamic_size_<?php echo $item->item_id ?>').html(' ');
+                    var ori_price = parseInt($('#original_price<?php echo $item->item_id ?>').val());
+                    var real_price = parseInt($('#real_price<?php echo $item->item_id ?>').html());
+                    var size = $('#size_name<?php echo $item->item_id ?><?php echo $key ?>').html();
+                    var price = parseInt( $('#size_price<?php echo $item->item_id ?><?php echo $key;?>').html());
+                    var mainprice = parseInt($('#price_point<?php echo $item->item_id ?>').html());
+                    
+                    $('#daynamic_size_<?php echo $item->item_id ?>').html(size);
+                    
+                    var add_real = (ori_price) + (price);
+                    $('#real_price<?php echo $item->item_id ?>').html(add_real);
+                    var total = (price) + (ori_price);
+                    $('#price_point<?php echo $item->item_id ?>').html(total);                                                                                            
+                    
+                    
+                });
+                <?php
+                    $key++;
+                }
+            }
         ?>
 
         
