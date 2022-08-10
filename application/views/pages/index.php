@@ -143,23 +143,36 @@
                         if(!empty($item->group_list)){
                             $group_list      = json_decode($item->group_list);
                             if (!empty($group_list)) {?>
-                                <div class="custom-control custom-checkbox">
-                                    <?php if(!empty($group_list[0]->title) ){?>
-                                        <h4 align="center"><?php echo $group_list[0]->title; ?></h4>
-                                    <?php }?>
-                                    
-                                    <?php foreach ($group_list as $key => $list) {?>
-                                        <?php
-                                        if($key > 0 && $list->item_name != ''){?>
-                                            <div class="col-md-12 col-sm-12 col-lg-12">
-                                                <input type="checkbox" id="choose_<?php echo $item->item_id ?><?php echo $key ?>" onclick="chooseCheckClick<?php echo $item->item_id ?><?php echo $key ?>()"/> 
-                                                <label for="choose">
-                                                    <h6><span id="choose_name<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->item_name ?></span></h6>
-                                                </label>
+                                <div class="accordion md-accordion" id="chooseListAccordion" role="tablist" aria-multiselectable="true">
+                                    <div class="card">
+                                        <div class="card-header" role="tab" id="chooseHeading" style="height: 40px; background: #f1f1f1; padding-top: 5px; margin-top: 10px">
+                                            <?php if(!empty($group_list[0]->title) ){?>
+                                                <a class="collapsed" data-toggle="collapse" data-parent="#chooseListAccordion" href="#choosecollapse<?php echo $item->item_id ?>" aria-expanded="false" aria-controls="collapseTwo<?php echo $item->item_id ?>">
+                                                    <h5 class="mb-0"><?php echo $group_list[0]->title; ?> <i style="margin-left: 60%;" class="fa fa-angle-down rotate-icon"></i></h5>
+                                                </a>
+                                            <?php }?>
+                                        </div>
+                                        <div id="choosecollapse<?php echo $item->item_id ?>" class="collapse" role="tabpanel" aria-labelledby="chooseHeading" data-parent="#chooseListAccordion">
+                                            <div class="card-body">
+                                                <div class="custom-control custom-checkbox">
+                                                    <div style="align-items: center; align-content: center; align-self: center; text-align: left;">
+                                                        <?php foreach ($group_list as $key => $list) {?>
+                                                            <?php
+                                                            if($key > 0 && $list->item_name != ''){?>
+                                                                <div class="col-md-12 col-sm-12 col-lg-12">
+                                                                    <input type="checkbox" id="choose_<?php echo $item->item_id ?><?php echo $key ?>" onclick="chooseCheckClick<?php echo $item->item_id ?><?php echo $key ?>()"/> 
+                                                                    <label for="choose">
+                                                                        <h6><span id="choose_name<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->item_name ?></span></h6>
+                                                                    </label>
+                                                                </div>
+                                                            <?php }
+                                                            $key++;
+                                                        }?>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        <?php }
-                                        $key++;
-                                    }?>
+                                        </div>
+                                    </div>
                                 </div>
                             <?php }
                         }
@@ -190,9 +203,6 @@
                             }?>
                         <span id="daynamic_size_<?php echo $item->item_id ?>" style="display: none;"></span>
                     </div>
-
-                    
-
                     <?php
                         if(!empty($item->extra_list)){
                             $exra_list      = json_decode($item->extra_list);
