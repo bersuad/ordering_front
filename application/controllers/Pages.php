@@ -319,4 +319,151 @@ class Pages extends MY_Controller {
 		// print_r($data); die();
 		$this->load->view('pages/404', $data);
 	}
+
+
+	public function login()
+	{
+		// print_r($_POST);
+
+		if ($this->input->post('phone_no')) {
+            $phone_no = $this->input->post('phone_no');
+            $url = $this->input->post('url');
+            $where = array( 'customer_phone' => $phone_no);
+            $user = $this->Customer_model->where($where)->get();
+
+            $this->session->set_userdata('page_url', $url);
+            
+            $user_info = $user->customer_is_in_blacklist;
+            
+            if($user_info == 1){
+                unset($_SESSION["phone_no"]);
+                
+				redirect($url);
+            }else{
+                $this->sms_send($phone_no);
+            }
+            
+        }
+
+	}
+
+	public function verify_page()
+	{
+		$restaurant_id = $this->session->userdata('restaurant_id');
+		$sql  = "SELECT DISTINCT on (item_name) item_name, item_id,item_value, item_description->'image' AS image,
+				item_description->'description' AS description,company_cover_image, company_logo,company_name, company_opening_hour, company_closing_hour, item_category
+				from items
+				INNER JOIN branches ON items.item_branch_id = branches.branch_id
+				INNER JOIN companies ON branches.branch_company_id = companies.company_id
+				WHERE company_id = $restaurant_id";
+		$data['items'] = $this->item_model->sql($sql);
+		$sql_extra  = "SELECT DISTINCT on (item_name) item_name, item_id,item_value, item_description->'image' AS image,
+				item_description->'description' AS description,item_category
+				from items
+				INNER JOIN branches ON items.item_branch_id = branches.branch_id
+				INNER JOIN companies ON branches.branch_company_id = companies.company_id
+				WHERE company_id = $restaurant_id 
+				AND items.item_status =  1::bit 
+				AND items.item_category = 13";
+		$data['extras'] = $this->item_model->sql($sql_extra);
+		$sql_drink  = "SELECT DISTINCT on (item_name) item_name, item_id,item_value, item_description->'image' AS image,
+				item_description->'description' AS description,item_category
+				from items
+				INNER JOIN branches ON items.item_branch_id = branches.branch_id
+				INNER JOIN companies ON branches.branch_company_id = companies.company_id
+				WHERE company_id = $restaurant_id  
+				AND items.item_status = 1::bit
+				AND items.item_category = 14";
+
+
+		$data['branches'] = $this->branch_model->where(['branch_company_id' => $restaurant_id])->get_all();
+		$data['drinks'] = $this->item_model->sql($sql_drink);
+		$data['companies'] = $this->company_model->where('company_id', $restaurant_id)->get_all();
+
+		$this->data = $data;
+
+		$this->load->view('included/header', $this->data);
+		$this->load->view('pages/verification');
+		$this->load->view('included/footer');
+	}
+
+	public function verify()
+	{
+		$home = base_url('menu/'.$this->session->userdata('menu_url'));
+
+        $url = $this->session->userdata('page_url');
+
+		$code =  $this->session->userdata('code');
+		$v_code = $this->input->post('reservation_name');
+
+        if ($v_code == $code) {
+            $this->session->set_userdata('logged_in', true);
+            header('Location:'.$home);            
+        } else {
+			$this->session->set_userdata('logged_in', false);
+            redirect('/'.$url);
+        }
+	}
+
+	public function sms_send($phone)
+	{
+		$phone_no = $phone;
+
+		$user_id = $this->Customer_model->where('customer_phone',$phone_no);
+		
+		if ($user_id) {
+            $phone_no = str_replace('-', '', $phone_no);
+				
+			if (strpos($phone_no, "2519") 			=== 0) {
+				$phone_no = str_replace('251', '', $phone_no);
+			} else if (strpos($phone_no, "09") 		=== 0) {
+				$phone_no = str_replace('0', '', $phone_no);
+			} else if (strpos($phone_no, "+2519") 	=== 0) {
+				$phone_no = str_replace('+251', '', $phone_no);
+			}
+
+
+			$phone_no = "251".$phone_no;
+
+			$code = (string) random_int(1111, 9999);
+			$curl = curl_init();
+
+			curl_setopt_array($curl, array(
+			CURLOPT_URL => 'https://api.geezsms.com/api/v1/sms/send',
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => '',
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 0,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => 'POST',
+			CURLOPT_POSTFIELDS => array('token' => 'izX1mlRIMqJQAjjIYondSwTtvBv3JxjA','phone' => $phone_no,'msg' => 'Your QRAnbessa Orderring Verification Code is '.$code.'. Please add this code to verify you. Thank you!'),
+			));
+
+			$response = curl_exec($curl);
+
+			curl_close($curl);
+			$customer = $this->customer_model->fields('customer_full_name,customer_id')->where('customer_phone',$phone)->get();
+			
+			$user_data = array(
+				'phone_no'   => $phone_no,
+				'code' => $code,
+				'customer_name' => $customer->customer_full_name,
+				'customer_id' => $customer->customer_id
+	
+			);
+	
+			$this->session->set_userdata($user_data);
+			redirect('pages/verify_page');
+
+        } else {
+            $this->session->set_flashdata('message', 'This phone number isn\'t registered ');
+            $this->session->set_flashdata('color', 'red');
+            echo $this->session->flashdata('message');
+
+			$url = $this->session->userdata('page_url');
+            redirect($url);
+        }
+
+	}
 }

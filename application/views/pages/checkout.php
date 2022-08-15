@@ -13,13 +13,13 @@
                             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="padding-bottom: 10px;">
                                 <div>
                                     <label for="name">Name</label>
-                                    <input type="text" class="default form-control" name="user_name" placeholder="Your Name" id="user_name" require onchange="inputCheck()"/>
+                                    <input type="text" class="default form-control" name="user_name" placeholder="Your Name" id="user_name" require onchange="inputCheck()" value="<?php if($this->session->userdata('logged_in')){echo $this->session->userdata('customer_name');}else{ echo "";} ?>"/>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="padding-bottom: 10px;">
                                 <div>
                                     <label for="phone">Phone No</label>
-                                    <input autocomplete="off" maxlength="10" onkeyup="inputCheck()" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" name="phone_no" class="form-control input-default " placeholder="Your Phone Number" required autocomplete="off" id="user_phone">
+                                    <input autocomplete="off" maxlength="10" onkeyup="inputCheck()" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" name="phone_no" class="form-control input-default " placeholder="Your Phone Number" required autocomplete="off" id="user_phone" value="<?php if($this->session->userdata('logged_in')){echo $this->session->userdata('phone_no');}else{ echo "";} ?>">
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">

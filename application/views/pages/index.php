@@ -5,6 +5,7 @@
     }
    ?>
 <div class="container section" id="menu" data-aos="fade-up" style="margin-top: 180px;">
+
     <div class="title-block">
         <h1 class="section-title" style="color: <?php echo $companies[0]->main_color; ?>;">Our Menus</h1>
     </div>
@@ -131,43 +132,89 @@
                     <h3 style="margin-top: 20px; margin-bottom: 20px;"><?php echo $item->item_name ?></h3>
                     <p style="margin-top: 20px; margin-bottom: 20px;" id="real_price<?php echo $item->item_id ?>"><?php echo $item->item_value ?> Br.</p>
                     <input type="hidden" name="original_price" value="<?php echo $item->item_value ?>" id="original_price<?php echo $item->item_id ?>"/>
+
                     <p align="left" style="margin-top: 2%; align-items:flex-start; align-content:flex-start; align-self: flex-start; text-align: left;"> <?php echo $item->description ?></p>
-                    <div align="center" class="row" style="background-color: #f8f8f8; width: 100%; border-radius: 10px; align-content: center;">
-                        <i class="fa fa-minus fa-lg" id="minus_btn<?php echo $item->item_id ?>" style="cursor: pointer; background: #eeeeee; height: 50px; width: 50px; border-radius: 50%; padding-top: 15px; margin-rigth: 20px;"></i>
+
+                    <div align="center" class="row" style="background-color: #f8f8f8; width: 105%; border-radius: 10px; align-content: center;">
+                        <i class="fa fa-minus fa-lg" id="minus_btn<?php echo $item->item_id ?>" style="cursor: pointer; background: #eeeeee; height: 50px; width: 50px; border-radius: 50%; padding-top: 18px; margin-rigth: 20px;"></i>
                         <strong><label style="font-size: 1.1em; padding-left: 6px;" id="qty_<?php echo $item->item_id ?>" name="quantity" class="quantity<?php echo $item->item_id ?>"> 1 </label> </strong>
-                        <i class="fa fa-plus fa-lg" id="plus_btn<?php echo $item->item_id ?>" style="cursor: pointer; background: #eeeeee; height: 50px; width: 50px; border-radius: 100%; padding-top: 15px; margin-left: 15px;"></i>
+                        <i class="fa fa-plus fa-lg" id="plus_btn<?php echo $item->item_id ?>" style="cursor: pointer; background: #eeeeee; height: 50px; width: 50px; border-radius: 100%; padding-top: 18px; margin-left: 15px;"></i>
                     </div>
+
                     <p style="margin-top: 10px;" id="price_point<?php echo $item->item_id ?>"><?php echo $item->item_value ?>.00 Br.</p>
-                    
+
                     <?php 
-                        if(!empty($item->group_list)){
+                        if(!empty($item->item_size)){
+                            $size_list      = json_decode($item->item_size);
+                            if (!empty($size_list)) {?>
+                            <div class="accordion md-accordion" id="radioGroupAccordion" role="tablist" aria-multiselectable="true">
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="radioHeader" style="height: 40px; background: #f0f0f0; padding-top: 5px; margin-top: 10px;">
+                                        <?php if(!empty($size_list[0]->title) ){?>
+                                            <a class="collapsed" data-toggle="collapse" data-parent="#radioGroupAccordion" href="#radioGroupAccordion<?php echo $item->item_id ?>" aria-expanded="false" aria-controls="collapseThree<?php echo $item->item_id ?>">
+                                                <h5 class="mb-0"><?php echo $size_list[0]->title; ?> <i style="margin-left: 60%;" class="fa fa-angle-down rotate-icon"></i> </h5>
+                                            </a>
+                                        <?php }?>
+                                    </div>
+                                    <div id="radioGroupAccordion<?php echo $item->item_id ?>" class="collapse" role="tabpanel" aria-labelledby="radioOption" data-parent="#radioGroupAccordion">
+                                        <div class="card-body">
+                                            <div style="align-items: center; align-content: center; align-self: center; text-align: left;">
+                                                <div class="form-check">
+                                                    <?php foreach ($size_list as $key => $list) {?>
+                                                        <?php
+                                                        if($key > 0 && $list->size != ''){?>
+                                                            <div class="custom-control custom-radio row">
+                                                                <div class="col-md-4 col-sm-12 col-lg-4">
+                                                                    <input type="radio" id="size<?php echo $item->item_id ?><?php echo $key ?>" name="time" value="" required> <label for="size">
+                                                                        <h6><span id="size_name<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->size ?></span> (<span id="size_price<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->price ?> Br.</span>)</h6>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        <?php }
+                                                        $key++;
+                                                    }?>
+                                                    <span id="daynamic_size_<?php echo $item->item_id ?>" style="display: none;"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php }
+                    }?>
+
+                    <?php
+                        if(!empty($item->group_list) && $item->group_list != null){
                             $group_list      = json_decode($item->group_list);
                             if (!empty($group_list)) {?>
                                 <div class="accordion md-accordion" id="chooseListAccordion" role="tablist" aria-multiselectable="true">
                                     <div class="card">
                                         <div class="card-header" role="tab" id="chooseHeading" style="height: 40px; background: #f1f1f1; padding-top: 5px; margin-top: 10px">
                                             <?php if(!empty($group_list[0]->title) ){?>
-                                                <a class="collapsed" data-toggle="collapse" data-parent="#chooseListAccordion" href="#choosecollapse<?php echo $item->item_id ?>" aria-expanded="false" aria-controls="collapseTwo<?php echo $item->item_id ?>">
+                                                <a class="collapsed" data-toggle="collapse" data-parent="#chooseListAccordion" href="#choosecollapse<?php echo $item->item_id ?>" aria-expanded="false" aria-controls="collapseOne<?php echo $item->item_id ?>">
                                                     <h5 class="mb-0"><?php echo $group_list[0]->title; ?> <i style="margin-left: 60%;" class="fa fa-angle-down rotate-icon"></i></h5>
                                                 </a>
                                             <?php }?>
                                         </div>
                                         <div id="choosecollapse<?php echo $item->item_id ?>" class="collapse" role="tabpanel" aria-labelledby="chooseHeading" data-parent="#chooseListAccordion">
                                             <div class="card-body">
-                                                <div class="custom-control custom-checkbox">
-                                                    <div style="align-items: center; align-content: center; align-self: center; text-align: left;">
+                                                <div style="align-items: center; align-content: center; align-self: center; text-align: left;">
+                                                    <div class="form-check">
                                                         <?php foreach ($group_list as $key => $list) {?>
                                                             <?php
                                                             if($key > 0 && $list->item_name != ''){?>
-                                                                <div class="col-md-12 col-sm-12 col-lg-12">
-                                                                    <input type="checkbox" id="choose_<?php echo $item->item_id ?><?php echo $key ?>" onclick="chooseCheckClick<?php echo $item->item_id ?><?php echo $key ?>()"/> 
-                                                                    <label for="choose">
-                                                                        <h6><span id="choose_name<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->item_name ?></span></h6>
-                                                                    </label>
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <div class="col-md-12 col-sm-12 col-lg-12">
+                                                                        <input type="checkbox" id="choose_<?php echo $item->item_id ?><?php echo $key ?>" onclick="chooseCheckClick<?php echo $item->item_id ?><?php echo $key ?>()"/> 
+                                                                        <label for="choose">
+                                                                            <h6><span id="choose_name<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->item_name ?></span></h6>
+                                                                        </label>
+                                                                    </div>
                                                                 </div>
                                                             <?php }
                                                             $key++;
                                                         }?>
+                                                        <span id="choose_field_<?php echo $item->item_id ?>" style="display: none;"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -177,84 +224,58 @@
                             <?php }
                         }
                     ?>
-                    <span id="choose_field_<?php echo $item->item_id ?>" style="display: none;"></span>
-
-                    <div class="custom-control custom-radio row">
-                        <?php 
-                            if(!empty($item->item_size)){
-                                $size_list      = json_decode($item->item_size);
-                                if (!empty($size_list)) {?>
-                                    <?php if(!empty($size_list[0]->title) ){?>
-                                        <h4 align="center"><?php echo $size_list[0]->title; ?></h4>
-                                    <?php }?>
-                                    
-                                    <?php foreach ($size_list as $key => $list) {?>
-                                        <?php
-                                        if($key > 0 && $list->size != ''){?>
-                                            <div class="col-md-4 col-sm-12 col-lg-4">
-                                                <input type="radio" id="size<?php echo $item->item_id ?><?php echo $key ?>" name="time" value="" required> <label for="size">
-                                                    <h6><span id="size_name<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->size ?></span> (<span id="size_price<?php echo $item->item_id; ?><?php echo $key;?>"><?php echo $list->price ?> Br.</span>)</h6>
-                                                </label>
-                                            </div>
-                                        <?php }
-                                        $key++;
-                                    }
-                                }
-                            }?>
-                        <span id="daynamic_size_<?php echo $item->item_id ?>" style="display: none;"></span>
-                    </div>
+                    
                     <?php
                         if(!empty($item->extra_list)){
                             $exra_list      = json_decode($item->extra_list);
                             if ($exra_list[0]->extra=='') {
                             } else { ?>
-                            <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
-                                <div class="card">
-                                    <div class="card-header" role="tab" id="headingTwo2" style="height: 40px; background: #f1f1f1; padding-top: 5px; margin-top: 10px">
-                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseTwo<?php echo $item->item_id ?>" aria-expanded="false" aria-controls="collapseTwo<?php echo $item->item_id ?>">
-                                        <h5 class="mb-0">
-                                        Add-on Options<i style="margin-left: 60%;" class="fa fa-angle-down rotate-icon"></i>
-                                        </h5>
-                                    </a>
-                                    </div>
-                                    <div id="collapseTwo<?php echo $item->item_id ?>" class="collapse" role="tabpanel" aria-labelledby="headingTwo2" data-parent="#accordionEx">
-                                    <div class="card-body">
-                                        <div class="form-check">
-                                            <ul class="list-group list-group-flush">
-                                                <?php 
-                                                $exra_list      = json_decode($item->extra_list);
-                                                if (!empty($exra_list)) {
-                                                foreach ($exra_list as $key => $extra) {
-                                                    if($extra->extra != ''){
-                                                ?>
-                                                <li class="list-group-item">
-                                                <!-- Default checked -->
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" value="<?php echo $extra->price ?>" id="<?php echo $item->item_id ?><?php echo $key ?>"  onclick="checkClick<?php echo $item->item_id ?><?php echo $key ?>()">
-                                                    <label class="custom-control-label" for="<?php echo $item->item_id ?><?php echo $key ?>"> 
-                                                        <span id="extrList<?php echo $item->item_id ?><?php echo $key ?>"> 
-                                                            <?php echo $extra->extra ?> 
-                                                        </span> 
-                                                        (<small ><?php echo number_format($extra->price, 2) ?>)</small>
-                                                    </label>
+                                <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
+                                    <div class="card">
+                                        <div class="card-header" role="tab" id="headingTwo2" style="height: 40px; background: #f1f1f1; padding-top: 5px; margin-top: 10px">
+                                            <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseTwo<?php echo $item->item_id ?>" aria-expanded="false" aria-controls="collapseTwo<?php echo $item->item_id ?>">
+                                                <h5 class="mb-0">
+                                                Add-on Options<i style="margin-left: 60%;" class="fa fa-angle-down rotate-icon"></i>
+                                                </h5>
+                                            </a>
+                                        </div>
+                                        <div id="collapseTwo<?php echo $item->item_id ?>" class="collapse" role="tabpanel" aria-labelledby="headingTwo2" data-parent="#accordionEx">
+                                            <div class="card-body">
+                                                <div class="form-check">
+                                                    <ul class="list-group list-group-flush">
+                                                        <?php 
+                                                        $exra_list      = json_decode($item->extra_list);
+                                                        if (!empty($exra_list)) {
+                                                        foreach ($exra_list as $key => $extra) {
+                                                            if($extra->extra != ''){
+                                                        ?>
+                                                        <li class="list-group-item">
+                                                        <!-- Default checked -->
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input" value="<?php echo $extra->price ?>" id="<?php echo $item->item_id ?><?php echo $key ?>"  onclick="checkClick<?php echo $item->item_id ?><?php echo $key ?>()">
+                                                            <label class="custom-control-label" for="<?php echo $item->item_id ?><?php echo $key ?>"> 
+                                                                <span id="extrList<?php echo $item->item_id ?><?php echo $key ?>"> 
+                                                                    <?php echo $extra->extra ?> 
+                                                                </span> 
+                                                                (<small ><?php echo number_format($extra->price, 2) ?>)</small>
+                                                            </label>
+                                                        </div>
+                                                        </li>
+                                                        <?php }
+                                                        $key++;
+                                                        }
+                                                        } ?>
+                                                        <span id="daynamic_field_<?php echo $item->item_id ?>" style="display: none;"></span>
+                                                    </ul>
                                                 </div>
-                                                </li>
-                                                <?php }
-                                                $key++;
-                                                }
-                                                } ?>
-                                                <span id="daynamic_field_<?php echo $item->item_id ?>" style="display: none;"></span>
-                                            </ul>
+                                            </div>
                                         </div>
                                     </div>
-                                    </div>
                                 </div>
-                            </div>
-
                             <?php
                             }
                         }
-                        ?>
+                    ?>
                     <div id="modal_comment">
                         <label for="textarea">Special Instructions</label>
                         <textarea placeholder="Special Instructions" class="form-control" id="comment_<?php echo $item->item_id ?>" rows="3"></textarea>

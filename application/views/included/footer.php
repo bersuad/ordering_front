@@ -26,12 +26,55 @@
                     </a>
                 </li>
             <?php }?>
+
+            <?php if($this->session->userdata('logged_in') != true){?>
+              <li>
+                  <a data-toggle="modal" data-target="#loginModal"> 
+                      <i class="fas fa-log-in"></i>Login
+                  </a>
+              </li>
+            <?php }?>
         </ul>
         <div class="right_menu_addr top_addr">
             <span><i class="fa fa-map-marker" aria-hidden="true"></i> Addis Ababa, Bole around Edna Mall</span>
             <span><i class="fa fa-clock-o" aria-hidden="true"></i> <?php echo $companies[0]->company_opening_hour; ?> - <?php echo $companies[0]->company_closing_hour; ?></span>
         </div>
     </nav>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <strong style="font-size: 1.5em; color: #000;"><span aria-hidden="true">&times;</span></strong>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="<?php echo base_url('pages/login') ?>" method="post" style="border: 2px solid #fff;">
+              <div align="center" style="padding-bottom: 30px;">
+                <img src="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" alt="logo" style="width:auto; max-height: 120px;" />
+              </div>
+              <h4 class="text-light-black " align="center" style="font-weight: bold;">Enter your phone number</h4>
+              <div class="row">
+                <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1" style="padding-bottom: 10px;">
+                    <input type="text" class="form-control" name="phone_no" placeholder="Your Phone Number" id="phone_no" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                    <input type="hidden" value="<?php echo current_url() ?>" name="url">
+                </div>
+                <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1" style="padding-bottom: 10px;">
+                  <button type="submit" class="btn btn-block add_to_cart" style="background-color: <?php echo $companies[0]->main_color; ?> ; color:#fff;">Login</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <div id="registerLink" align="center">
+                <b><span>New to order?</span></b><br>
+                <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#registerModal" style="color: <?php echo $companies[0]->main_color; ?>;"><b>SIGN UP</b></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <?php 
       if(current_url() != base_url('/checkout')){?>

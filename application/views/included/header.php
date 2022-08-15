@@ -161,6 +161,12 @@
                                                 <span>LOG OUT</span>
                                             </a>
                                         </li>
+                                        <?php }else{?>
+                                            <li>
+                                                <a class="page-scroll" href="#" data-toggle="modal" data-target="#loginModal"> <i class="fa fa-log-in"></i>
+                                                    <span>Login</span>
+                                                </a>
+                                            </li>
                                         <?php }?>
                                     </ul>
                                 </div>

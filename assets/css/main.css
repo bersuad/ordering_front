@@ -2051,3 +2051,7 @@ a:focus {
     align-items: center;
     text-align: center;
 }
+
+#modal_comment{
+    margin-top: 30px;
+}
