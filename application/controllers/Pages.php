@@ -422,22 +422,30 @@ class Pages extends MY_Controller {
 				$phone_no = str_replace('+251', '', $phone_no);
 			}
 
+			if (preg_match('/^(\+?251|0?)9\d{8}$/', $phone_no) !== 1) {
+				header("HTTP/1.1 400 Bad Request");
+				$response = array("Response" => "Bad Number");
+				echo json_encode($response);
+				return;
+			}
+	
+
 
 			$phone_no = "251".$phone_no;
 
-			$code = (string) random_int(1111, 9999);
+			$code = (string) random_int(0000, 9999);
 			$curl = curl_init();
 
 			curl_setopt_array($curl, array(
-			CURLOPT_URL => 'https://api.geezsms.com/api/v1/sms/send',
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_ENCODING => '',
-			CURLOPT_MAXREDIRS => 10,
-			CURLOPT_TIMEOUT => 0,
-			CURLOPT_FOLLOWLOCATION => true,
-			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-			CURLOPT_CUSTOMREQUEST => 'POST',
-			CURLOPT_POSTFIELDS => array('token' => 'izX1mlRIMqJQAjjIYondSwTtvBv3JxjA','phone' => $phone_no,'msg' => 'Your QRAnbessa Orderring Verification Code is '.$code.'. Please add this code to verify you. Thank you!'),
+				CURLOPT_URL => 'https://api.geezsms.com/api/v1/sms/send',
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => '',
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => 'POST',
+				CURLOPT_POSTFIELDS => array('token' => 'izX1mlRIMqJQAjjIYondSwTtvBv3JxjA','phone' => $phone_no,'msg' => 'Your QRAnbessa Orderring Verification Code is '.$code.'. Please add this code to verify you. Thank you!'),
 			));
 
 			$response = curl_exec($curl);
@@ -461,7 +469,7 @@ class Pages extends MY_Controller {
             $this->session->set_flashdata('color', 'red');
             echo $this->session->flashdata('message');
 
-			$url = $this->session->userdata('page_url');
+			$url = base_url('/menu/rori-hotel');
             redirect($url);
         }
 

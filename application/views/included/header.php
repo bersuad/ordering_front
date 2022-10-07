@@ -39,8 +39,6 @@
     <link rel="icon" type="image/png" sizes="16x16" href="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" />
     <link rel="icon" type="image/png" href="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>"/>
     <link rel="mask-icon" href="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" color="#5bbad5" />
-    <meta name="msapplication-TileColor" content="#990100" />
-    <meta name="theme-color" content="#ffffff" />    
     <style>
         .top_addr i.fa {
             color:<?php echo $companies[0]->second_color; ?>;
@@ -69,6 +67,10 @@
             background-color: <?php echo $companies[0]->second_color; ?>;
         }
 
+        .nav > li > a{
+            color:<?php echo $companies[0]->second_color; ?>;
+        }
+
         .menu_filter .item a:focus,
         .menu_filter .item a:hover {
             color:<?php echo $companies[0]->main_color; ?>;
@@ -76,12 +78,21 @@
             background-color: <?php echo $companies[0]->second_color; ?>;
         }
         .menu_filter .item.active a {
-            border-color: <?php echo $companies[0]->main_color; ?>;
-            background-color: <?php echo $companies[0]->main_color; ?>;
-            color:<?php echo $companies[0]->second_color; ?>;
+            color:<?php echo $companies[0]->main_color; ?>;
+            border-color: <?php echo $companies[0]->second_color; ?>;
+            background-color: <?php echo $companies[0]->second_color; ?>;
         }
         .reserv_box{
             background-color: <?php echo $companies[0]->main_color; ?>!important;
+        }
+        .top_addr span i{
+            color:<?php echo $companies[0]->second_color; ?>;
+        }
+        .right_menu_icon span i{
+            color:<?php echo $companies[0]->second_color; ?>;
+        }
+        .rmenu_list li a{
+            color:<?php echo $companies[0]->second_color; ?>;
         }
     </style>
 </head>
@@ -107,7 +118,9 @@
                         </div>
                         <div id="navbar_search">
                             <form>
+                                    
                                 <input style="color: <?php echo $companies[0]->second_color; ?>;" type="text" name="name" class="form-control pull-left" value="" placeholder="Search your favorites food here" id="search_food" autocomplete="off"/>
+
                                 <button type='reset' value='Reset' name='reset' class="pull-right close" id="search_close" onclick="return resetForm(this.form);"><i class="fa fa-close"></i></button>
                             </form>
                         </div>
@@ -121,7 +134,7 @@
                                     <img src="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" alt="logo" />
                                 </a>
                                 <a href="<?php echo base_url('/checkout') ?>" id="mobile-count-view">
-                                    <span><i class="fa fa-shopping-cart fa-lg" style="font-size: 1.em; color:#fff;"></i> <sup><span class="badge badge-pill badge-default" id="mobile_cart_item_count"></span></sup></span>
+                                    <span><i class="fa fa-shopping-cart fa-lg" style="font-size: 1.em; color:<?php echo $companies[0]->second_color; ?>;"></i> <sup><span class="badge badge-pill badge-default" id="mobile_cart_item_count"></span></sup></span>
                                 </a>
                                 <a href="#cd-nav" class="cd-nav-trigger right_menu_icon">
                                     <span><i class="fa fa-bars" aria-hidden="true"></i></span>
@@ -148,7 +161,7 @@
                                                         <div class="card-body no-padding" id="cart-item">
                                                             
                                                         </div>
-                                                        <div  id="trip_estimation" style="color: #444!important;font-weight:700;float:left"></div>
+                                                        <div  id="trip_estimation" style="color: <?php echo $companies[0]->second_color; ?>!important;font-weight:700;float:left"></div>
                                                         <div class="card-footer padding-15" id="go_cart_btn"> 
                                                             
                                                         </div>

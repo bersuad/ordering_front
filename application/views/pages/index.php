@@ -4,10 +4,10 @@
       }
     }
    ?>
-<div class="container section" id="menu" data-aos="fade-up" style="margin-top: 180px;">
+<div class="container section" id="menu" data-aos="fade-up">
 
     <div class="title-block">
-        <h1 class="section-title" style="color: <?php echo $companies[0]->main_color; ?>;">Our Menus</h1>
+        <h1 class="section-title" style="color: <?php echo $companies[0]->second_color; ?>;">Our Menu</h1>
     </div>
     <?php if (!empty($items)) {?>
         <div class="menu_filter text-center category-list">
@@ -35,7 +35,9 @@
         
         <div class="filtr-item image filter all active">
             <div class="row">
+
                 <div id="result"></div>
+                
                 <?php  if(!empty($items)){
                     foreach($items as $key => $item){
                 ?>
@@ -325,53 +327,58 @@
             }
         }
         ?>
+        <?php 
+            if(!empty($item->group_list)){?>
+            <?php $group_list      = json_decode($item->group_list);
+                if (!empty($group_list)) {
+                    foreach ($group_list as $key => $group) {?>
 
-        <?php $group_list      = json_decode($item->group_list);
-            if (!empty($group_list)) {
-                foreach ($group_list as $key => $group) {?>
-
-                function chooseCheckClick<?php echo $item->item_id ?><?php echo $key ?>(){
-                    var choose = $('#choose_name<?php echo $item->item_id ?><?php echo $key ?>').html();
-                    
-                    if ($("#choose_<?php echo $item->item_id ?><?php echo $key ?>").prop('checked')==true){
-                        $('#choose_field_<?php echo $item->item_id ?>').append(choose+', ');
-                    }else{
-                        $('#choose_field_<?php echo $item->item_id ?>').remove();
+                    function chooseCheckClick<?php echo $item->item_id ?><?php echo $key ?>(){
+                        var choose = $('#choose_name<?php echo $item->item_id ?><?php echo $key ?>').html();
+                        
+                        if ($("#choose_<?php echo $item->item_id ?><?php echo $key ?>").prop('checked')==true){
+                            $('#choose_field_<?php echo $item->item_id ?>').append(choose+', ');
+                        }else{
+                            $('#choose_field_<?php echo $item->item_id ?>').remove();
+                        }
+                        
                     }
-                    
-                }
-            <?php
-                $key++;
-            }
-        }
-        ?>
-
-        <?php $size_list      = json_decode($item->item_size);
-            if (!empty($size_list)) {
-                
-                foreach ($size_list as $key => $list) {?>
-                $('#size<?php echo $item->item_id ?><?php echo $key ?>').click(function() {
-                    $('#daynamic_size_<?php echo $item->item_id ?>').html(' ');
-                    var ori_price = parseInt($('#original_price<?php echo $item->item_id ?>').val());
-                    var real_price = parseInt($('#real_price<?php echo $item->item_id ?>').html());
-                    var size = $('#size_name<?php echo $item->item_id ?><?php echo $key ?>').html();
-                    var price = parseInt( $('#size_price<?php echo $item->item_id ?><?php echo $key;?>').html());
-                    var mainprice = parseInt($('#price_point<?php echo $item->item_id ?>').html());
-                    
-                    $('#daynamic_size_<?php echo $item->item_id ?>').html(size);
-                    
-                    var add_real = (ori_price) + (price);
-                    $('#real_price<?php echo $item->item_id ?>').html(add_real);
-                    var total = (price) + (ori_price);
-                    $('#price_point<?php echo $item->item_id ?>').html(total);                                                                                            
-                    
-                    
-                });
                 <?php
                     $key++;
                 }
             }
-        ?>
+            ?>
+        <?php }?>
+        
+        <?php 
+            if(!empty($item->item_size)){?>
+                <?php $size_list      = json_decode($item->item_size);
+                    if (!empty($size_list)) {
+                        
+                        foreach ($size_list as $key => $list) {?>
+                        $('#size<?php echo $item->item_id ?><?php echo $key ?>').click(function() {
+                            $('#daynamic_size_<?php echo $item->item_id ?>').html(' ');
+                            var ori_price = parseInt($('#original_price<?php echo $item->item_id ?>').val());
+                            var real_price = parseInt($('#real_price<?php echo $item->item_id ?>').html());
+                            var size = $('#size_name<?php echo $item->item_id ?><?php echo $key ?>').html();
+                            var price = parseInt( $('#size_price<?php echo $item->item_id ?><?php echo $key;?>').html());
+                            var mainprice = parseInt($('#price_point<?php echo $item->item_id ?>').html());
+                            
+                            $('#daynamic_size_<?php echo $item->item_id ?>').html(size);
+                            
+                            var add_real = (ori_price) + (price);
+                            $('#real_price<?php echo $item->item_id ?>').html(add_real);
+                            var total = (price) + (ori_price);
+                            $('#price_point<?php echo $item->item_id ?>').html(total);                                                                                            
+                            
+                            
+                        });
+                        <?php
+                            $key++;
+                        }
+                    }
+                ?>
+        <?php }?>
 
         
         $("#add_to_cart").click(function(argument) {
@@ -437,7 +444,7 @@
 
             var str_len = txt.length;
             
-            if(txt != '' && str_len >= 3){
+            if(txt != '' && str_len >= 2){
                 $.ajax({
                     type: "POST",
                     url: '<?php echo base_url() ?>pages/getFood',

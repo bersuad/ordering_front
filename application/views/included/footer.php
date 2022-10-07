@@ -6,12 +6,6 @@
                 <img src="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" alt="logo" style="max-width: 80px; height:auto;"/>
             </a>
         </div>
-        <!-- <div class="right_menu_search">
-            <form method="post">
-                <input type="text" name="q" class="form-control search_input" value="" placeholder="Search anything">
-                <button type="submit" class="search_icon"><i class="fa fa-search"></i></button>
-            </form>
-        </div> -->
         <ul class="rmenu_list">
             <li onclick="$('#cover-spin').show(0)" class="<?=(current_url() == base_url('menu/'.$this->session->userdata('restaurant_id'))) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('menu/'.$this->session->userdata('menu_url')) ?>">Menu</a></li>
             <li onclick="$('#cover-spin').show(0)" class="<?=(current_url() == base_url('/reservation')) ? 'active':''?>"><a class="page-scroll" href="<?php echo base_url('/reservation') ?>">Reservation</a></li>
@@ -57,7 +51,7 @@
               <h4 class="text-light-black " align="center" style="font-weight: bold;">Enter your phone number</h4>
               <div class="row">
                 <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1" style="padding-bottom: 10px;">
-                    <input type="text" class="form-control" name="phone_no" placeholder="Your Phone Number" id="phone_no" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                    <input type="text" class="form-control" name="phone_no" placeholder="09123456789" id="phone_no" required  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"  maxlength="10" autocomplete="off"/>
                     <input type="hidden" value="<?php echo current_url() ?>" name="url">
                 </div>
                 <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1" style="padding-bottom: 10px;">

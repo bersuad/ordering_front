@@ -224,6 +224,7 @@ a:focus {
     overflow: hidden;
     height: 50px;
     position: relative;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1)
 }
 
 .top_addr {
@@ -254,7 +255,8 @@ a:focus {
     top: 0;
     z-index: 999;
     max-height: 200px;
-    background-color: #d60000;
+    /* background-color: #d60000; */
+    box-shadow: 10px 2px 22px -3px rgb(87 85 85 / 20%);
 }
 
 .navbar {
@@ -289,6 +291,7 @@ a:focus {
 .navbar-container {
     top: -60px;
     transition: top .5s;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1)!important;
 }
 
 .navbar-container.affix {
@@ -298,6 +301,7 @@ a:focus {
     background-color: rgba(153, 1, 0, .8);
     z-index: 999;
     min-height: 90px;
+    box-shadow: 10px 2px 22px -3px rgb(87 85 85 / 20%);
 }
 
 .affix .navbar {
@@ -314,7 +318,7 @@ a:focus {
     width: auto;
     height: 70px;
     border-radius: 5px;
-    box-shadow: 0 0 10px #ccc;
+    padding: 6px;
     margin-bottom: 1px;
 }
 
@@ -882,9 +886,10 @@ a:focus {
 
 .filter_item_img img {
     max-width: 100%;
-    border-radius: 50%;
+    border-radius: 10%;
     width: 136px;
     height: 136px;
+    object-fit: contain;
 }
 
 #menu_items .left,
@@ -918,7 +923,7 @@ a:focus {
 }
 
 #menu_items .filter_item_price {
-    font-size: 18px;
+    font-size: 1.1em;
     color: #616161;
     font-family: 'Montserrat-Bold';
 }
@@ -928,9 +933,8 @@ a:focus {
     font-family: 'ChunkFiveEx';
     color: #424242;
     text-transform: uppercase;
-    white-space: nowrap;
     text-overflow: ellipsis;
-    overflow: hidden;
+    white-space: initial;
 }
 
 #menu_items .info .short {
@@ -2052,6 +2056,36 @@ a:focus {
     text-align: center;
 }
 
+#menu{
+    margin-top: 180px;
+}
+
 #modal_comment{
     margin-top: 30px;
+}
+
+@media (max-width: 775px) {
+    #menu{
+        margin-top: 70px!important;
+    }
+
+    .navbar-brand img {
+        width: auto;
+        height: 50px;
+        border-radius: 5px;
+        padding: 0px;
+        margin-bottom: 1px;
+        margin-top: 10px;
+    }
+
+    .navbar-container.affix {
+        min-height: 80px;
+        box-shadow: 10px 2px 22px -3px rgb(87 85 85 / 20%);
+    }
+
+    .list-of-items {
+        box-shadow: rgb(0 0 0 / 2%) 0 8px 8px, rgb(0 0 0 / 2%) 0 2px 6px;
+        padding-top: 20px;
+        min-height: 240px!important;
+    }
 }
