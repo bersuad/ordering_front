@@ -65,7 +65,7 @@
                             <div class="form-group">
                                 <textarea rows="3" name="reservation_message" placeholder="Message" class="form-control" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Message'"></textarea>
                             </div>
-                            <input type="submit" name="send" value="book now" class="btn btn-block" />
+                            <input type="submit" name="send" value="book now" class="btn btn-block reserve" />
 
                         </div>
                     </form>

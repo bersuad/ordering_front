@@ -5,7 +5,6 @@
 
 
 <head>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="QR Anbessa is a digital QR menu solution provider in Addis Ababa, Ethiopia and with QRAnbessa it will be easy to provide a digital product list to your clients" />
     <meta property="og:locale" content="en_US" />
@@ -18,8 +17,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta name="keywords" content="QR Anbessa Menu, Ethiopia Online Menu">
     <title>QR Anbessa | The first digital QR menu solution provider in Addis Ababa, Ethiopia.</title>
-
-
+    
+    
     <link href="<?php echo base_url() ?>assets/css/bootstrap.min.css" type="text/css" rel="stylesheet" media="all" />
     <link href="<?php echo base_url() ?>assets/css/bootstrap-theme.min.css" type="text/css" rel="stylesheet" media="all" />
     <link href="<?php echo base_url() ?>assets/css/fonts.css" type="text/css" rel="stylesheet" />
@@ -34,8 +33,9 @@
     <link href="<?php echo base_url() ?>assets/css/jquery.fancybox.css" type="text/css" rel="stylesheet" />
     <link href="<?php echo base_url() ?>assets/css/main.css" type="text/css" rel="stylesheet" />
     <link href="<?php echo base_url() ?>assets/css/responsive.css" type="text/css" rel="stylesheet" />
-
-
+    
+    
+    <link rel="manifest" href="<?php echo base_url() ?>manifest.json">  
     <link rel="apple-touch-icon" sizes="180x180" href="<?php echo base_url() ?>assets/img/qr.png" />
     <link rel="icon" type="image/png" sizes="256x256"  href="<?php echo base_url() ?>assets/img/qr.png">
     <link rel="icon" type="image/png" sizes="192x192"  href="<?php echo base_url() ?>assets/img/qr.png">    
@@ -43,6 +43,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="<?php echo base_url() ?>assets/img/qr.png" />
     <link rel="icon" type="image/png" href="<?php echo base_url() ?>assets/img/qr.png"/>
     <meta name="msapplication-TileColor" content="#990100" />
+    <meta name="msapplication-TileImage" content="<?php echo base_url() ?>assets/img/qr.png">
     <meta name="theme-color" content="#ffffff" />    
 
 </head>
@@ -66,12 +67,9 @@
             </div>
             <div class="col-lg-2"></div>  
         </div>
-        <div class="title-block">
-            <h1 class="section-title" style="color: #282828;">Sorry we can't find that!</h1>
-        </div>  
     </div>
 </section>
-<div class="container section" id="menu" data-aos="fade-up" style="margin-top: 100px;">
+<div class="container section" id="menu" data-aos="fade-up" style="margin-top: 80px;">
     <div class="title-block">
         <h3 class="section-title" style="color: #1f1f1f;">Here is what we have</h3>
     </div>
@@ -85,7 +83,7 @@
                 <a href="<?php echo base_url() .'menu/'. $comp->url_name; ?>">
                     <div class="content">
                         <div class="filter_item_img">
-                            <img src="<?php echo order_admin_URL; ?><?php echo $comp->company_logo; ?>" alt="sample" />
+                            <img src="<?php echo order_admin_URL; ?><?php echo $comp->company_logo; ?>" alt="<?php echo $comp->company_name ?>" />
                         </div>
                         <div class="info" style="margin-top: 50px;">
                             <div class="name"><?php echo $comp->company_name ?></div>
@@ -138,7 +136,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="copy_text">
-                                    <a target="_blank" href="https://www.qranbessa.net" style="text-decoration: none; color: #6D6D6D;">Anbessa IT Solutions</a>
+                                    <a rel="noreferrer" target="_blank" href="https://www.qranbessa.net" style="text-decoration: none; color: #6D6D6D;">Anbessa IT Solutions</a>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -167,11 +165,17 @@
                 </div>
             </div>
         </div>
+        <div id="installContainer" class="hidden">
+            <button id="butInstall" type="button">
+                Install
+            </button>
+        </div>
     </footer>
 </div>
 
-
-<script src="<?php echo base_url() ?>assets/js/jquery-2.1.1.min.js"></script>
+    <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
+    <script src="https://button.glitch.me/button.js"></script>
+    <script src="<?php echo base_url() ?>assets/js/jquery-2.1.1.min.js"></script>
     <script src="<?php echo base_url() ?>assets/js/bootstrap.min.js"></script>
     <script src="<?php echo base_url() ?>assets/js/jquery.mousewheel.min.js"></script>
     <script src="<?php echo base_url() ?>assets/js/jquery.easing.min.js"></script>
@@ -185,6 +189,60 @@
     <script src="<?php echo base_url() ?>assets/js/jquery.fancybox.js"></script>
     <script src="<?php echo base_url() ?>assets/js/loadMoreResults.js"></script>
     <script src="<?php echo base_url() ?>assets/js/main.js"></script>
+    <script type="text/javascript">
+        if ('serviceWorker' in navigator) {
+            console.log("Will the service worker register?");
+            navigator.serviceWorker.register('<?php echo base_url() ?>service-worker.js')
+            .then(function(reg){
+                console.log("Yes, it did.");
+            }).catch(function(err) {
+                console.log("No it didn't. This happened:", err)
+            });
+        }
+        
+        const divInstall = document.getElementById('installContainer');
+        const butInstall = document.getElementById('butInstall');
+
+        /* Put code here */
+        window.addEventListener('beforeinstallprompt', (event) => {
+        // Prevent the mini-infobar from appearing on mobile.
+        event.preventDefault();
+        console.log('👍', 'beforeinstallprompt', event);
+        // Stash the event so it can be triggered later.
+        window.deferredPrompt = event;
+        // Remove the 'hidden' class from the install button container.
+        divInstall.classList.toggle('hidden', false);
+        });
+
+
+
+        butInstall.addEventListener('click', async () => {
+        console.log('👍', 'butInstall-clicked');
+        const promptEvent = window.deferredPrompt;
+        if (!promptEvent) {
+            // The deferred prompt isn't available.
+            return;
+        }
+        // Show the install prompt.
+        promptEvent.prompt();
+        // Log the result
+        const result = await promptEvent.userChoice;
+        console.log('👍', 'userChoice', result);
+        // Reset the deferred prompt variable, since
+        // prompt() can only be called once.
+        window.deferredPrompt = null;
+        // Hide the install button.
+        divInstall.classList.toggle('hidden', true);
+        });
+
+        window.addEventListener('appinstalled', (event) => {
+        console.log('👍', 'appinstalled', event);
+        // Clear the deferredPrompt so it can be garbage collected
+        window.deferredPrompt = null;
+        });
+
+        
+    </script>
 
 </body>
 

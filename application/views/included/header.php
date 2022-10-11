@@ -77,11 +77,69 @@
             border-color: <?php echo $companies[0]->second_color; ?>;
             background-color: <?php echo $companies[0]->second_color; ?>;
         }
+        .menu_filter .item a {
+            color: #000;
+            border-color: rgba(0,0,0,0.2);
+        }
         .menu_filter .item.active a {
             color:<?php echo $companies[0]->main_color; ?>;
             border-color: <?php echo $companies[0]->second_color; ?>;
             background-color: <?php echo $companies[0]->second_color; ?>;
+            filter: drop-shadow(1px 1px 2px <?php echo $companies[0]->main_color; ?>);
+            font-weight: bold;
         }
+
+
+        .form_pos .form-control{
+            color:<?php echo $companies[0]->second_color; ?>!important;
+        }
+
+        .form_pos .form-control::placeholder{ 
+            color:<?php echo $companies[0]->second_color; ?>!important;
+            opacity: 1;
+        }
+
+        .reserv_box h1{
+            color:<?php echo $companies[0]->second_color; ?>;
+        }
+
+        .reserv_box p{
+            color:<?php echo $companies[0]->second_color; ?>;
+        }
+
+        .add_to_cart{
+            background-color: <?php echo $companies[0]->main_color; ?>!important; 
+            color:<?php echo $companies[0]->second_color; ?>!important; 
+            border: 1px solid <?php echo $companies[0]->second_color; ?>!important;
+        }
+
+        .add_to_cart:hover{
+            background-color: <?php echo $companies[0]->second_color; ?>!important; 
+            color:<?php echo $companies[0]->main_color; ?>!important; 
+            border: 1px solid <?php echo $companies[0]->main_color; ?>!important;
+        }
+
+        #reserv_form .btn[type="submit"] {
+            color:<?php echo $companies[0]->main_color; ?>;
+            border-color: <?php echo $companies[0]->second_color; ?>;
+            background-color: <?php echo $companies[0]->second_color; ?>;
+        }
+
+        #reserv_form .btn[type="submit"] :hover{
+            color:<?php echo $companies[0]->second_color; ?>!important;
+            border-color: <?php echo $companies[0]->main_color; ?>!important;
+            background-color: <?php echo $companies[0]->main_color; ?>!important;
+        }
+
+        #reserv_form textarea.form-control {
+            color:<?php echo $companies[0]->second_color; ?>;
+            border-color: <?php echo $companies[0]->second_color; ?>;
+        }
+
+        #reserv_form textarea::placeholder{ 
+            color:<?php echo $companies[0]->second_color; ?>!important;
+        }
+
         .reserv_box{
             background-color: <?php echo $companies[0]->main_color; ?>!important;
         }

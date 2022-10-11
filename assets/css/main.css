@@ -318,8 +318,9 @@ a:focus {
     width: auto;
     height: 70px;
     border-radius: 5px;
-    padding: 6px;
+    padding: 1px;
     margin-bottom: 1px;
+    background-color: #fff;
 }
 
 .nav>li+li:after {

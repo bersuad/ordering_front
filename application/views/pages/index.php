@@ -6,9 +6,7 @@
    ?>
 <div class="container section" id="menu" data-aos="fade-up">
 
-    <div class="title-block">
-        <h1 class="section-title" style="color: <?php echo $companies[0]->second_color; ?>;">Our Menu</h1>
-    </div>
+    
     <?php if (!empty($items)) {?>
         <div class="menu_filter text-center category-list">
             <ul class="list-unstyled list-inline d-inline-block">
@@ -284,7 +282,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button style="background-color: <?php echo $companies[0]->main_color; ?> ; color:#fff;" type="button" id="add_<?php echo $item->item_id ?>" onClick="cartAction('add','<?php echo $item->item_id ?>')" <?php if ($in_session != "0") { ?>style="display:none" <?php
+                    <button type="button" id="add_<?php echo $item->item_id ?>" onClick="cartAction('add','<?php echo $item->item_id ?>')" <?php if ($in_session != "0") { ?>style="display:none" <?php
                                     } ?>  class="btn btn-block add_to_cart">Add to Order</button>
                     <button id="added_<?php echo $item->item_id ?>" <?php if ($in_session != "1") { ?>style="display:none" <?php
                     } ?> class="btn btn-block add_to_cart disabled">Added</button>
