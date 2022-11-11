@@ -36,6 +36,7 @@
     
     
     <link rel="manifest" href="<?php echo base_url() ?>manifest.json">  
+    <link rel="manifest" href="<?php echo base_url() ?>manifest.webmanifest">  
     <link rel="apple-touch-icon" sizes="180x180" href="<?php echo base_url() ?>assets/img/qr.png" />
     <link rel="icon" type="image/png" sizes="256x256"  href="<?php echo base_url() ?>assets/img/qr.png">
     <link rel="icon" type="image/png" sizes="192x192"  href="<?php echo base_url() ?>assets/img/qr.png">    

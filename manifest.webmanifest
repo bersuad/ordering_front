@@ -1,0 +1,47 @@
+{
+    "short_name": "QRAnbessaOrder",
+    "name": "QRAnbessa | Order",
+    "description": "QR Anbessa is a digital QR menu solution provider in Addis Ababa, Ethiopia and with QRAnbessa it will be easy to provide a digital product list to your clients",
+    "theme_color": "#111111",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "icons": [
+        {  
+     "src": "./assets/img/qr.png",
+     "sizes": "36x36",
+     "type": "image/png",
+     "density": "0.75"
+    },
+      {
+        "src": "./assets/img/qr.png",
+        "type": "image/png",
+        "sizes": "48x48"
+      },
+      {
+         "src": "./assets/img/qr.png",
+     "sizes": "72x72",
+     "type": "image/png",
+     "density": "1.5"
+    },
+  
+      {
+      "src": "./assets/img/qr.png",
+     "sizes": "96x96",
+     "type": "image/png",
+     "density": "2.0"
+    },
+    {
+     "src": "./assets/img/qr.png",
+     "sizes": "144x144",
+     "type": "image/png",
+     "density": "3.0"
+    },
+    {
+     "src": "./assets/img/qr.png",
+     "sizes": "192x192",
+     "type": "image/png",
+     "density": "4.0"
+    }
+    ],
+    "start_url": "/"
+  }

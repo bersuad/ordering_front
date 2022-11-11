@@ -42,13 +42,14 @@ class Pages extends MY_Controller {
 					INNER JOIN branches ON items.item_branch_id = branches.branch_id
 					INNER JOIN companies ON branches.branch_company_id = companies.company_id
 					WHERE company_id = $restaurant_id 
+					AND category.category_status = 1
 					AND companies.company_status = 1
 					AND items.item_category != 13";
 			$data['items'] = $this->item_model->sql($sql);
 			
 			$data['companies'] = $this->company_model->where(['company_id' => $restaurant_id, 'company_status' => 1])->get_all();
 	
-			$data['category_list']  = $this->Category_model->where(['category_company_id'=>$restaurant_id, 'category_status' => 1 ] )->get_all();
+			$data['category_list']  = $this->Category_model->where(['category_company_id'=>$restaurant_id, 'category_status' => 1 ] )->order_by('category_position', 'ASC')->get_all();
 	
 			$this->data = $data;
 			
