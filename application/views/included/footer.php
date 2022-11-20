@@ -30,7 +30,7 @@
             <?php }?>
         </ul>
         <div class="right_menu_addr top_addr">
-            <span><i class="fa fa-map-marker" aria-hidden="true"></i> Addis Ababa, Bole around Edna Mall</span>
+            <span><i class="fa fa-map-marker" aria-hidden="true"></i> <?php echo $companies[0]->location; ?> </span>
             <span><i class="fa fa-clock-o" aria-hidden="true"></i> <?php echo $companies[0]->company_opening_hour; ?> - <?php echo $companies[0]->company_closing_hour; ?></span>
         </div>
     </nav>

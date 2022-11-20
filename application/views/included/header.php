@@ -168,7 +168,7 @@
 
                     <div class="navbar_top hidden-xs">
                         <div class="top_addr">
-                            <span><i class="fa fa-map-marker" aria-hidden="true"></i> Addis Ababa, Bole around Edna Mall</span>
+                            <span><i class="fa fa-map-marker" aria-hidden="true"></i> <?php echo $companies[0]->location; ?> </span>
                             <span><i class="fa fa-clock-o" aria-hidden="true"></i> <?php echo $companies[0]->company_opening_hour; ?> - <?php echo $companies[0]->company_closing_hour; ?></span>
                             <div class="pull-right search-block">
                                 <i class="fa fa-search" id="search" aria-hidden="true"></i>

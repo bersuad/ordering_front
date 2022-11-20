@@ -46,8 +46,14 @@ class Pages extends MY_Controller {
 					AND companies.company_status = 1
 					AND items.item_category != 13";
 			$data['items'] = $this->item_model->sql($sql);
-			
-			$data['companies'] = $this->company_model->where(['company_id' => $restaurant_id, 'company_status' => 1])->get_all();
+
+			$comp_sql = "SELECT *, branch_description->'location' as location from companies
+			INNER JOIN branches ON companies.company_id = branches.branch_company_id
+			where companies.company_id = $restaurant_id
+			and company_status = 1
+			";
+			$data['companies'] = $this->item_model->sql($comp_sql);
+			// $data['companies'] = $this->company_model->where(['company_id' => $restaurant_id, 'company_status' => 1])->join('branches', 'companies.company_id = branches.branch_company_id')->get_all();
 	
 			$data['category_list']  = $this->Category_model->where(['category_company_id'=>$restaurant_id, 'category_status' => 1 ] )->order_by('category_position', 'ASC')->get_all();
 	
@@ -316,7 +322,7 @@ class Pages extends MY_Controller {
 
 	public function no_page()
 	{
-		$data['companies'] = $this->company_model->where(['company_status' => 1])->get_all();
+		$data['companies'] = $this->company_model->where(['company_status' => 1])->order_by('company_id', 'random')->get_all();
 		// print_r($data); die();
 		$this->load->view('pages/404', $data);
 	}
