@@ -1,8 +1,10 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
+// defined('BASEPATH') or exit('No direct script access allowed');
 class Cart extends MY_Controller {
     public function __construct() {
         parent::__construct();
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
         $this->load->model('admin_model');
         $this->load->model('action_model');
         $this->load->model('customer_model');
@@ -16,6 +18,8 @@ class Cart extends MY_Controller {
         $this->load->model('branch_model');
         $this->load->model('role_model');
         $this->load->model('Payment_model');
+
+        $this->load->library('form_validation');
     }    
     
     public function product_cart() 
@@ -127,9 +131,18 @@ class Cart extends MY_Controller {
         }
     }
 
-    public function order_cart() {
-        
-        
+    public function get_payment(){
+
+        $price_list = 0;
+        $item_total = 0;  
+        $restaurant_id = $this->session->userdata('restaurant_id');
+        $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
+        $comp_vat = (int) $customer[0]->vat / 100 ;
+        $comp_service = (int) $customer[0]->service_charge / 100;
+        $company_name = $customer[0]->company_name;
+        // echo $company_name;
+        // die();
+
         if (!empty($_SESSION["cart_item"])) {
             $items = [];
             foreach ( $_SESSION["cart_item"] as $value ) {
@@ -148,6 +161,222 @@ class Cart extends MY_Controller {
                 
                 $items_list=[];
                 foreach ($value as $key => $item) {
+                    $price_list = ((int)($item["price"]) / (int)($item["quantity"]));
+                    $item_total+= (int)$price_list * ((int)($item["quantity"]));
+                    $order = array(
+                        "order_item_id" => $item['code'], 
+                        "extra"         => $item['extra'],
+                        "choose"        => $item['choose'],
+                        "comment"       => $item['comment'], 
+                        "item_name"     => $item['name'], 
+                        "item_price"    => $item['price'], 
+                        "item_quantity" => $item['quantity'], 
+                        "item_size"     => $item['size']
+                    );
+                    array_push($items_list, $order);
+                }
+                $payment = $this->input->post('payment_method');
+                
+                if($payment == "Cash"){
+                    $payment = 'Cash';
+                }else{
+                    $payemnt = "Chapa";
+                }
+
+                $order_item = array(
+                                "code"                          => $code,
+                                "items"                         => $items_list, 
+                                "item_destination"              => '', 
+                                "item_destination_coordinate"   => '', 
+                                "item_destination_date"         => '', 
+                                "payment_ref"                   => $payment, 
+                            ); 
+        
+                $branch_id = $this->input->post('branch_id'); 
+                $customer_phone = $this->input->post('phone_no');
+                $customer_name = $this->input->post('user_name');
+                $order_type = $this->input->post('order_type');
+                $customer = $this->customer_model->where('customer_phone', $customer_phone)->order_by('customer_id', "desc")->get_all();
+
+                if(!empty($customer))
+                {
+                    $customer_id = $customer[0]->customer_id;
+
+        
+                    $user_data = array(
+                        'phone_no'   => $customer_phone,
+                        'customer_name' => $customer[0]->customer_full_name,
+                        'customer_id' => $customer[0]->customer_id,                     
+                        'logged_in' => true
+                    );
+
+                    $this->session->set_userdata($user_data);
+                }else{
+                    $user_data = array(
+                        'customer_phone' => $customer_phone,
+                        'customer_full_name' => $customer_name,   
+                        'customer_password' => '654321'                    
+                    );
+
+                    $customer_id = $this->customer_model->insert($user_data);
+                    
+                    $New_user_data = array(
+                        'phone_no'   => $customer_phone,
+                        'customer_name' => $customer_name,
+                        'customer_id' => $customer_id,
+                        'logged_in' => true
+                    );
+    
+                    $this->session->set_userdata($New_user_data);
+                }
+
+                if($comp_vat != ''){
+                    $item_total += $item_total * $comp_vat;
+                }
+                if($comp_service != ''){
+                    $item_total += $item_total * $comp_service;
+                } 
+                $new_result = $this->toPayment($item_total, $company_name);
+                if($new_result){
+                    echo "1";
+                }else{
+                    echo "no data";
+                }
+                print_r($new_result); die();
+                if($new_result){
+                    echo $new_result; die();
+                    $this->load->helper('date_helper');
+                    $date1 = custom_date_format_parser($this->input->input_stream('item_destination_date'));
+                    $date2 = Date("Y-m-d H:i:s", time());
+                    
+                    $time1     = strtotime($date1);
+                    $time2     = strtotime($date2);
+                    $diff   = $time1 - $time2;
+                    $hours  = $diff / (60 * 60);
+                    
+                    //check if difference hour is greater than 1
+                    if ($hours > 1) {
+                        $order_status = 6;
+                    }else{
+                        $order_status = 0;
+                    }
+    
+                    $result = $this->order_model->new_request($customer_id, $order_item, $order_type, $order_status, $branch_id);
+                    
+                    array_push($list, $result);
+                }else{
+                    echo "no data";
+                }
+            }
+            
+            try {
+                if ($list) {
+                    unset($_SESSION["cart_item"]);
+                    echo json_encode($result);
+                    redirect('pages/order_view/'.$result->order_id);
+                    exit;
+                } else {
+                    $this->output->set_content_type('application/json')->set_status_header(500);
+                    echo json_encode(array("message" => "Failed processing order!", "error" => ""));
+                    exit;
+                }
+            }
+            catch(Exception $exception) {
+                $this->output->set_content_type('application/json')->set_status_header(500);
+                echo json_encode(array("message" => "Failed processing order!", "error" => $exception->getMessage(),));
+                exit;
+            }
+        } else {
+            echo "nothing";
+        }
+
+        die();
+
+        
+
+    }
+
+    public function toPayment($item_total)
+    {
+        $item_total = $item_total;
+        $set = '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $code = substr(str_shuffle($set), 0, 9);
+        $curl = curl_init();
+        $callback_url = base_url('/cart/order_cart');
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.chapa.co/v1/transaction/initialize',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array(
+                'amount' => $item_total,
+                'currency' => 'ETB',
+                'email' => 'your@email.com',
+                'first_name' => 'First Name',
+                'last_name' => 'Last Name',
+                'tx_ref' => $code,
+                'callback_url'=> $callback_url,
+                'return_url'=> $callback_url,
+                'customization[title]' => "Pay Here",
+                'customization[description]' => 'It is time to pay'
+            ),
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Bearer CHASECK-Res34Y2wfzz1ehatlDVQ0Vq7CzDrR0eY'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $payment_result = $response;
+        
+        $payment_result = json_decode($payment_result, false);
+        print_r($payment_result);
+        $url = '';
+        foreach($payment_result as $country) {
+            $url = $country->checkout_url;
+        }
+        
+        
+        Header('Access-Control-Allow-Origin: *'); 
+        Header("Access-Control-Allow-Headers: Origin,X-Requested-With,Content-Type,Accept,Access-Control-Request-Method,Authorization,Cache-Control");
+        Header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
+        Header("Location: " . $url);
+    }
+
+    public function total_price(){
+        $price_list = 0;
+        $item_total = 0;  
+        $restaurant_id = $this->session->userdata('restaurant_id');
+        $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
+        $comp_vat = (int) $customer[0]->vat / 100 ;
+        $comp_service = (int) $customer[0]->service_charge / 100;
+            
+        if (!empty($_SESSION["cart_item"])) {
+            $items = [];
+            foreach ( $_SESSION["cart_item"] as $value ) {
+                $group[$value['branch']][] = $value;
+            }
+
+            foreach ($group as $item) {
+                $order = $item;
+                array_push($items, $order);
+            }
+            $list = [];
+            $set = '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $code = substr(str_shuffle($set), 0, 4);
+            $this->session->set_userdata('code', $code);  
+            foreach ($items as $value) {
+                
+                $items_list=[];
+                foreach ($value as $key => $item) {
+                    $price_list = ((int)($item["price"]) / (int)($item["quantity"]));
+                    $item_total+= (int)$price_list * ((int)($item["quantity"]));
                     $order = array(
                         "order_item_id" => $item['code'], 
                         "extra"         => $item['extra'],
@@ -213,32 +442,149 @@ class Cart extends MY_Controller {
                     $this->session->set_userdata($New_user_data);
                 }
 
+                if($comp_vat != ''){
+                    $item_total += $item_total * $comp_vat;
+                }
+                if($comp_service != ''){
+                    $item_total += $item_total * $comp_service;
+                } 
+                return $item_total;
+            }
+        }
+    }
+
+    public function order_cart() {
+        $price_list = 0;
+        $item_total = 0;  
+        $restaurant_id = $this->session->userdata('restaurant_id');
+        $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
+        $comp_vat = (int) $customer[0]->vat / 100 ;
+        $comp_service = (int) $customer[0]->service_charge / 100;
             
-                $this->load->helper('date_helper');
-                $date1 = custom_date_format_parser($this->input->input_stream('item_destination_date'));
-                $date2 = Date("Y-m-d H:i:s", time());
+        if (!empty($_SESSION["cart_item"])) {
+            $items = [];
+            foreach ( $_SESSION["cart_item"] as $value ) {
+                $group[$value['branch']][] = $value;
+            }
+
+            foreach ($group as $item) {
+                $order = $item;
+                array_push($items, $order);
+            }
+            $list = [];
+            $set = '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $code = substr(str_shuffle($set), 0, 4);
+            $this->session->set_userdata('code', $code);  
+            foreach ($items as $value) {
                 
-                $time1     = strtotime($date1);
-                $time2     = strtotime($date2);
-                $diff   = $time1 - $time2;
-                $hours  = $diff / (60 * 60);
+                $items_list=[];
+                foreach ($value as $key => $item) {
+                    $price_list = ((int)($item["price"]) / (int)($item["quantity"]));
+                    $item_total+= (int)$price_list * ((int)($item["quantity"]));
+                    $order = array(
+                        "order_item_id" => $item['code'], 
+                        "extra"         => $item['extra'],
+                        "choose"        => $item['choose'],
+                        "comment"       => $item['comment'], 
+                        "item_name"     => $item['name'], 
+                        "item_price"    => $item['price'], 
+                        "item_quantity" => $item['quantity'], 
+                        "item_size"     => $item['size']
+                    );
+                    array_push($items_list, $order);
+                }
+                $payment = $this->input->post('order_payment');
                 
-                //check if difference hour is greater than 1
-                if ($hours > 1) {
-                    $order_status = 6;
-                }else{
-                    $order_status = 0;
+                if($payment == ''){
+                    $payment = 'Cash';
                 }
 
-                $result = $this->order_model->new_request($customer_id, $order_item, $order_type, $order_status, $branch_id);
-                
-                array_push($list, $result);
+                $order_item = array(
+                                "code"                          => $code,
+                                "items"                         => $items_list, 
+                                "item_destination"              => $this->input->post('item_destination'), 
+                                "item_destination_coordinate"   => $this->input->post('item_destination_coordinate'), 
+                                "item_destination_date"         => $this->input->post('item_destination_date'), 
+                                "payment_ref"                   => $payment, 
+                            ); 
+        
+                $branch_id = $this->input->post('branch'); 
+                $customer_phone = $this->input->post('user_phone');
+                $customer_name = $this->input->post('user_name');
+                $order_type = $this->input->post('order_type');
+                $customer = $this->customer_model->where('customer_phone', $customer_phone)->order_by('customer_id', "desc")->get_all();
+
+                if(!empty($customer))
+                {
+                    $customer_id = $customer[0]->customer_id;
+
+        
+                    $user_data = array(
+                        'phone_no'   => $customer_phone,
+                        'customer_name' => $customer[0]->customer_full_name,
+                        'customer_id' => $customer[0]->customer_id,                     
+                        'logged_in' => true
+                    );
+
+                    $this->session->set_userdata($user_data);
+                }else{
+                    $user_data = array(
+                        'customer_phone' => $customer_phone,
+                        'customer_full_name' => $customer_name,   
+                        'customer_password' => '654321'                    
+                    );
+
+                    $customer_id = $this->customer_model->insert($user_data);
+                    
+                    $New_user_data = array(
+                        'phone_no'   => $customer_phone,
+                        'customer_name' => $customer_name,
+                        'customer_id' => $customer_id,
+                        'logged_in' => true
+                    );
+    
+                    $this->session->set_userdata($New_user_data);
+                }
+
+                if($comp_vat != ''){
+                    $item_total += $item_total * $comp_vat;
+                }
+                if($comp_service != ''){
+                    $item_total += $item_total * $comp_service;
+                } 
+                $new_result = $this->get_payment($item_total);
+                // print_r($new_result); die();
+                if($new_result){
+                    echo $new_result; die();
+                    $this->load->helper('date_helper');
+                    $date1 = custom_date_format_parser($this->input->input_stream('item_destination_date'));
+                    $date2 = Date("Y-m-d H:i:s", time());
+                    
+                    $time1     = strtotime($date1);
+                    $time2     = strtotime($date2);
+                    $diff   = $time1 - $time2;
+                    $hours  = $diff / (60 * 60);
+                    
+                    //check if difference hour is greater than 1
+                    if ($hours > 1) {
+                        $order_status = 6;
+                    }else{
+                        $order_status = 0;
+                    }
+    
+                    $result = $this->order_model->new_request($customer_id, $order_item, $order_type, $order_status, $branch_id);
+                    
+                    array_push($list, $result);
+                }else{
+                    echo "no data";
+                }
             }
             
             try {
                 if ($list) {
                     unset($_SESSION["cart_item"]);
                     echo json_encode($result);
+                    redirect('pages/order_view/'.$result->order_id);
                     exit;
                 } else {
                     $this->output->set_content_type('application/json')->set_status_header(500);
@@ -261,6 +607,7 @@ class Cart extends MY_Controller {
         $data['companies'] = $this->company_model->join('comapny_services', 'comapny_services.service_company_id = companies.company_id ')->join('services', 'services.id = comapny_services.service_list_id')->where(['company_id' => $restaurant_id, 'services.service_status' => 1 ])->get_all(); 
         $data['payments'] = $this->Payment_model->where(['company_payment_id'=> $restaurant_id, 'payment_status'=> 1])->order_by('payment_id', 'desc')->get_all();
         $data['branches'] = $this->branch_model->where('branch_company_id', $restaurant_id)->get_all();
+        
         if($data['companies']){
             $this->data = $data;
     

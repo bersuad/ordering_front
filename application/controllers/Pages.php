@@ -98,6 +98,12 @@ class Pages extends MY_Controller {
 		$data['branches'] = $this->branch_model->where(['branch_company_id' => $restaurant_id])->get_all();
 		$data['drinks'] = $this->item_model->sql($sql_drink);
 		$data['companies'] = $this->company_model->where('company_id', $restaurant_id)->get_all();
+		$comp_sql = "SELECT *, branch_description->'location' as location from companies
+			INNER JOIN branches ON companies.company_id = branches.branch_company_id
+			where companies.company_id = $restaurant_id
+			and company_status = 1
+			";
+		$data['companies'] = $this->item_model->sql($comp_sql);
 
 		$this->data = $data;
 
@@ -323,14 +329,13 @@ class Pages extends MY_Controller {
 	public function no_page()
 	{
 		$data['companies'] = $this->company_model->where(['company_status' => 1])->order_by('company_id', 'random')->get_all();
-		// print_r($data); die();
+
 		$this->load->view('pages/404', $data);
 	}
 
 
 	public function login()
 	{
-		// print_r($_POST);
 
 		if ($this->input->post('phone_no')) {
             $phone_no = $this->input->post('phone_no');
@@ -339,6 +344,7 @@ class Pages extends MY_Controller {
             $user = $this->Customer_model->where($where)->get();
 
             $this->session->set_userdata('page_url', $url);
+			$this->session->set_userdata('page_url', $url);
             
             $user_info = $user->customer_is_in_blacklist;
             
@@ -353,6 +359,52 @@ class Pages extends MY_Controller {
         }
 
 	}
+
+	public function signup()
+    {
+        $url = $this->input->post('url');
+        
+        $phone_no = $this->input->post('phone_no');
+        
+            if($phone_no){          
+                $where = array( 'customer_phone' => $phone_no);
+                $user = $this->Customer_model->where($where)->get();
+                
+                if ($user) {
+                    if($user->customer_is_in_blacklist == 1){
+                        unset($_SESSION["phone_no"]);
+                        $this->session->set_userdata('blocked',true);
+                        redirect($url);
+                    }else{
+                        $this->sms_send($phone_no);
+                        redirect($url);
+                    }
+                }else{
+                    $phone_no = $this->input->post('phone_no');
+                    $url = $this->input->post('url');
+                    $this->session->set_userdata('page_url', $url);
+                    $user = $this->Customer_model->from_form($this->Customer_model->rules);
+                
+                    if ($user) {
+                        $user->insert([
+                            
+                            'customer_full_name'  => $this->input->post('name'),
+                            'customer_phone'  => $this->input->post('phone_no'),
+                        
+                        ]);                
+                        $this->sms_send($phone_no);
+                    } else {
+                        if($user->customer_is_in_blacklist == 1){
+                            unset($_SESSION["phone_no"]);
+                            $this->session->set_userdata('blocked',true);
+                            redirect($url);
+                        }else{
+                            $this->sms_send($phone_no);
+                        }
+                    }
+                }
+            }
+    }
 
 	public function verify_page()
 	{
@@ -440,7 +492,7 @@ class Pages extends MY_Controller {
 
 			$phone_no = "251".$phone_no;
 
-			$code = (string) random_int(0000, 9999);
+			$code = (string) random_int(1111, 9999);
 			$curl = curl_init();
 
 			curl_setopt_array($curl, array(
@@ -452,7 +504,7 @@ class Pages extends MY_Controller {
 				CURLOPT_FOLLOWLOCATION => true,
 				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 				CURLOPT_CUSTOMREQUEST => 'POST',
-				CURLOPT_POSTFIELDS => array('token' => 'izX1mlRIMqJQAjjIYondSwTtvBv3JxjA','phone' => $phone_no,'msg' => 'Your QRAnbessa Orderring Verification Code is '.$code.'. Please add this code to verify you. Thank you!'),
+				CURLOPT_POSTFIELDS => array('token' => 'awfKqYMlj5LFklawRlNHUiOHzsN7HNt8','phone' => $phone_no,'msg' => 'Your QRAnbessa Orderring Verification Code is '.$code.' Please add this code to verify you. Thank you!'),
 			));
 
 			$response = curl_exec($curl);

@@ -8,6 +8,7 @@
                         <img src="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" alt="logo"  style="height: 120px; width:auto;"/>
                     </div>
                     <div class="section-header mt-3">
+                    <?php echo form_open_multipart('/cart/order_cart/get_payment')?>
                         <h5 align="center" style="font-weight: bold;">Review and place your order from <?php echo $companies[0]->company_name; ?></h5>
                         <div class="row" style="background: #f7f7f7!important; padding-top: 10px; border-radius: 10px; border-top: 5px solid #f2f2f2; border-right: 3.5px solid #f1f1f1; ">
                             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="padding-bottom: 10px;">
@@ -56,14 +57,14 @@
                                                 <label for="exampleFormControlInput1">From <?php echo $companies[0]->company_name; ?> branch <b style="color:red;">*</b></label>
                                                 <?php
                                                     if(count($branches)==1){?>
-                                                        <select class="default form-control" name="item" id="vendor_id_select" required>
+                                                        <select class="default form-control" name="branch_id" id="vendor_id_select" required>
                                                         <?php foreach ($branches as $branch) {
                                                             echo '<option value="' . $branch->branch_id . '" selected> ' . $branch->branch_name . '</option>';
                                                         }
                                                         ?>
                                                     </select>
                                                 <?php }else{ ?>
-                                                    <select class="default form-control" name="item" id="vendor_id_select" required>
+                                                    <select class="default form-control" name="branch_id" id="vendor_id_select" required>
                                                         <?php foreach ($branches as $branch) {
                                                             echo '<option value="' . $branch->branch_id . '"> ' . $branch->branch_name . '</option>';
                                                         }
@@ -140,7 +141,7 @@
                                             <div class="form-group">
                                                 <label> </label>
                                                 <div class='input-group' style="height: 25px!important; width: 100%; background-color: #fff; border-color: #111; border-radius: 9px;">
-                                                    <input type="text" class="default form-control" name="item_destination1" placeholder="Add table number" id="order_destination_place_table" required/>
+                                                    <input type="text" class="default form-control" name="item_destination1" placeholder="Add table number" id="order_destination_place_table" />
                                                 </div>
                                             </div>
                                         </div>
@@ -151,7 +152,7 @@
                                             <div class="form-group">
                                                 <label> </label>
                                                 <div class='input-group' style="height: 25px!important; width: 100%; background-color: #fff; border-color: #111; border-radius: 9px;">
-                                                    <input type="text" class="default form-control" name="item_destination2" placeholder="Add room number" id="order_destination_place_room" required/>
+                                                    <input type="text" class="default form-control" name="item_destination2" placeholder="Add room number" id="order_destination_place_room" />
                                                 </div>
                                             </div>
                                         </div>
@@ -162,7 +163,7 @@
                                             <div class="form-group">
                                                 <label> </label>
                                                 <div class='input-group' style="height: 25px!important; width: 100%; background-color: #fff; border-color: #111; border-radius: 9px;">
-                                                    <input type="text" class="default form-control" name="item_destination3" placeholder="Add plate number" id="order_destination_place_plate" required/>
+                                                    <input type="text" class="default form-control" name="item_destination3" placeholder="Add plate number" id="order_destination_place_plate" />
                                                 </div>
                                             </div>
                                         </div>
@@ -173,7 +174,7 @@
                                             <div class="form-group">
                                                 <label> </label>
                                                 <div class='input-group' style="height: 25px!important; width: 100%; background-color: #fff; border-color: #111; border-radius: 9px;">
-                                                    <input type="text" class="default form-control" name="item_destination4" placeholder="Add order destination" id="order_destination_place_address" required/>
+                                                    <input type="text" class="default form-control" name="item_destination4" placeholder="Add order destination" id="order_destination_place_address"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -182,7 +183,7 @@
                                         <hr>
                                         <br/>
                                         <h5 class="text-light-black " align="center" style="font-weight: bold;">Please Select Payment</h5>
-                                        <select class="default form-control" name="item" id="payment_option" required>
+                                        <select class="default form-control" name="payment_method" id="payment_option" required>
                                             <option value="Cash" selected>Cash</option>
                                         <?php 
                                             if(!empty($payments))
@@ -203,6 +204,7 @@
                                             </div>
                                         
                                     </div>
+                                    
                                     <div class="row">
                                         <div class="col-12" style="padding-left: 10px; padding-right: 10px;">
                                             <div id="accordion">
@@ -210,18 +212,21 @@
                                                     <div class="tab-content">
                                                         <div class="form-group">
                                                             <h5 align="center" id="verification"></h5>
-                                                            <button class="btn btn-first btn-block create_btn filter-button" disabled>Place Order</button>
+                                                            
+                                                                <button type="submit" class="btn btn-first btn-block filter-button">Place Order</button>
+                                                            </div>
+                                                            <p class="text-center text-light-black no-margin">
+                                                                By placing your order, you agree to QRAnbessa's 
+                                                                <a href="#">terms of use</a> and <a href="#">privacy agreement</a>
+                                                            </p>
                                                         </div>
-                                                        <p class="text-center text-light-black no-margin">
-                                                            By placing your order, you agree to QRAnbessa's 
-                                                            <a href="#">terms of use</a> and <a href="#">privacy agreement</a>
-                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                    <input type="hidden" name="order_type" value="1"/>
+                                    <?php echo form_close() ?>
                             </div>
                         </div>
                     </div>
@@ -273,9 +278,12 @@
         }
     };
     $('.create_btn').click(function() {
+        // getPayment();
+        console.log('here pay');
+        // return;
         $('#cover-spin').show(0);
-        inputCheck();
-        location_list();
+        // inputCheck();
+        // location_list();
         var order_destination ='';
         var order_destination1 = document.getElementById("order_destination_place_table").value;
         var order_destination2 = document.getElementById("order_destination_place_room").value;
@@ -348,9 +356,11 @@
                 sessionStorage.removeItem('to');
                 sessionStorage.removeItem('to_hidden');
                 sessionStorage.removeItem('from_hidden');
-                setInterval(function () {
-                    window.location.href = "<?php echo base_url() ?>pages/order_view/" + JSON.parse(response).order_id;
-                }, 4000);
+                console.log(response);
+                // getPayment();
+                // setInterval(function () {
+                //     window.location.href = "<?php echo base_url() ?>pages/order_view/" + JSON.parse(response).order_id;
+                // }, 4000);
             },
             error: function(error) {
                 swal("Oops...", "Something went wrong :(", "error");
@@ -486,4 +496,22 @@
             button: "Ok",
         });
     };
+</script>
+
+<script>
+    function getPayment() {
+        inputCheck();
+        location_list()
+        // $.ajax({
+        //     type: "POST",
+        //     url: '<?php echo base_url() ?>Cart/get_payment',
+        //     success: function(response) {
+        //         console.log(JSON.parse(response).data.checkout_url);
+        //         window.location.href = JSON.parse(response).data.checkout_url;
+        //     },
+        //     error: function(error) {
+        //         swal("Oops...", "Something went wrong :(", "error");
+        //     }
+        // });
+    }
 </script>

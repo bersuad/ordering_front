@@ -35,8 +35,8 @@
         </div>
     </nav>
 
-    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -51,23 +51,72 @@
               <h4 class="text-light-black " align="center" style="font-weight: bold;">Enter your phone number</h4>
               <div class="row">
                 <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1" style="padding-bottom: 10px;">
-                    <input type="text" class="form-control" name="phone_no" placeholder="09123456789" id="phone_no" required  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"  maxlength="10" autocomplete="off"/>
-                    <input type="hidden" value="<?php echo current_url() ?>" name="url">
+                    <input type="text" class="form-control" name="phone_no" placeholder="09-12-345-678" id="phone_no" required  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"  maxlength="10" autocomplete="off"/>
+                    <input type="hidden" value="<?php echo current_url() ?>" name="url"/>
                 </div>
                 <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1" style="padding-bottom: 10px;">
-                  <button type="submit" class="btn btn-block add_to_cart" style="background-color: <?php echo $companies[0]->main_color; ?> ; color:#fff;">Login</button>
+                  <button type="submit" class="btn btn-block add_to_cart" style="background-color: <?php echo $companies[0]->main_color; ?> ; color:#fff;">LOGIN</button>
                 </div>
               </div>
             </form>
-          </div>
-          <div class="modal-footer">
-            <div id="registerLink" align="center">
-                <b><span>New to order?</span></b><br>
-                <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#registerModal" style="color: <?php echo $companies[0]->main_color; ?>;"><b>SIGN UP</b></a>
+            <div class="modal-footer">
+                <div align="center" id="registerLink">
+                    <b><span>New to <?php echo $companies[0]->company_name; ?>?</span></b><br>
+                    <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#registerModal" style="color: <?php echo $companies[0]->main_color; ?>;"><b>SIGN UP</b></a>
+                </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <strong style="font-size: 1.5em; color: #000;"><span aria-hidden="true">&times;</span></strong>
+                </button>
+              </div>
+                <div class="modal-body" id="login_modal">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="body_modal" align="center">
+                              <form action="<?php echo base_url('pages/signup'); ?>" method="post" style="border: 2px solid #fff;">
+                              <div align="center" style="padding-bottom: 30px;">
+                                <img src="<?php echo order_admin_URL ?><?php echo $companies[0]->company_logo; ?>" alt="logo" style="width:auto; max-height: 120px;" />
+                              </div>
+                                <div id="modal_comment">
+                                    <b><span>Enter your phone number</span></b>
+                                    <div class="col-lg-12" id="phone_input">
+                                        <div class="form-group">
+                                            <input type="text" name="name" class="form-control form-control-submit" placeholder="Full Name" required="">
+                                        </div>
+                                        <div class="form-group">
+                                            <input maxlength="10" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="phone" name="phone_no" class="form-control form-control-submit" placeholder="09-12-345-678" required="">
+                                        </div>
+                                        <!-- <span>
+                                    By signing up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+                                </span> -->
+                                    </div>
+                                </div>
+                                <div class="text-center" id="modal_cart_button">
+                                  <input type="hidden" value="<?php echo current_url() ?>" name="url"/>
+                                  <button type="submit" class="btn btn-block add_to_cart" style="background-color: <?php echo $companies[0]->main_color; ?> ; color:#fff;">SIGN UP</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div align="center" id="registerLink">
+                        <b><span>Already have an account?</span></b><br>
+                        <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#loginModal" id="login" style="color: <?php echo $companies[0]->main_color; ?>;"><b>LOG IN</b></a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <?php 
