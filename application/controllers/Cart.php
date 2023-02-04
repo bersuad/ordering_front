@@ -139,10 +139,7 @@ class Cart extends MY_Controller {
         $customer = $this->company_model->where('company_id', $restaurant_id)->order_by('company_id', "desc")->get_all();
         $comp_vat = (int) $customer[0]->vat / 100 ;
         $comp_service = (int) $customer[0]->service_charge / 100;
-        $company_name = $customer[0]->company_name;
-        // echo $company_name;
-        // die();
-
+        
         if (!empty($_SESSION["cart_item"])) {
             $items = [];
             foreach ( $_SESSION["cart_item"] as $value ) {
@@ -157,6 +154,8 @@ class Cart extends MY_Controller {
             $set = '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $code = substr(str_shuffle($set), 0, 4);
             $this->session->set_userdata('code', $code);  
+            $payment = $this->input->post('payment_method');
+            
             foreach ($items as $value) {
                 
                 $items_list=[];
@@ -175,14 +174,7 @@ class Cart extends MY_Controller {
                     );
                     array_push($items_list, $order);
                 }
-                $payment = $this->input->post('payment_method');
                 
-                if($payment == "Cash"){
-                    $payment = 'Cash';
-                }else{
-                    $payemnt = "Chapa";
-                }
-
                 $order_item = array(
                                 "code"                          => $code,
                                 "items"                         => $items_list, 
@@ -197,7 +189,8 @@ class Cart extends MY_Controller {
                 $customer_name = $this->input->post('user_name');
                 $order_type = $this->input->post('order_type');
                 $customer = $this->customer_model->where('customer_phone', $customer_phone)->order_by('customer_id', "desc")->get_all();
-
+                
+                
                 if(!empty($customer))
                 {
                     $customer_id = $customer[0]->customer_id;
@@ -236,15 +229,7 @@ class Cart extends MY_Controller {
                 if($comp_service != ''){
                     $item_total += $item_total * $comp_service;
                 } 
-                $new_result = $this->toPayment($item_total, $company_name);
-                if($new_result){
-                    echo "1";
-                }else{
-                    echo "no data";
-                }
-                print_r($new_result); die();
-                if($new_result){
-                    echo $new_result; die();
+                if($payment != "Cash"){
                     $this->load->helper('date_helper');
                     $date1 = custom_date_format_parser($this->input->input_stream('item_destination_date'));
                     $date2 = Date("Y-m-d H:i:s", time());
@@ -254,30 +239,50 @@ class Cart extends MY_Controller {
                     $diff   = $time1 - $time2;
                     $hours  = $diff / (60 * 60);
                     
-                    //check if difference hour is greater than 1
                     if ($hours > 1) {
                         $order_status = 6;
                     }else{
                         $order_status = 0;
                     }
-    
                     $result = $this->order_model->new_request($customer_id, $order_item, $order_type, $order_status, $branch_id);
-                    
                     array_push($list, $result);
-                }else{
-                    echo "no data";
+                    $result = json_encode($result);
+                    
+                    $result = json_decode($result, false);
+                    $this->toPayment($item_total,$result);
+                    die();
+                }else{                
+                    $this->load->helper('date_helper');
+                    $date1 = custom_date_format_parser($this->input->input_stream('item_destination_date'));
+                    $date2 = Date("Y-m-d H:i:s", time());
+                    
+                    $time1     = strtotime($date1);
+                    $time2     = strtotime($date2);
+                    $diff   = $time1 - $time2;
+                    $hours  = $diff / (60 * 60);
+                    
+                    if ($hours > 1) {
+                        $order_status = 6;
+                    }else{
+                        $order_status = 0;
+                    }
+                    $result = $this->order_model->new_request($customer_id, $order_item, $order_type, $order_status, $branch_id);
+                    array_push($list, $result);
                 }
+                
             }
             
             try {
                 if ($list) {
-                    unset($_SESSION["cart_item"]);
-                    echo json_encode($result);
+                    $this->session->set_userdata('cash_payment',"payment");
+                    $result = json_encode($result);
+                    
+                    $result = json_decode($result, false);
                     redirect('pages/order_view/'.$result->order_id);
                     exit;
                 } else {
                     $this->output->set_content_type('application/json')->set_status_header(500);
-                    echo json_encode(array("message" => "Failed processing order!", "error" => ""));
+                    echo json_encode(array("message" => "Failed processing order here!", "error" => ""));
                     exit;
                 }
             }
@@ -287,22 +292,74 @@ class Cart extends MY_Controller {
                 exit;
             }
         } else {
-            echo "nothing";
+            $url = 'menu/'.$this->session->userdata('menu_url');
+            redirect($url, 'refresh');
         }
 
-        die();
+    }
+    public function canceled_order()
+    {
 
+        $restaurant_id = $this->session->userdata('restaurant_id');
+		$sql  = "SELECT DISTINCT on (item_name) item_name, item_id,item_value, item_description->'image' AS image,
+				item_description->'description' AS description,company_cover_image, company_logo,company_name, company_opening_hour, company_closing_hour, item_category
+				from items
+				INNER JOIN branches ON items.item_branch_id = branches.branch_id
+				INNER JOIN companies ON branches.branch_company_id = companies.company_id
+				WHERE company_id = $restaurant_id";
+		$data['items'] = $this->item_model->sql($sql);
+		$sql_extra  = "SELECT DISTINCT on (item_name) item_name, item_id,item_value, item_description->'image' AS image,
+				item_description->'description' AS description,item_category
+				from items
+				INNER JOIN branches ON items.item_branch_id = branches.branch_id
+				INNER JOIN companies ON branches.branch_company_id = companies.company_id
+				WHERE company_id = $restaurant_id 
+				AND items.item_status =  1::bit 
+				AND items.item_category = 13";
+		$data['extras'] = $this->item_model->sql($sql_extra);
+		$sql_drink  = "SELECT DISTINCT on (item_name) item_name, item_id,item_value, item_description->'image' AS image,
+				item_description->'description' AS description,item_category
+				from items
+				INNER JOIN branches ON items.item_branch_id = branches.branch_id
+				INNER JOIN companies ON branches.branch_company_id = companies.company_id
+				WHERE company_id = $restaurant_id  
+				AND items.item_status = 1::bit
+				AND items.item_category = 14";
+
+
+		$data['branches'] = $this->branch_model->where(['branch_company_id' => $restaurant_id])->get_all();
+		$data['drinks'] = $this->item_model->sql($sql_drink);
+		$data['companies'] = $this->company_model->where('company_id', $restaurant_id)->get_all();
+		$comp_sql = "SELECT *, branch_description->'location' as location from companies
+			INNER JOIN branches ON companies.company_id = branches.branch_company_id
+			where companies.company_id = $restaurant_id
+			and company_status = 1
+			";
+		$data['companies'] = $this->item_model->sql($comp_sql);
+
+		$this->data = $data;
         
+        $this->load->view('included/header', $this->data);
+		$this->load->view('pages/cancled');
+		$this->load->view('included/footer');
+    }
+
+    public function successful_order($order_id)
+    {
+        $this->session->set_userdata('cash_payment',"chapa");
+        unset($_SESSION["cart_item"]);
+        redirect('pages/order_view/'.$order_id);
 
     }
 
-    public function toPayment($item_total)
+    private function toPayment($item_total,$result)
     {
         $item_total = $item_total;
         $set = '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $code = substr(str_shuffle($set), 0, 9);
         $curl = curl_init();
-        $callback_url = base_url('/cart/order_cart');
+        $callback_url = base_url('/cart/successful_order/'.$result->order_id);
+        $canceled_order = base_url('/cart/canceled_order');
 
         curl_setopt_array($curl, array(
             CURLOPT_URL => 'https://api.chapa.co/v1/transaction/initialize',
@@ -317,16 +374,16 @@ class Cart extends MY_Controller {
                 'amount' => $item_total,
                 'currency' => 'ETB',
                 'email' => 'your@email.com',
-                'first_name' => 'First Name',
+                'first_name' => "your name",
                 'last_name' => 'Last Name',
                 'tx_ref' => $code,
-                'callback_url'=> $callback_url,
                 'return_url'=> $callback_url,
+                'callback_url'=> $canceled_order,
                 'customization[title]' => "Pay Here",
                 'customization[description]' => 'It is time to pay'
             ),
             CURLOPT_HTTPHEADER => array(
-                'Authorization: Bearer CHASECK-Res34Y2wfzz1ehatlDVQ0Vq7CzDrR0eY'
+                'Authorization: Bearer CHASECK-Res34Y2wfzz1ehatlDVQ0Vq7CzDrR0eY',
             ),
         ));
 
@@ -336,12 +393,11 @@ class Cart extends MY_Controller {
         $payment_result = $response;
         
         $payment_result = json_decode($payment_result, false);
-        print_r($payment_result);
+        
         $url = '';
         foreach($payment_result as $country) {
             $url = $country->checkout_url;
         }
-        
         
         Header('Access-Control-Allow-Origin: *'); 
         Header("Access-Control-Allow-Headers: Origin,X-Requested-With,Content-Type,Accept,Access-Control-Request-Method,Authorization,Cache-Control");
@@ -391,8 +447,10 @@ class Cart extends MY_Controller {
                 }
                 $payment = $this->input->post('order_payment');
                 
-                if($payment == ''){
+                if($payment == 'Cash'){
                     $payment = 'Cash';
+                }else{
+                    $paymnet = "Chapa";
                 }
 
                 $order_item = array(
@@ -495,8 +553,10 @@ class Cart extends MY_Controller {
                 }
                 $payment = $this->input->post('order_payment');
                 
-                if($payment == ''){
+                if($payment == 'Cash'){
                     $payment = 'Cash';
+                }else{
+                    $payment = 'Chapa';
                 }
 
                 $order_item = array(
@@ -553,7 +613,7 @@ class Cart extends MY_Controller {
                     $item_total += $item_total * $comp_service;
                 } 
                 $new_result = $this->get_payment($item_total);
-                // print_r($new_result); die();
+                
                 if($new_result){
                     echo $new_result; die();
                     $this->load->helper('date_helper');
@@ -683,6 +743,11 @@ class Cart extends MY_Controller {
         $url = 'menu/'.$this->session->userdata('menu_url');
 
         redirect($url, 'refresh');
+    }
+
+    public function ClearCart(){
+        unset($_SESSION["cart_item"]);
+        echo "removed";
     }
 
 

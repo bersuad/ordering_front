@@ -492,7 +492,8 @@ class Pages extends MY_Controller {
 
 			$phone_no = "251".$phone_no;
 
-			$code = (string) random_int(1111, 9999);
+			$set = '0123456789';
+			$code = substr(str_shuffle($set), 0, 4);
 			$curl = curl_init();
 
 			curl_setopt_array($curl, array(

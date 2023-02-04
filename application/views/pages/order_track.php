@@ -23,9 +23,11 @@
         </div>
     </section>
 
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="<?php echo base_url() ?>assets/js/jquery-2.1.1.min.js"></script>
     
     <script>
+        
         truck_order_for_mobile();
         function truck_order_for_mobile() {
             var id = $('#request_id').val();
@@ -91,4 +93,50 @@
                 }
             });
         }
+
+        
+        
     </script>
+
+<?php 
+            if($this->session->userdata('cash_payment') == 'chapa'){
+                echo '<script type="text/javascript">',
+                'success();',
+                'jQuery.noConflict();',
+                'function success() {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Successfully Paid!",
+                        text: "Thank You, You have successfully order, Now you can track your order! ",
+                        showConfirmButton: false,
+                        timer: 8000,
+                        button: "Ok",
+                    });
+                };',
+                '</script>';
+                unset($_SESSION["cash_payment"]);
+        }
+        ?>
+        <?php 
+            if($this->session->userdata('cash_payment') == 'payment'){
+                unset($_SESSION["cart_item"]);
+                unset($_SESSION["cash_payment"]);
+                echo '<script type="text/javascript">',
+                    'success();',
+                    'jQuery.noConflict();',
+                    'function success() {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Ordered!",
+                            text: "Thank You, You have successfully order, We will contact you soon! ",
+                            showConfirmButton: false,
+                            timer: 8000,
+                            button: "Ok",
+                        });
+                    };',
+                
+                '</script>';
+            }
+        ?>

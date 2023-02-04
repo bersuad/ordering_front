@@ -282,15 +282,33 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="add_<?php echo $item->item_id ?>" onClick="cartAction('add','<?php echo $item->item_id ?>')" <?php if ($in_session != "0") { ?>style="display:none" <?php
+                    <?php
+                        $current_branch   = $item->branch_id;
+                        if(!empty($_SESSION["cart_item"])){
+                            $cart_branch = array_values( $_SESSION["cart_item"])[0]['branch'] ;
+                        }else{
+                            $cart_branch = null;
+                        }
+                        if ($current_branch === $cart_branch || $cart_branch === null) {?>
+                            <button type="button" id="add_<?php echo $item->item_id ?>" onClick="cartAction('add','<?php echo $item->item_id ?>')" <?php if ($in_session != "0") { ?>style="display:none" <?php
                                     } ?>  class="btn btn-block add_to_cart">Add to Order</button>
-                    <button id="added_<?php echo $item->item_id ?>" <?php if ($in_session != "1") { ?>style="display:none" <?php
-                    } ?> class="btn btn-block add_to_cart disabled">Added</button>
+                            <button id="added_<?php echo $item->item_id ?>" <?php if ($in_session != "1") { ?>style="display:none" <?php
+                            } ?> class="btn btn-block add_to_cart disabled">Added</button>
+                        <?php } else {?>
+                            <button class="btn btn-block add_to_cart" data-dismiss="modal" data-toggle="modal" data-target="#newCartModal"> 
+                                Add to Order
+                            </button>
+                    <?php
+                        }
+                    ?>
+                    
                     <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
     </div>
+
+
 
     <script type="text/javascript">
         <?php $exra_list      = json_decode($item->extra_list);
@@ -466,4 +484,82 @@
     {
         $('#result').html('');
     }
+</script>
+<div class="modal fade" id="newCartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body" id="login_modal">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div align="left" class="close-modal btn-lg"><b data-dismiss="modal">X</b></div>
+                            <div align="center">
+                            <h2 class="h2-responsive product-name">
+                                <strong>Create new order?</strong>
+                            </h2>
+                            <div id="modal_comment">
+                                <div class="col-lg-12">
+                                    <span>
+                                        Your order contains items from another Restaurant. Do you want to create a new order?
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="text-center" id="modal_cart_button">
+                                <div class="col-lg-12">
+                                    <span>
+                                        <strong>
+                                            This action will remove all cart items!
+                                        </strong>
+                                    </span>
+                                    <button class="btn btn-block add_to_cart" id="modal_login_button" type="submit"> New Order</button>
+                                    <br><br>
+                                    <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="modal-fotter">
+                    
+                </div> -->
+            </div>
+        </div>
+    </div>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+   branchLocation();
+
+   function branchLocation(){
+      var value = "<?php echo $items[0]->coordinates; ?>";
+      var comp_name = "<?php echo $items[0]->branch_name; ?>";
+      sessionStorage.setItem('from_hidden', value);
+      sessionStorage.setItem('from_company', comp_name);
+      <?php if(!empty($_SESSION["cart_item"])){?>
+         var cart_branch_id = <?php print_r( array_values( $_SESSION["cart_item"])[0]['branch'] );?>
+      <?php   }   
+      ?> ;
+      var branch_id = "<?php echo $items[0]->branch_id; ?>";
+   }
+   
+   $("#modal_login_button").click(function(){
+      $.ajax({
+         url: '<?php echo site_url() ?>cart/ClearCart',
+         success: function(response) {
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: "Order removed from another restaurant!",
+                text: 'You can continue ordering.',
+                showConfirmButton: false,
+                timer: 8000,
+                button: "Ok",
+            });
+            setInterval(function () {
+                location.reload();
+            }, 4000);
+         }
+      });
+   });       
+   
 </script>

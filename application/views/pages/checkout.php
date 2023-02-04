@@ -184,15 +184,16 @@
                                         <br/>
                                         <h5 class="text-light-black " align="center" style="font-weight: bold;">Please Select Payment</h5>
                                         <select class="default form-control" name="payment_method" id="payment_option" required>
-                                            <option value="Cash" selected>Cash</option>
-                                        <?php 
+                                            <option value="Cash">Cash</option>
+                                            <option value="Chapa" selected>Chapa(We Accept Telebirr, CBE, Amole, Paypal, Wogagen)</option>
+                                        <!-- <?php 
                                             if(!empty($payments))
                                             {?>
                                                     <?php foreach ($payments as $payment) {?>
                                                         <option value="<?php echo $payment->payment_number ?>"><?php echo $payment->payment_name?></option>
                                                     <?php }?>
                                                     
-                                                    <?php }?>
+                                                    <?php }?> -->
                                                     
                                             </select>
                                             <div class="form-group" id="telebirr_input" style="display: none;">
@@ -212,8 +213,11 @@
                                                     <div class="tab-content">
                                                         <div class="form-group">
                                                             <h5 align="center" id="verification"></h5>
-                                                            
-                                                                <button type="submit" class="btn btn-first btn-block filter-button">Place Order</button>
+                                                            <?php if($this->session->userdata('logged_in') == true){?>
+                                                                <button type="submit" class="btn btn-first btn-block filter-button add_to_cart">Place Order</button>
+                                                            <?php }else{?>
+                                                                <button data-toggle="modal" data-target="#loginModal" class="btn btn-first btn-block filter-button add_to_cart">Place Order</button>
+                                                            <?php }?>
                                                             </div>
                                                             <p class="text-center text-light-black no-margin">
                                                                 By placing your order, you agree to QRAnbessa's 
@@ -242,9 +246,6 @@
 <script src="<?php echo base_url() ?>assets/js/jquery-2.1.1.min.js"></script>
 
 <script type="text/javascript">
-   
-
-
     if ( $.fn.magnificPopup ) {	
         $('.btn-iframe').magnificPopup({
             type: 'iframe',
@@ -278,9 +279,6 @@
         }
     };
     $('.create_btn').click(function() {
-        // getPayment();
-        console.log('here pay');
-        // return;
         $('#cover-spin').show(0);
         // inputCheck();
         // location_list();
@@ -369,6 +367,12 @@
     });
 
     $(document).ready(function() {
+        var cart_length = $('#cart-item .cart_item_item').length;
+          if (cart_length <= 0) {
+            $(".add_to_cart").attr('disabled', true);
+          } else {
+            $('.add_to_cart').attr('enable', true);
+          }
         
         $('#now').click(function() {
             $('#order_destination_place_room').val('');
@@ -446,7 +450,13 @@
         <?php
             if(count($branches)==1){?>
             var branch_name = document.getElementById("vendor_id_select").innerHTML;
-            $("#to_here_list").html(branch_name);
+            $("#to_here_list").html(branch_name);var cart_length = $('#cart-item .cart_item_item').length;
+          if (cart_length <= 0) {
+            $('#cart_hover_btn').css({"display":"none"});
+          } else {
+            $('#cart_hover_btn').html("<h4 style='padding-top: 5px;'><i class='fa fa-shopping-cart'></i> To your cart <span style='background:<?php echo $companies[0]->second_color; ?>; color: <?php echo $companies[0]->main_color; ?>;' class='badge badge-pill'>"+ cart_length)+"</span></h4>";
+            $('#cart_hover_btn').css({"display":"block"});
+          }
             $('.create_btn').removeAttr('disabled');
             $('#table_order_destination').hide();
             inputCheck();
@@ -464,9 +474,9 @@
             var account_name = $('#payment_option :selected').text();
             var account_number = $(this).val();
             if (account_name != 'Cash') { 
-                $('#telebirr_input').show();
-                $("#acc_name").html(account_name);
-                $("#acc_num").html(account_number);
+                // $('#telebirr_input').show();
+                // $("#acc_name").html(account_name);
+                // $("#acc_num").html(account_number);
             }else{
                 $('#telebirr_input').hide();  
                 $("#acc_name").html('');
